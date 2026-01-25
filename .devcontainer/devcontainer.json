@@ -1,12 +1,12 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-  "name": "WaniKani Mobile",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:24",
-  "postCreateCommand": "npm install",
-  "forwardPorts": [5173],
-  "appPort": [5173],
-  "runArgs": ["-p", "5173:5173"],
-  "remoteUser": "node",
-  "containerUser": "node"
+	"name": "WaniKani Mobile",
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:24",
+	"postCreateCommand": "npm install",
+	"forwardPorts": [5173],
+	"appPort": [5173],
+	"runArgs": ["-p", "5173:5173"],
+	"remoteUser": "node",
+	"containerUser": "node"
 }
