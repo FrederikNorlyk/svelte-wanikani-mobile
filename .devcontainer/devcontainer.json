@@ -4,9 +4,9 @@
   "name": "WaniKani Mobile",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:24",
   "postCreateCommand": "npm install",
-  "forwardPorts": [3000],
-  "appPort": [3000],
-  "runArgs": ["-p", "3000:3000"],
+  "forwardPorts": [5173],
+  "appPort": [5173],
+  "runArgs": ["-p", "5173:5173"],
   "remoteUser": "node",
   "containerUser": "node"
 }
