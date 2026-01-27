@@ -1,13 +1,14 @@
-import { getRequestEvent, query } from '$app/server';
-import CookieUtil from '$lib/util/cookieUtil';
+import { query } from '$app/server';
+import sendHTTPRequest from '$lib/util/httpUtil';
 import * as v from 'valibot';
+import { ValiError } from 'valibot';
 
 const subjectSchema = v.pipe(
 	v.object({
 		id: v.number(),
-		object: v.picklist(['radical', 'kanji', 'vocabulary']),
+		object: v.string(),
 		data: v.object({
-			characters: v.string(),
+			characters: v.nullable(v.string()),
 			meanings: v.array(
 				v.object({
 					meaning: v.string(),
@@ -15,13 +16,15 @@ const subjectSchema = v.pipe(
 					accepted_answer: v.boolean()
 				})
 			),
-			readings: v.array(
-				v.object({
-					type: v.picklist(['onyomi', 'kunyomi', 'nanori']),
-					primary: v.boolean(),
-					accepted_answer: v.boolean(),
-					reading: v.string()
-				})
+			readings: v.optional(
+				v.array(
+					v.object({
+						type: v.optional(v.string()),
+						primary: v.boolean(),
+						accepted_answer: v.boolean(),
+						reading: v.string()
+					})
+				)
 			)
 		})
 	}),
@@ -36,7 +39,7 @@ const subjectSchema = v.pipe(
 
 const schema = v.object({
 	pages: v.object({
-		next_url: v.optional(v.string())
+		next_url: v.nullable(v.string())
 	}),
 	data: v.array(subjectSchema)
 });
@@ -44,36 +47,25 @@ const schema = v.object({
 export type Subject = v.InferOutput<typeof subjectSchema>;
 
 export const getAllSubjects = query(async () => {
-	let nextUrl: string | undefined = 'https://api.wanikani.com/v2/subjects';
+	let nextUrl: string | null = 'https://api.wanikani.com/v2/subjects';
 	let subjects: Subject[] = [];
 
 	while (nextUrl) {
-		const response = await fetchSubjects(nextUrl);
+		const json = await sendHTTPRequest(nextUrl, { method: 'GET' });
+		let response;
+		try {
+			response = v.parse(schema, json);
+		} catch (e) {
+			if (e instanceof ValiError && e.issues) {
+				const issue = e.issues[0];
+				throw new Error(issue.message);
+			}
+			throw e;
+		}
+
 		subjects = [...subjects, ...response.data];
 		nextUrl = response.pages.next_url;
 	}
 
 	return subjects;
 });
-
-async function fetchSubjects(url: string) {
-	const { cookies } = getRequestEvent();
-	const apiToken = CookieUtil.get(cookies, 'api_token');
-
-	if (!apiToken) {
-		throw new Error('Could not get user, no api key.');
-	}
-
-	const response = await fetch(url, {
-		headers: {
-			Authorization: `Bearer ${apiToken}`
-		}
-	});
-
-	if (!response.ok) {
-		throw new Error(`Failed to fetch subjects (${response.status})`);
-	}
-
-	const json = await response.json();
-	return v.parse(schema, json);
-}
