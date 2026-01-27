@@ -1,6 +1,7 @@
-import { getRequestEvent, query } from '$app/server';
-import CookieUtil from '$lib/util/cookieUtil';
+import { query } from '$app/server';
+import sendHTTPRequest from '$lib/util/httpUtil';
 import * as v from 'valibot';
+import { ValiError } from 'valibot';
 
 const userSchema = v.pipe(
 	v.object({
@@ -29,24 +30,18 @@ const schema = v.object({
 export type User = v.InferOutput<typeof userSchema>;
 
 export const getUser = query(async () => {
-	const { cookies } = getRequestEvent();
-	const apiToken = CookieUtil.get(cookies, 'api_token');
+	const json = await sendHTTPRequest('https://api.wanikani.com/v2/user', { method: 'GET' });
 
-	if (!apiToken) {
-		throw new Error('Could not get user, no api key.');
-	}
-
-	const response = await fetch('https://api.wanikani.com/v2/user', {
-		headers: {
-			Authorization: `Bearer ${apiToken}`
+	let parsed;
+	try {
+		parsed = v.parse(schema, json);
+	} catch (e) {
+		if (e instanceof ValiError && e.issues) {
+			const issue = e.issues[0];
+			throw new Error(issue.message);
 		}
-	});
-
-	if (!response.ok) {
-		throw new Error(`Failed to fetch user (${response.status})`);
+		throw e;
 	}
 
-	const json = await response.json();
-	const parsed = v.parse(schema, json);
 	return parsed.data;
 });
