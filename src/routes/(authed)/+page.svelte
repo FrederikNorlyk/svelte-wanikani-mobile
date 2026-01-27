@@ -1,12 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type User from '$lib/model/user';
 	import UserRepository from '$lib/repository/userRepository';
+	import type { User } from '$lib/functions/user.remote';
+	import { toast } from 'svelte-sonner';
 
 	let user = $state<User | undefined>(undefined);
 
 	onMount(async () => {
-		user = await UserRepository.getUser();
+		try {
+			user = await UserRepository.getUser();
+		} catch {
+			toast.error('Could not get user');
+		}
 	});
 </script>
 
