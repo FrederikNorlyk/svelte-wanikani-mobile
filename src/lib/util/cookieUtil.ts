@@ -12,7 +12,8 @@ export default class CookieUtil {
 			path: '/',
 			httpOnly: true,
 			secure: true,
-			sameSite: 'lax'
+			sameSite: 'lax',
+			maxAge: 60 * 60 * 24 * 400 // ~400 days
 		});
 	}
 
