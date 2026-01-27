@@ -12,6 +12,7 @@
 		FieldLegend,
 		FieldSet
 	} from '$lib/shadcn/components/ui/field';
+	import { toast } from 'svelte-sonner';
 
 	let isLoggingIn = $state(false);
 </script>
@@ -21,6 +22,8 @@
 		isLoggingIn = true;
 		try {
 			await submit();
+		} catch {
+			toast.error('Could not log in');
 		} finally {
 			isLoggingIn = false;
 			form.reset();
