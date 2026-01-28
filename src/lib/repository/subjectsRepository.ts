@@ -9,15 +9,24 @@ const SUBJECTS_STORE = 'subjects';
 export default class SubjectsRepository {
 	private static openPromise: Promise<IDBDatabase> | null = null;
 
-	public static async getSubject(id: number): Promise<Subject | undefined> {
+	public static async getSubject(
+		id: number,
+		{
+			onSynchronize,
+			afterSynchronize
+		}: {
+			onSynchronize: () => void;
+			afterSynchronize: () => void;
+		}
+	): Promise<Subject | undefined> {
 		let subject: Subject | undefined = await this.readSubject(id);
 
 		if (!subject) {
+			onSynchronize();
 			await this.deleteAll();
-
 			const subjects = await API.getAllSubjects();
-
 			await this.writeSubjects(subjects);
+			afterSynchronize();
 
 			subject = await this.readSubject(id);
 		}
