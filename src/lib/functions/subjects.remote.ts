@@ -6,7 +6,7 @@ import { ValiError } from 'valibot';
 const subjectSchema = v.pipe(
 	v.object({
 		id: v.number(),
-		object: v.string(),
+		object: v.picklist(['vocabulary', 'kana_vocabulary', 'kanji', 'radical']),
 		data: v.object({
 			characters: v.nullable(v.string()),
 			meanings: v.array(
