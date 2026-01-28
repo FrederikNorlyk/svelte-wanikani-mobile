@@ -5,21 +5,18 @@
 	import SubjectsRepository from '$lib/repository/subjectsRepository';
 	import type { Subject } from '$lib/functions/subjects.remote';
 	import Review from '$lib/components/Review.svelte';
-	import { Button } from '$lib/shadcn/components/ui/button';
-	import { logout } from '$lib/functions/auth.remote';
 	import LogOutButton from '$lib/components/LogOutButton.svelte';
-	import { Spinner } from '$lib/shadcn/components/ui/spinner';
-	import NoReviews from '$lib/components/NoReviews.svelte';
 	import StartPage from '$lib/components/StartPage.svelte';
 	import Synchronizing from '$lib/components/Synchronizing.svelte';
 	import { createReview } from '$lib/functions/reviews.remote';
+	import Centered from '$lib/components/Centered.svelte';
+
+	type AppState = 'loading' | 'synchronizing' | 'loaded' | 'reviewing' | 'finished';
 
 	let assignments = $state<Assignment[]>([]);
 	let currentAssignment = $state<Assignment | undefined>(undefined);
 	let currentSubject = $state<Subject | undefined>(undefined);
-	let appState = $state<'loading' | 'synchronizing' | 'loaded' | 'reviewing' | 'finished'>(
-		'loading'
-	);
+	let appState = $state<AppState>('loading');
 
 	onMount(async () => {
 		try {
@@ -93,7 +90,9 @@
 	{:else if appState === 'loaded'}
 		<LogOutButton />
 		{#if assignments.length === 0}
-			<NoReviews />
+			<Centered>
+				<p>You have no reviews</p>
+			</Centered>
 		{:else}
 			<StartPage {assignments} onStartReview={() => (appState = 'reviewing')} />
 		{/if}
@@ -109,6 +108,8 @@
 		{/if}
 	{:else if appState === 'finished'}
 		<LogOutButton />
-		Great job!
+		<Centered>
+			<p>Great job!</p>
+		</Centered>
 	{/if}
 </main>
