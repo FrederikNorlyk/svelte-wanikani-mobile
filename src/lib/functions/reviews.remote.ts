@@ -30,10 +30,19 @@ const schema = v.pipe(
 );
 
 export const createReview = query(schema, async (body) => {
-	await sendHTTPRequest('https://api.wanikani.com/v2/reviews/', {
-		method: 'POST',
-		body: body
-	});
+	try {
+		await sendHTTPRequest('https://api.wanikani.com/v2/reviews/', {
+			method: 'POST',
+			body: body
+		});
+	} catch (e) {
+		console.error(e);
+
+		if (e instanceof Error) {
+			return { success: false, error: e.message };
+		}
+		throw e;
+	}
 
 	return { success: true };
 });
