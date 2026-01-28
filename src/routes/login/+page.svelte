@@ -1,4 +1,5 @@
 <script lang="ts">
+	import BadgeAlert from '@lucide/svelte/icons/badge-alert';
 	import { Input } from '$lib/shadcn/components/ui/input';
 	import { Button } from '$lib/shadcn/components/ui/button';
 	import { login } from '$lib/functions/auth.remote';
@@ -38,6 +39,12 @@
 				target="_blank"
 				href="https://www.wanikani.com/settings/personal_access_tokens">here</a
 			>.
+		</FieldDescription>
+		<FieldDescription class="flex space-x-1">
+			<BadgeAlert class="size-5" />
+			<p>
+				Make sure it has the permission called <b>reviews:create</b>.
+			</p>
 		</FieldDescription>
 		<FieldGroup>
 			<Field>
