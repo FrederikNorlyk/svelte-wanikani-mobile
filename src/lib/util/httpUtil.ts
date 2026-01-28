@@ -71,9 +71,15 @@ export default async function sendHTTPRequest(
 		}
 	}
 
+	const headers: Record<string, string> = { Authorization: `Bearer ${apiToken}` };
+
+	if (body) {
+		headers['Content-Type'] = 'application/json';
+	}
+
 	const response = await fetch(url.toString(), {
 		method: method,
-		headers: { Authorization: `Bearer ${apiToken}` },
+		headers: headers,
 		signal: signal,
 		body: JSON.stringify(body)
 	});
@@ -81,6 +87,9 @@ export default async function sendHTTPRequest(
 	const json = await response.json();
 
 	if (!response.ok) {
+		if (json.error) {
+			throw new Error(json.error);
+		}
 		const errorMessage = `Request failed: ${response.status} ${response.statusText} - ${json}`;
 		throw new Error(errorMessage);
 	}
