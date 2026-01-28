@@ -35,6 +35,10 @@
 	--sidebar-accent-foreground: oklch(0.21 0.034 264.665);
 	--sidebar-border: oklch(0.928 0.006 264.531);
 	--sidebar-ring: oklch(0.707 0.022 261.325);
+	--safe-top: env(safe-area-inset-top);
+	--safe-right: env(safe-area-inset-right);
+	--safe-bottom: env(safe-area-inset-bottom);
+	--safe-left: env(safe-area-inset-left);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -109,6 +113,10 @@
 	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-ring: var(--sidebar-ring);
+}
+
+main {
+	padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
 }
 
 @layer base {
