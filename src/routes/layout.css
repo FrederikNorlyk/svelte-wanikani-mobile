@@ -49,9 +49,9 @@
 		--card-foreground: oklch(0.985 0.002 247.839);
 		--popover: oklch(0.21 0.034 264.665);
 		--popover-foreground: oklch(0.985 0.002 247.839);
-		--primary: oklch(0.928 0.006 264.531);
+		--primary: oklch(0.928 0.006 264.531 / 0.5);
 		--primary-foreground: oklch(0.21 0.034 264.665);
-		--secondary: oklch(0.278 0.033 256.848);
+		--secondary: oklch(0.278 0.034 257.672 / 0.3);
 		--secondary-foreground: oklch(0.985 0.002 247.839);
 		--muted: oklch(0.278 0.033 256.848);
 		--muted-foreground: oklch(0.707 0.022 261.325);
@@ -177,7 +177,22 @@
 		}
 
 		& .answer__text {
-			@apply mt-1 text-xl text-secondary-foreground;
+			@apply text-secondary-foreground;
+		}
+
+		& .answer__text--primary {
+			@apply text-xl;
+		}
+
+		& .answer__text--secondary {
+			@apply opacity-75;
+		}
+
+		& .answer__secondary-block {
+			& > .answer__text--secondary + .answer__text--secondary::before {
+				content: '·';
+				margin-right: 0.5rem;
+			}
 		}
 	}
 }

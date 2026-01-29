@@ -17,10 +17,26 @@
 		isShowingAnswer = false;
 	});
 
-	const primaryMeaning = $derived(subject.meanings.find((meaning) => meaning.primary));
-	const secondaryMeanings = $derived(subject.meanings.filter((meaning) => !meaning.primary));
-	const primaryReading = $derived(subject.readings?.find((reading) => reading.primary));
-	const secondaryReadings = $derived(subject.readings?.filter((reading) => !reading.primary) ?? []);
+	const primaryMeaning = $derived(subject.meanings.find((meaning) => meaning.primary)?.meaning);
+	const primaryReading = $derived(subject.readings?.find((reading) => reading.primary)?.reading);
+
+	const secondaryMeanings = $derived(
+		subject.meanings
+			.filter(
+				(meaning) =>
+					!meaning.primary && meaning.meaning.toLowerCase() !== primaryMeaning?.toLowerCase()
+			)
+			.map((meaning) => meaning.meaning)
+	);
+
+	const secondaryReadings = $derived(
+		subject.readings
+			?.filter(
+				(reading) =>
+					!reading.primary && reading.reading.toLowerCase() !== primaryReading?.toLowerCase()
+			)
+			.map((reading) => reading.reading) ?? []
+	);
 </script>
 
 <div class="flex flex-1 flex-col gap-2">
@@ -37,22 +53,10 @@
 	<div class="flex-1 space-y-2">
 		{#if isShowingAnswer}
 			{#if primaryMeaning}
-				<div class="answer">
-					<p class="answer__label">Meaning</p>
-					<b class="answer__text">{primaryMeaning.meaning}</b>
-					{#each secondaryMeanings as meaning (meaning.meaning)}
-						<p class="answer__text">{meaning.meaning}</p>
-					{/each}
-				</div>
+				{@render answerBlock('Meanings', primaryMeaning, secondaryMeanings)}
 			{/if}
 			{#if primaryReading}
-				<div class="answer">
-					<p class="answer__label">Reading</p>
-					<b class="answer__text">{primaryReading.reading}</b>
-					{#each secondaryReadings as reading (reading.reading)}
-						<p class="answer__text">{reading.reading}</p>
-					{/each}
-				</div>
+				{@render answerBlock('Readings', primaryReading, secondaryReadings)}
 			{/if}
 		{/if}
 	</div>
@@ -68,3 +72,17 @@
 		{/if}
 	</div>
 </div>
+
+{#snippet answerBlock(label: string, primaryAnswer: string, secondaryAnswers: string[])}
+	<div class="answer">
+		<p class="answer__label">{label}</p>
+		<b class="answer__text answer__text--primary">{primaryAnswer}</b>
+		{#if secondaryAnswers.length > 0}
+			<div class="answer__secondary-block flex gap-2">
+				{#each secondaryAnswers as answer (answer)}
+					<p class="answer__text answer__text--secondary">{answer}</p>
+				{/each}
+			</div>
+		{/if}
+	</div>
+{/snippet}
