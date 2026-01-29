@@ -13,14 +13,18 @@
 
 	type AppState = 'loading' | 'synchronizing' | 'loaded' | 'reviewing' | 'finished';
 
-	let assignments = $state<Assignment[]>([]);
+	let remainingAssignments = $state<Assignment[]>([]);
 	let currentAssignment = $state<Assignment | undefined>(undefined);
 	let currentSubject = $state<Subject | undefined>(undefined);
 	let appState = $state<AppState>('loading');
 
+	let totalNumberOfAssignments = $derived(
+		remainingAssignments.length + (currentAssignment ? 1 : 0)
+	);
+
 	onMount(async () => {
 		try {
-			assignments = await getAllAssignments();
+			remainingAssignments = await getAllAssignments();
 			await getNextSubject();
 		} catch {
 			toast.error('Something went wrong');
@@ -31,7 +35,7 @@
 	});
 
 	async function getNextSubject() {
-		currentAssignment = assignments.shift();
+		currentAssignment = remainingAssignments.shift();
 
 		if (currentAssignment) {
 			const previousState = appState;
@@ -82,19 +86,22 @@
 	}
 </script>
 
-<main class="flex flex-1 flex-col">
+<main class="flex flex-1 flex-col gap-2">
 	{#if appState === 'loading'}
 		<span></span>
 	{:else if appState === 'synchronizing'}
 		<Synchronizing />
 	{:else if appState === 'loaded'}
 		<LogOutButton />
-		{#if assignments.length === 0}
+		{#if totalNumberOfAssignments === 0}
 			<Centered>
 				<p>You have no reviews</p>
 			</Centered>
 		{:else}
-			<StartPage {assignments} onStartReview={() => (appState = 'reviewing')} />
+			<StartPage
+				numberOfAssignments={totalNumberOfAssignments}
+				onStartReview={() => (appState = 'reviewing')}
+			/>
 		{/if}
 	{:else if appState === 'reviewing'}
 		{#if !currentSubject}
