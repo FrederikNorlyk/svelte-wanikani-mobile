@@ -115,10 +115,6 @@
 	--color-sidebar-ring: var(--sidebar-ring);
 }
 
-main {
-	padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
-}
-
 @layer base {
 	* {
 		@apply border-border outline-ring/50;
