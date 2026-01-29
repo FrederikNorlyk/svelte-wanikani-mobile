@@ -17,8 +17,10 @@
 		isShowingAnswer = false;
 	});
 
-	const meaning = $derived(subject.meanings.find((meaning) => meaning.primary));
-	const reading = $derived(subject.readings?.find((reading) => reading.primary));
+	const primaryMeaning = $derived(subject.meanings.find((meaning) => meaning.primary));
+	const secondaryMeanings = $derived(subject.meanings.filter((meaning) => !meaning.primary));
+	const primaryReading = $derived(subject.readings?.find((reading) => reading.primary));
+	const secondaryReadings = $derived(subject.readings?.filter((reading) => !reading.primary) ?? []);
 </script>
 
 <div class="flex flex-1 flex-col gap-2">
@@ -34,16 +36,22 @@
 
 	<div class="flex-1 space-y-2">
 		{#if isShowingAnswer}
-			{#if meaning}
+			{#if primaryMeaning}
 				<div class="answer">
 					<p class="answer__label">Meaning</p>
-					<p class="answer__text">{meaning.meaning}</p>
+					<b class="answer__text">{primaryMeaning.meaning}</b>
+					{#each secondaryMeanings as meaning (meaning.meaning)}
+						<p class="answer__text">{meaning.meaning}</p>
+					{/each}
 				</div>
 			{/if}
-			{#if reading}
+			{#if primaryReading}
 				<div class="answer">
 					<p class="answer__label">Reading</p>
-					<p class="answer__text">{reading.reading}</p>
+					<b class="answer__text">{primaryReading.reading}</b>
+					{#each secondaryReadings as reading (reading.reading)}
+						<p class="answer__text">{reading.reading}</p>
+					{/each}
 				</div>
 			{/if}
 		{/if}
