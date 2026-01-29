@@ -93,16 +93,10 @@
 		<Synchronizing />
 	{:else if appState === 'loaded'}
 		<LogOutButton />
-		{#if totalNumberOfAssignments === 0}
-			<Centered>
-				<p>You have no reviews</p>
-			</Centered>
-		{:else}
-			<StartPage
-				numberOfAssignments={totalNumberOfAssignments}
-				onStartReview={() => (appState = 'reviewing')}
-			/>
-		{/if}
+		<StartPage
+			numberOfAssignments={totalNumberOfAssignments}
+			onStartReview={() => (appState = 'reviewing')}
+		/>
 	{:else if appState === 'reviewing'}
 		{#if !currentSubject}
 			Something went wrong.
