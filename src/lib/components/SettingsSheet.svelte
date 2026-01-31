@@ -31,7 +31,9 @@
 
 		<SheetFooter>
 			<LogOutButton />
-			<SheetClose class={buttonVariants({ variant: 'outline' })}>Close</SheetClose>
+			<SheetClose class={buttonVariants({ variant: 'outline' })}
+				>Close</SheetClose
+			>
 		</SheetFooter>
 	</SheetContent>
 </Sheet>

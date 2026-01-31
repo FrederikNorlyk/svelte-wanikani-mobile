@@ -30,7 +30,9 @@ const schema = v.object({
 export type User = v.InferOutput<typeof userSchema>;
 
 export const getUser = query(async () => {
-	const json = await sendHTTPRequest('https://api.wanikani.com/v2/user', { method: 'GET' });
+	const json = await sendHTTPRequest('https://api.wanikani.com/v2/user', {
+		method: 'GET'
+	});
 
 	let parsed;
 	try {

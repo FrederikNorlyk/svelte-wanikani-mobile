@@ -21,13 +21,15 @@ const schema = v.pipe(
 			v.minValue(0, 'incorrectReadingAnswers must be zero or a positive number')
 		)
 	}),
-	v.transform(({ assignmentId, incorrectMeaningAnswers, incorrectReadingAnswers }) => ({
-		review: {
-			assignment_id: assignmentId,
-			incorrect_meaning_answers: incorrectMeaningAnswers,
-			incorrect_reading_answers: incorrectReadingAnswers
-		}
-	}))
+	v.transform(
+		({ assignmentId, incorrectMeaningAnswers, incorrectReadingAnswers }) => ({
+			review: {
+				assignment_id: assignmentId,
+				incorrect_meaning_answers: incorrectMeaningAnswers,
+				incorrect_reading_answers: incorrectReadingAnswers
+			}
+		})
+	)
 );
 
 const responseSchema = v.pipe(

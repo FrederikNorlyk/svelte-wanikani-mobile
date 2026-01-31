@@ -60,7 +60,8 @@ export default class SubjectsRepository {
 			};
 
 			request.onsuccess = () => resolve(request.result);
-			request.onerror = () => reject(request.error ?? new Error('Failed to open IndexedDB.'));
+			request.onerror = () =>
+				reject(request.error ?? new Error('Failed to open IndexedDB.'));
 		});
 
 		return this.openPromise;
@@ -79,10 +80,13 @@ export default class SubjectsRepository {
 			const request = fn(store);
 
 			request.onsuccess = () => resolve(request.result);
-			request.onerror = () => reject(request.error ?? new Error('IndexedDB request failed.'));
+			request.onerror = () =>
+				reject(request.error ?? new Error('IndexedDB request failed.'));
 
 			transaction.onabort = () =>
-				reject(transaction.error ?? new Error('IndexedDB transaction aborted.'));
+				reject(
+					transaction.error ?? new Error('IndexedDB transaction aborted.')
+				);
 		});
 	}
 
@@ -98,8 +102,10 @@ export default class SubjectsRepository {
 			}
 
 			tx.oncomplete = () => resolve();
-			tx.onabort = () => reject(tx.error ?? new Error('IndexedDB transaction aborted.'));
-			tx.onerror = () => reject(tx.error ?? new Error('IndexedDB transaction failed.'));
+			tx.onabort = () =>
+				reject(tx.error ?? new Error('IndexedDB transaction aborted.'));
+			tx.onerror = () =>
+				reject(tx.error ?? new Error('IndexedDB transaction failed.'));
 		});
 	}
 

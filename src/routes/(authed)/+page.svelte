@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { type Assignment, getAllAssignments } from '$lib/functions/assignments.remote';
+	import {
+		type Assignment,
+		getAllAssignments
+	} from '$lib/functions/assignments.remote';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import SubjectsRepository from '$lib/repository/subjectsRepository';
@@ -13,9 +16,16 @@
 	import pose_happy_businessman_guts from '$lib/assets/irasutoya/pose_happy_businessman_guts.png';
 	import SettingsSheet from '$lib/components/SettingsSheet.svelte';
 	import { getSrsStage } from '$lib/util/srsStageUtil';
-	import SRSStageToast, { type Variant } from '$lib/components/SRSStageToast.svelte';
+	import SRSStageToast, {
+		type Variant
+	} from '$lib/components/SRSStageToast.svelte';
 
-	type AppState = 'loading' | 'synchronizing' | 'loaded' | 'reviewing' | 'finished';
+	type AppState =
+		| 'loading'
+		| 'synchronizing'
+		| 'loaded'
+		| 'reviewing'
+		| 'finished';
 
 	let remainingAssignments = $state<Assignment[]>([]);
 	let currentAssignment = $state<Assignment | undefined>(undefined);
@@ -56,10 +66,13 @@
 		if (currentAssignment) {
 			const previousState = appState;
 
-			currentSubject = await SubjectsRepository.getSubject(currentAssignment.subjectId, {
-				onSynchronize: () => (appState = 'synchronizing'),
-				afterSynchronize: () => (appState = previousState)
-			});
+			currentSubject = await SubjectsRepository.getSubject(
+				currentAssignment.subjectId,
+				{
+					onSynchronize: () => (appState = 'synchronizing'),
+					afterSynchronize: () => (appState = previousState)
+				}
+			);
 
 			if (!currentSubject) {
 				toast.error(`Could not get subject #${currentAssignment.subjectId}`);
@@ -83,7 +96,10 @@
 		if (!wasCorrect) {
 			incorrectMeanings = 1;
 
-			if (currentSubject.object === 'kanji' || currentSubject.object === 'vocabulary') {
+			if (
+				currentSubject.object === 'kanji' ||
+				currentSubject.object === 'vocabulary'
+			) {
 				incorrectReadings = 1;
 			}
 		}
@@ -103,10 +119,14 @@
 			}
 
 			const result = response.result;
-			const variant: Variant = result.endingStage > result.startingStage ? 'success' : 'error';
+			const variant: Variant =
+				result.endingStage > result.startingStage ? 'success' : 'error';
 
 			toast.custom(SRSStageToast, {
-				componentProps: { srsStage: getSrsStage(result.endingStage), variant: variant },
+				componentProps: {
+					srsStage: getSrsStage(result.endingStage),
+					variant: variant
+				},
 				duration: 1000
 			});
 		});

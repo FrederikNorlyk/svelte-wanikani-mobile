@@ -71,7 +71,9 @@ export default async function sendHTTPRequest(
 		}
 	}
 
-	const headers: Record<string, string> = { Authorization: `Bearer ${apiToken}` };
+	const headers: Record<string, string> = {
+		Authorization: `Bearer ${apiToken}`
+	};
 
 	if (body) {
 		headers['Content-Type'] = 'application/json';

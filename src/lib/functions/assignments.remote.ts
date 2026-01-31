@@ -5,7 +5,11 @@ import { ValiError } from 'valibot';
 
 const assignmentSchema = v.pipe(
 	v.object({
-		id: v.pipe(v.number(), v.integer(), v.minValue(1, 'id must be a positive number')),
+		id: v.pipe(
+			v.number(),
+			v.integer(),
+			v.minValue(1, 'id must be a positive number')
+		),
 		data: v.object({
 			subject_id: v.pipe(
 				v.number(),
@@ -36,7 +40,9 @@ export const getAllAssignments = query(async () => {
 	while (nextUrl) {
 		const json = await sendHTTPRequest(nextUrl, {
 			method: 'GET',
-			searchParams: new URLSearchParams({ immediately_available_for_review: 'true' })
+			searchParams: new URLSearchParams({
+				immediately_available_for_review: 'true'
+			})
 		});
 
 		let parsed;

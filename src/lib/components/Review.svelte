@@ -23,7 +23,8 @@
 			return;
 		}
 
-		const url = subject.audio[Math.floor(Math.random() * subject.audio.length)]?.url;
+		const url =
+			subject.audio[Math.floor(Math.random() * subject.audio.length)]?.url;
 		const response = await fetch(url);
 		const blob = await response.blob();
 		const objectUrl = URL.createObjectURL(blob);
@@ -49,14 +50,19 @@
 		void loadAudio();
 	});
 
-	const primaryMeaning = $derived(subject.meanings.find((meaning) => meaning.primary)?.meaning);
-	const primaryReading = $derived(subject.readings?.find((reading) => reading.primary)?.reading);
+	const primaryMeaning = $derived(
+		subject.meanings.find((meaning) => meaning.primary)?.meaning
+	);
+	const primaryReading = $derived(
+		subject.readings?.find((reading) => reading.primary)?.reading
+	);
 
 	const secondaryMeanings = $derived(
 		subject.meanings
 			.filter(
 				(meaning) =>
-					!meaning.primary && meaning.meaning.toLowerCase() !== primaryMeaning?.toLowerCase()
+					!meaning.primary &&
+					meaning.meaning.toLowerCase() !== primaryMeaning?.toLowerCase()
 			)
 			.map((meaning) => meaning.meaning)
 	);
@@ -65,7 +71,8 @@
 		subject.readings
 			?.filter(
 				(reading) =>
-					!reading.primary && reading.reading.toLowerCase() !== primaryReading?.toLowerCase()
+					!reading.primary &&
+					reading.reading.toLowerCase() !== primaryReading?.toLowerCase()
 			)
 			.map((reading) => reading.reading) ?? []
 	);
@@ -97,8 +104,14 @@
 
 	<div class="flex space-x-4">
 		{#if isShowingAnswer}
-			<Button class="h-20 flex-1" size="lg" onclick={onCorrectAnswer}>Knew it</Button>
-			<Button class="h-20 flex-1" size="lg" variant="secondary" onclick={onWrongAnswer}
+			<Button class="h-20 flex-1" size="lg" onclick={onCorrectAnswer}
+				>Knew it</Button
+			>
+			<Button
+				class="h-20 flex-1"
+				size="lg"
+				variant="secondary"
+				onclick={onWrongAnswer}
 				>Didn't know
 			</Button>
 		{:else}
@@ -114,7 +127,11 @@
 	</div>
 </div>
 
-{#snippet answerBlock(label: string, primaryAnswer: string, secondaryAnswers: string[])}
+{#snippet answerBlock(
+	label: string,
+	primaryAnswer: string,
+	secondaryAnswers: string[]
+)}
 	<div class="answer">
 		<p class="answer__label">{label}</p>
 		<b class="answer__text answer__text--primary">{primaryAnswer}</b>

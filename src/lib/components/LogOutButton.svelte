@@ -25,7 +25,12 @@
 		}
 	})}
 >
-	<Button class="w-full" variant="secondary" type="submit" disabled={isLoggingOut}>
+	<Button
+		class="w-full"
+		variant="secondary"
+		type="submit"
+		disabled={isLoggingOut}
+	>
 		{#if isLoggingOut}
 			<Spinner />
 			Logging out

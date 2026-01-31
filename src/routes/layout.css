@@ -128,8 +128,16 @@
 		--grid-line: color-mix(in oklch, var(--foreground) 3%, transparent);
 
 		background-image:
-			repeating-linear-gradient(0deg, var(--grid-line) 0 1px, transparent 1px var(--grid-size)),
-			repeating-linear-gradient(90deg, var(--grid-line) 0 1px, transparent 1px var(--grid-size));
+			repeating-linear-gradient(
+				0deg,
+				var(--grid-line) 0 1px,
+				transparent 1px var(--grid-size)
+			),
+			repeating-linear-gradient(
+				90deg,
+				var(--grid-line) 0 1px,
+				transparent 1px var(--grid-size)
+			);
 
 		background-attachment: fixed;
 	}
