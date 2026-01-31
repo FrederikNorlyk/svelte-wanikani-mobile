@@ -1,20 +1,52 @@
 <script lang="ts">
 	import type { Subject } from '$lib/functions/subjects.remote';
 	import { Button } from '$lib/shadcn/components/ui/button';
+	import { toast } from 'svelte-sonner';
+	import { Progress } from '$lib/shadcn/components/ui/progress';
 
 	interface Props {
 		subject: Subject;
+		progress: number;
 		onCorrectAnswer: () => void;
 		onWrongAnswer: () => void;
 	}
 
-	const { subject, onCorrectAnswer, onWrongAnswer }: Props = $props();
+	const { subject, progress, onCorrectAnswer, onWrongAnswer }: Props = $props();
 
 	let isShowingAnswer = $state(false);
+	let audio: HTMLAudioElement | undefined = $state(undefined);
+
+	async function loadAudio() {
+		audio = undefined;
+
+		if (subject.audio.length == 0) {
+			return;
+		}
+
+		const url = subject.audio[Math.floor(Math.random() * subject.audio.length)]?.url;
+		const response = await fetch(url);
+		const blob = await response.blob();
+		const objectUrl = URL.createObjectURL(blob);
+
+		audio = new Audio(objectUrl);
+
+		audio.onended = () => {
+			URL.revokeObjectURL(objectUrl);
+		};
+	}
+
+	async function playAudio() {
+		try {
+			await audio?.play();
+		} catch (e) {
+			toast.error('Could not play audio: ' + e);
+		}
+	}
 
 	$effect(() => {
 		void subject; // Track changes
 		isShowingAnswer = false;
+		void loadAudio();
 	});
 
 	const primaryMeaning = $derived(subject.meanings.find((meaning) => meaning.primary)?.meaning);
@@ -40,6 +72,8 @@
 </script>
 
 <div class="flex flex-1 flex-col gap-2">
+	<Progress value={progress} />
+
 	<h1
 		class="character-header"
 		class:character-header--vocab={subject.object === 'vocabulary' ||
@@ -68,7 +102,14 @@
 				>Didn't know
 			</Button>
 		{:else}
-			<Button class="h-20 flex-1" onclick={() => (isShowingAnswer = true)}>Show answer</Button>
+			<Button
+				class="h-20 flex-1"
+				onclick={() => {
+					void playAudio();
+					isShowingAnswer = true;
+				}}
+				>Show answer
+			</Button>
 		{/if}
 	</div>
 </div>
@@ -78,7 +119,7 @@
 		<p class="answer__label">{label}</p>
 		<b class="answer__text answer__text--primary">{primaryAnswer}</b>
 		{#if secondaryAnswers.length > 0}
-			<div class="answer__secondary-block flex gap-2">
+			<div>
 				{#each secondaryAnswers as answer (answer)}
 					<p class="answer__text answer__text--secondary">{answer}</p>
 				{/each}

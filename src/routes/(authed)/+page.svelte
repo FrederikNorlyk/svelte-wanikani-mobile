@@ -18,13 +18,25 @@
 	let currentSubject = $state<Subject | undefined>(undefined);
 	let appState = $state<AppState>('loading');
 
-	let totalNumberOfAssignments = $derived(
+	const totalNumberOfAssignments = $derived(
 		remainingAssignments.length + (currentAssignment ? 1 : 0)
 	);
+
+	let startingNumberOfAssignments = $state(0);
+
+	const progress = $derived(() => {
+		if (startingNumberOfAssignments <= 0) return 0;
+
+		const completed = startingNumberOfAssignments - totalNumberOfAssignments;
+		const percent = Math.floor((completed / startingNumberOfAssignments) * 100);
+
+		return Math.min(100, Math.max(0, percent));
+	});
 
 	onMount(async () => {
 		try {
 			remainingAssignments = await getAllAssignments();
+			startingNumberOfAssignments = remainingAssignments.length;
 			await getNextSubject();
 		} catch {
 			toast.error('Something went wrong');
@@ -79,7 +91,20 @@
 		}).then((response) => {
 			if (!response.success) {
 				toast.error(response.error ?? 'Something went wrong');
+				return;
 			}
+
+			if (!response.result) {
+				return;
+			}
+
+			const result = response.result;
+			const variant: Variant = result.endingStage > result.startingStage ? 'success' : 'error';
+
+			toast.custom(SRSStageToast, {
+				componentProps: { srsStage: getSrsStage(result.endingStage), variant: variant },
+				duration: 1000
+			});
 		});
 
 		void getNextSubject();
@@ -95,7 +120,9 @@
 		<LogOutButton />
 		<StartPage
 			numberOfAssignments={totalNumberOfAssignments}
-			onStartReview={() => (appState = 'reviewing')}
+			onStartReview={() => {
+				appState = 'reviewing';
+			}}
 		/>
 	{:else if appState === 'reviewing'}
 		{#if !currentSubject}
@@ -103,6 +130,7 @@
 		{:else}
 			<Review
 				subject={currentSubject}
+				progress={progress()}
 				onCorrectAnswer={() => onAnswer(true)}
 				onWrongAnswer={() => onAnswer(false)}
 			/>
