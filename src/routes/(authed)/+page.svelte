@@ -5,11 +5,15 @@
 	import SubjectsRepository from '$lib/repository/subjectsRepository';
 	import type { Subject } from '$lib/functions/subjects.remote';
 	import Review from '$lib/components/Review.svelte';
-	import LogOutButton from '$lib/components/LogOutButton.svelte';
 	import StartPage from '$lib/components/StartPage.svelte';
 	import Synchronizing from '$lib/components/Synchronizing.svelte';
 	import { createReview } from '$lib/functions/reviews.remote';
 	import Centered from '$lib/components/Centered.svelte';
+	import Illustration from '$lib/components/Illustration.svelte';
+	import pose_happy_businessman_guts from '$lib/assets/irasutoya/pose_happy_businessman_guts.png';
+	import SettingsSheet from '$lib/components/SettingsSheet.svelte';
+	import { getSrsStage } from '$lib/util/srsStageUtil';
+	import SRSStageToast, { type Variant } from '$lib/components/SRSStageToast.svelte';
 
 	type AppState = 'loading' | 'synchronizing' | 'loaded' | 'reviewing' | 'finished';
 
@@ -112,12 +116,13 @@
 </script>
 
 <main class="flex flex-1 flex-col gap-2">
-	{#if appState === 'loading'}
-		<span></span>
-	{:else if appState === 'synchronizing'}
+	{#if appState === 'loaded' || appState === 'finished'}
+		<SettingsSheet />
+	{/if}
+
+	{#if appState === 'synchronizing'}
 		<Synchronizing />
 	{:else if appState === 'loaded'}
-		<LogOutButton />
 		<StartPage
 			numberOfAssignments={totalNumberOfAssignments}
 			onStartReview={() => {
@@ -136,9 +141,13 @@
 			/>
 		{/if}
 	{:else if appState === 'finished'}
-		<LogOutButton />
 		<Centered>
-			<p>Great job!</p>
+			<Illustration
+				src={pose_happy_businessman_guts}
+				alt="An illustration of a male office worker in a suit, celebrating with a triumphant fist pump."
+			>
+				<p>Great job!</p>
+			</Illustration>
 		</Centered>
 	{/if}
 </main>
