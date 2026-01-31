@@ -185,14 +185,13 @@
 		}
 
 		& .answer__text--secondary {
-			@apply opacity-75;
+			@apply inline-block opacity-75;
 		}
 
-		& .answer__secondary-block {
-			& > .answer__text--secondary + .answer__text--secondary::before {
-				content: '·';
-				margin-right: 0.5rem;
-			}
+		& .answer__text--secondary + .answer__text--secondary::before {
+			content: '·';
+			margin-right: 0.25rem;
+			margin-left: 0.25rem;
 		}
 	}
 }
