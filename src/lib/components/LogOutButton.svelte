@@ -1,4 +1,5 @@
 <script lang="ts">
+	// noinspection ES6UnusedImports
 	import LogOut from '@lucide/svelte/icons/log-out';
 	import { logout } from '$lib/functions/auth.remote';
 	import { toast } from 'svelte-sonner';
@@ -24,7 +25,7 @@
 		}
 	})}
 >
-	<Button variant="secondary" type="submit" disabled={isLoggingOut}>
+	<Button class="w-full" variant="secondary" type="submit" disabled={isLoggingOut}>
 		{#if isLoggingOut}
 			<Spinner />
 			Logging out
