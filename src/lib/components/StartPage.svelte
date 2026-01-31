@@ -38,4 +38,6 @@
 	{/if}
 </div>
 
-<Button class="flex h-20" onclick={onStartReview}>Start reviewing!</Button>
+{#if numberOfAssignments > 0}
+	<Button class="flex h-20" onclick={onStartReview}>Start reviewing!</Button>
+{/if}
