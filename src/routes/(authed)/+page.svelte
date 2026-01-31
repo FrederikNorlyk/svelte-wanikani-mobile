@@ -19,13 +19,15 @@
 	import SRSStageToast, {
 		type Variant
 	} from '$lib/components/SRSStageToast.svelte';
+	import LevelUpPage from '$lib/components/LevelUpPage.svelte';
 
 	type AppState =
 		| 'loading'
 		| 'synchronizing'
 		| 'loaded'
 		| 'reviewing'
-		| 'finished';
+		| 'finished'
+		| 'level-up';
 
 	let remainingAssignments = $state<Assignment[]>([]);
 	let currentAssignment = $state<Assignment | undefined>(undefined);
@@ -119,6 +121,7 @@
 			}
 
 			const result = response.result;
+
 			const variant: Variant =
 				result.endingStage > result.startingStage ? 'success' : 'error';
 
@@ -131,7 +134,13 @@
 			});
 		});
 
-		void getNextSubject();
+		let didLevelUp = false;
+
+		if (didLevelUp) {
+			appState = 'level-up';
+		} else {
+			void getNextSubject();
+		}
 	}
 </script>
 
@@ -169,5 +178,13 @@
 				<p>Great job!</p>
 			</Illustration>
 		</Centered>
+	{:else if appState === 'level-up'}
+		<LevelUpPage
+			level={58}
+			onContinue={() => {
+				appState = 'reviewing';
+				getNextSubject();
+			}}
+		/>
 	{/if}
 </main>
