@@ -20,6 +20,8 @@
 		type Variant
 	} from '$lib/components/SRSStageToast.svelte';
 	import LevelUpPage from '$lib/components/LevelUpPage.svelte';
+	import { getUser } from '$lib/functions/user.remote';
+	import UserRepository from '$lib/repository/userRepository';
 
 	type AppState =
 		| 'loading'
@@ -134,13 +136,15 @@
 			});
 		});
 
-		let didLevelUp = false;
+		Promise.all([UserRepository.getUser(), getUser()]).then(
+			([oldUser, newUser]) => {
+				if (newUser.level > oldUser.level) {
+					appState = 'level-up';
+				}
+			}
+		);
 
-		if (didLevelUp) {
-			appState = 'level-up';
-		} else {
-			void getNextSubject();
-		}
+		void getNextSubject();
 	}
 </script>
 
@@ -183,7 +187,6 @@
 			level={58}
 			onContinue={() => {
 				appState = 'reviewing';
-				getNextSubject();
 			}}
 		/>
 	{/if}
