@@ -32,7 +32,8 @@ const subjectSchema = v.pipe(
 					v.object({
 						url: v.string(),
 						metadata: v.object({
-							gender: v.picklist(['male', 'female'])
+							gender: v.picklist(['male', 'female']),
+							pronunciation: v.string()
 						})
 					})
 				)
@@ -49,7 +50,8 @@ const subjectSchema = v.pipe(
 		audio:
 			data.data.pronunciation_audios?.map((audio) => ({
 				url: audio.url,
-				gender: audio.metadata.gender
+				gender: audio.metadata.gender,
+				reading: audio.metadata.pronunciation
 			})) ?? []
 	}))
 );

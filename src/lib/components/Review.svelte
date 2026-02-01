@@ -25,8 +25,16 @@
 			return;
 		}
 
+		let potentialAudios = subject.audio.filter(
+			(audio) => audio.reading.toLowerCase() === primaryReading?.toLowerCase()
+		);
+
+		if (potentialAudios.length === 0) {
+			potentialAudios = subject.audio;
+		}
+
 		const url =
-			subject.audio[Math.floor(Math.random() * subject.audio.length)]?.url;
+			potentialAudios[Math.floor(Math.random() * subject.audio.length)]?.url;
 
 		const response = await fetch(url);
 		const blob = await response.blob();
@@ -118,8 +126,8 @@
 	<div class="flex space-x-4">
 		{#if isShowingAnswer}
 			<Button class="h-20 flex-1" onclick={onCorrectAnswer} size="lg"
-				>Knew it</Button
-			>
+				>Knew it
+			</Button>
 			<Button
 				class="h-20 flex-1"
 				onclick={onWrongAnswer}
