@@ -27,6 +27,7 @@
 
 		const url =
 			subject.audio[Math.floor(Math.random() * subject.audio.length)]?.url;
+
 		const response = await fetch(url);
 		const blob = await response.blob();
 		const objectUrl = URL.createObjectURL(blob);

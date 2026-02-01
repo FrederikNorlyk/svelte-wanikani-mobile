@@ -18,6 +18,9 @@ export default defineConfig(
 	prettier,
 	...svelte.configs.prettier,
 	{
+		ignores: ['.idea/**']
+	},
+	{
 		languageOptions: { globals: { ...globals.browser, ...globals.node } },
 
 		rules: {

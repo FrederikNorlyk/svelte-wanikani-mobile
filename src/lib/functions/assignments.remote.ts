@@ -1,5 +1,6 @@
 import { query } from '$app/server';
 import sendHTTPRequest from '$lib/util/httpUtil';
+import { getSrsStage } from '$lib/util/srsStageUtil';
 import * as v from 'valibot';
 import { ValiError } from 'valibot';
 
@@ -15,12 +16,14 @@ const assignmentSchema = v.pipe(
 				v.number(),
 				v.integer(),
 				v.minValue(1, 'subject_id must be a positive number')
-			)
+			),
+			srs_stage: v.number()
 		})
 	}),
 	v.transform((data) => ({
 		id: data.id,
-		subjectId: data.data.subject_id
+		subjectId: data.data.subject_id,
+		srsStage: getSrsStage(data.data.srs_stage)
 	}))
 );
 

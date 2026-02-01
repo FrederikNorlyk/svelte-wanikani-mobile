@@ -15,10 +15,7 @@
 	import Illustration from '$lib/components/Illustration.svelte';
 	import pose_happy_businessman_guts from '$lib/assets/irasutoya/pose_happy_businessman_guts.png';
 	import SettingsSheet from '$lib/components/SettingsSheet.svelte';
-	import { getSrsStage } from '$lib/util/srsStageUtil';
-	import SRSStageToast, {
-		type Variant
-	} from '$lib/components/SRSStageToast.svelte';
+	import SRSStageToast from '$lib/components/SRSStageToast.svelte';
 	import LevelUpPage from '$lib/components/LevelUpPage.svelte';
 	import { getUser } from '$lib/functions/user.remote';
 	import UserRepository from '$lib/repository/userRepository';
@@ -108,33 +105,20 @@
 			}
 		}
 
-		createReview({
+		void createReview({
 			assignmentId: currentAssignment.id,
 			incorrectReadingAnswers: incorrectReadings,
 			incorrectMeaningAnswers: incorrectMeanings
-		}).then((response) => {
-			if (!response.success) {
-				toast.error(response.error ?? 'Something went wrong');
-				return;
-			}
+		});
 
-			if (!response.result) {
-				return;
-			}
-
-			const result = response.result;
-
-			const variant: Variant =
-				result.endingStage > result.startingStage ? 'success' : 'error';
-
+		if (wasCorrect && currentAssignment.srsStage === 'Enlightened') {
 			toast.custom(SRSStageToast, {
 				componentProps: {
-					srsStage: getSrsStage(result.endingStage),
-					variant: variant
+					srsStage: 'Burned'
 				},
 				duration: 1000
 			});
-		});
+		}
 
 		Promise.all([UserRepository.getUser(), getUser()]).then(
 			([oldUser, newUser]) => {
