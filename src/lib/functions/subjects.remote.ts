@@ -8,6 +8,7 @@ const subjectSchema = v.pipe(
 		id: v.number(),
 		object: v.picklist(['vocabulary', 'kana_vocabulary', 'kanji', 'radical']),
 		data: v.object({
+			document_url: v.string(),
 			characters: v.nullable(v.string()),
 			meanings: v.array(
 				v.object({
@@ -41,6 +42,7 @@ const subjectSchema = v.pipe(
 	v.transform((data) => ({
 		id: data.id,
 		object: data.object,
+		documentUrl: data.data.document_url,
 		characters: data.data.characters,
 		meanings: data.data.meanings,
 		readings: data.data.readings,

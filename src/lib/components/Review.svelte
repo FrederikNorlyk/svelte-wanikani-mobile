@@ -3,6 +3,8 @@
 	import { Button } from '$lib/shadcn/components/ui/button';
 	import { toast } from 'svelte-sonner';
 	import { Progress } from '$lib/shadcn/components/ui/progress';
+	// noinspection ES6UnusedImports
+	import ExternalLink from '@lucide/svelte/icons/external-link';
 
 	interface Props {
 		subject: Subject;
@@ -94,10 +96,20 @@
 	<div class="flex-1 space-y-2">
 		{#if isShowingAnswer}
 			{#if primaryMeaning}
-				{@render answerBlock('Meanings', primaryMeaning, secondaryMeanings)}
+				{@render answerBlock(
+					'Meanings',
+					primaryMeaning,
+					secondaryMeanings,
+					'meaning'
+				)}
 			{/if}
 			{#if primaryReading}
-				{@render answerBlock('Readings', primaryReading, secondaryReadings)}
+				{@render answerBlock(
+					'Readings',
+					primaryReading,
+					secondaryReadings,
+					'reading'
+				)}
 			{/if}
 		{/if}
 	</div>
@@ -130,9 +142,16 @@
 {#snippet answerBlock(
 	label: string,
 	primaryAnswer: string,
-	secondaryAnswers: string[]
+	secondaryAnswers: string[],
+	anchor: string
 )}
-	<div class="answer">
+	<a
+		href={`${subject.documentUrl}#${anchor}`}
+		rel="external"
+		target="_blank"
+		class="answer"
+	>
+		<ExternalLink class="absolute right-4 size-4 text-muted-foreground" />
 		<p class="answer__label">{label}</p>
 		<b class="answer__text answer__text--primary">{primaryAnswer}</b>
 		{#if secondaryAnswers.length > 0}
@@ -142,5 +161,5 @@
 				{/each}
 			</div>
 		{/if}
-	</div>
+	</a>
 {/snippet}
