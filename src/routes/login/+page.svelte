@@ -36,8 +36,8 @@
 		<FieldLegend>Login</FieldLegend>
 		<FieldDescription
 			>You can find your API Token <a
-				target="_blank"
-				href="https://www.wanikani.com/settings/personal_access_tokens">here</a
+				href="https://www.wanikani.com/settings/personal_access_tokens"
+				target="_blank">here</a
 			>.
 		</FieldDescription>
 		<div class="flex space-x-1">
@@ -51,10 +51,10 @@
 				<FieldLabel for="name">API Token</FieldLabel>
 				<Input
 					{...login.fields._apiToken.as('text')}
-					disabled={isLoggingIn}
-					placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 					autocomplete="off"
 					autofocus={true}
+					disabled={isLoggingIn}
+					placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 				/>
 				{#each login.fields._apiToken.issues() as issue, i (issue.message + ':' + i)}
 					<FieldError>{issue.message}</FieldError>
@@ -63,7 +63,7 @@
 		</FieldGroup>
 	</FieldSet>
 
-	<Button type="submit" disabled={isLoggingIn}>
+	<Button disabled={isLoggingIn} type="submit">
 		{#if isLoggingIn}
 			<Spinner />
 			Logging in

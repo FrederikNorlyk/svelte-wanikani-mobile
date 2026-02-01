@@ -27,9 +27,9 @@
 >
 	<Button
 		class="w-full"
-		variant="secondary"
-		type="submit"
 		disabled={isLoggingOut}
+		type="submit"
+		variant="secondary"
 	>
 		{#if isLoggingOut}
 			<Spinner />

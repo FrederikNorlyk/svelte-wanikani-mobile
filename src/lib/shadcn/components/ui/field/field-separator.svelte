@@ -18,12 +18,12 @@
 
 <div
 	bind:this={ref}
-	data-slot="field-separator"
-	data-content={hasContent}
 	class={cn(
 		'relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2',
 		className
 	)}
+	data-content={hasContent}
+	data-slot="field-separator"
 	{...restProps}
 >
 	<Separator class="absolute inset-0 top-1/2" />

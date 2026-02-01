@@ -8,8 +8,8 @@
 </script>
 
 <Loader2Icon
-	role="status"
-	aria-label="Loading"
 	class={cn('size-4 animate-spin', className)}
+	aria-label="Loading"
+	role="status"
 	{...restProps}
 />

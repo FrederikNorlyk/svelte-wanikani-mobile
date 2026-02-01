@@ -167,17 +167,17 @@
 			Something went wrong.
 		{:else}
 			<Review
-				subject={currentSubject}
-				progress={progress()}
 				onCorrectAnswer={() => onAnswer(true)}
 				onWrongAnswer={() => onAnswer(false)}
+				progress={progress()}
+				subject={currentSubject}
 			/>
 		{/if}
 	{:else if appState === 'finished'}
 		<Centered>
 			<Illustration
-				src={pose_happy_businessman_guts}
 				alt="An illustration of a male office worker in a suit, celebrating with a triumphant fist pump."
+				src={pose_happy_businessman_guts}
 			>
 				<p>Great job!</p>
 			</Illustration>

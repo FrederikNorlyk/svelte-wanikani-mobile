@@ -16,11 +16,11 @@
 
 <div class="flex flex-1 flex-col items-center justify-center">
 	{#if numberOfAssignments === 0}
-		<Illustration src={kokage_tree_necchusyou} alt="Boy resting under a tree">
+		<Illustration alt="Boy resting under a tree" src={kokage_tree_necchusyou}>
 			You have no reviews
 		</Illustration>
 	{:else if numberOfAssignments < 10}
-		<Illustration src={slump_good_man_study} alt="Man working effortlessly">
+		<Illustration alt="Man working effortlessly" src={slump_good_man_study}>
 			{#if numberOfAssignments === 1}
 				You've got just a single review.
 			{:else}
@@ -28,11 +28,11 @@
 			{/if}
 		</Illustration>
 	{:else if numberOfAssignments < 99}
-		<Illustration src={study_night_boy} alt="Boy studying hard">
+		<Illustration alt="Boy studying hard" src={study_night_boy}>
 			You've got <b>{numberOfAssignments}</b> reviews.
 		</Illustration>
 	{:else}
-		<Illustration src={study_chienetsu_boy} alt="Boy overwhelmed by work">
+		<Illustration alt="Boy overwhelmed by work" src={study_chienetsu_boy}>
 			Damn! You've got <b>{numberOfAssignments}</b> reviews.
 		</Illustration>
 	{/if}

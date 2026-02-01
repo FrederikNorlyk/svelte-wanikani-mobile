@@ -38,9 +38,9 @@
 {#if hasContent}
 	<div
 		bind:this={ref}
-		role="alert"
-		data-slot="field-error"
 		class={cn('text-sm font-normal text-destructive', className)}
+		data-slot="field-error"
+		role="alert"
 		{...restProps}
 	>
 		{#if children}

@@ -13,13 +13,13 @@
 
 <div
 	class="mx-20 rounded-lg p-2"
-	class:bg-red-100={variant === 'error'}
 	class:bg-green-100={variant === 'success'}
+	class:bg-red-100={variant === 'error'}
 >
 	<p
 		class="text-center"
-		class:text-red-500={variant === 'error'}
 		class:text-green-500={variant === 'success'}
+		class:text-red-500={variant === 'error'}
 	>
 		{srsStage}
 	</p>

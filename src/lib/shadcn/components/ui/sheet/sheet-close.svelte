@@ -5,4 +5,4 @@
 		$props();
 </script>
 
-<SheetPrimitive.Close bind:ref data-slot="sheet-close" {...restProps} />
+<SheetPrimitive.Close data-slot="sheet-close" bind:ref {...restProps} />

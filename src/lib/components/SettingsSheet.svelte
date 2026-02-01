@@ -18,7 +18,7 @@
 
 <Sheet>
 	<SheetTrigger class="absolute right-6">
-		<Button variant="outline" size="icon" aria-label="Submit">
+		<Button aria-label="Submit" size="icon" variant="outline">
 			<PanelRightOpen />
 		</Button>
 	</SheetTrigger>

@@ -48,6 +48,7 @@
 </script>
 
 <script lang="ts">
+	/* eslint-disable svelte/no-navigation-without-resolve */
 	let {
 		class: className,
 		variant = 'default',
@@ -64,10 +65,10 @@
 {#if href}
 	<a
 		bind:this={ref}
-		data-slot="button"
 		class={cn(buttonVariants({ variant, size }), className)}
-		href={disabled ? undefined : href}
 		aria-disabled={disabled}
+		data-slot="button"
+		href={disabled ? undefined : href}
 		role={disabled ? 'link' : undefined}
 		tabindex={disabled ? -1 : undefined}
 		{...restProps}
@@ -77,10 +78,10 @@
 {:else}
 	<button
 		bind:this={ref}
-		data-slot="button"
 		class={cn(buttonVariants({ variant, size }), className)}
-		{type}
+		data-slot="button"
 		{disabled}
+		{type}
 		{...restProps}
 	>
 		{@render children?.()}

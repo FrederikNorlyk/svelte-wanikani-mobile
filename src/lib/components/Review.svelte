@@ -85,10 +85,10 @@
 
 	<h1
 		class="character-header"
-		class:character-header--vocab={subject.object === 'vocabulary' ||
-			subject.object === 'kana_vocabulary'}
 		class:character-header--kanji={subject.object === 'kanji'}
 		class:character-header--radical={subject.object === 'radical'}
+		class:character-header--vocab={subject.object === 'vocabulary' ||
+			subject.object === 'kana_vocabulary'}
 	>
 		{subject.characters ?? 'No characters'}
 	</h1>
@@ -116,14 +116,14 @@
 
 	<div class="flex space-x-4">
 		{#if isShowingAnswer}
-			<Button class="h-20 flex-1" size="lg" onclick={onCorrectAnswer}
+			<Button class="h-20 flex-1" onclick={onCorrectAnswer} size="lg"
 				>Knew it</Button
 			>
 			<Button
 				class="h-20 flex-1"
+				onclick={onWrongAnswer}
 				size="lg"
 				variant="secondary"
-				onclick={onWrongAnswer}
 				>Didn't know
 			</Button>
 		{:else}
@@ -146,10 +146,10 @@
 	anchor: string
 )}
 	<a
+		class="answer"
 		href={`${subject.documentUrl}#${anchor}`}
 		rel="external"
 		target="_blank"
-		class="answer"
 	>
 		<ExternalLink class="absolute right-4 size-4 text-muted-foreground" />
 		<p class="answer__label">{label}</p>

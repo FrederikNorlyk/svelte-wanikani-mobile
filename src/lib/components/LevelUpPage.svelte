@@ -21,7 +21,7 @@
 </script>
 
 <Centered>
-	<Illustration src={business_group_happy} alt="Three office workers cheering">
+	<Illustration alt="Three office workers cheering" src={business_group_happy}>
 		レベルアップ、おめでとう！<br />レベル{level}になりました！
 	</Illustration>
 </Centered>

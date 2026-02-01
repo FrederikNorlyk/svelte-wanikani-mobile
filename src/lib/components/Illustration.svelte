@@ -20,11 +20,11 @@
 	class="size-60 transition-opacity duration-1000"
 	class:opacity-0={!loaded}
 	class:opacity-100={loaded}
-	{src}
 	{alt}
-	loading="lazy"
 	decoding="async"
+	loading="lazy"
 	onload={markLoaded}
+	{src}
 />
 
 <p class="text-lg">{@render children()}</p>

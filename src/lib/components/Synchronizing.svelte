@@ -8,8 +8,8 @@
 <Centered>
 	<div class="relative">
 		<Illustration
-			src={crane_game_kani}
 			alt="Illustration of a crane game in Kushiro, Hokkaido where you can catch crabs"
+			src={crane_game_kani}
 		>
 			Synchronizing with WaniKani
 		</Illustration>

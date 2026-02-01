@@ -45,10 +45,10 @@
 
 <div
 	bind:this={ref}
-	role="group"
-	data-slot="field"
-	data-orientation={orientation}
 	class={cn(fieldVariants({ orientation }), className)}
+	data-orientation={orientation}
+	data-slot="field"
+	role="group"
 	{...restProps}
 >
 	{@render children?.()}
