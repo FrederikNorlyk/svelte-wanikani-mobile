@@ -14,7 +14,6 @@
 	import Centered from '$lib/components/Centered.svelte';
 	import Illustration from '$lib/components/Illustration.svelte';
 	import pose_happy_businessman_guts from '$lib/assets/irasutoya/pose_happy_businessman_guts.png';
-	import SettingsSheet from '$lib/components/SettingsSheet.svelte';
 	import SRSStageToast from '$lib/components/SRSStageToast.svelte';
 	import LevelUpPage from '$lib/components/LevelUpPage.svelte';
 	import { getUser } from '$lib/functions/user.remote';
@@ -98,8 +97,8 @@
 			incorrectMeanings = 1;
 
 			if (
-				currentSubject.object === 'kanji' ||
-				currentSubject.object === 'vocabulary'
+				currentSubject.type === 'kanji' ||
+				currentSubject.type === 'vocabulary'
 			) {
 				incorrectReadings = 1;
 			}
@@ -133,10 +132,6 @@
 </script>
 
 <main class="flex flex-1 flex-col gap-2">
-	{#if appState === 'loaded' || appState === 'finished'}
-		<SettingsSheet />
-	{/if}
-
 	{#if appState === 'synchronizing'}
 		<Synchronizing />
 	{:else if appState === 'loaded'}

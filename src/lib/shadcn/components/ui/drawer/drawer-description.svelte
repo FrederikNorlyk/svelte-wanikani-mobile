@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { Dialog as SheetPrimitive } from 'bits-ui';
+	import { Drawer as DrawerPrimitive } from 'vaul-svelte';
 	import { cn } from '$lib/shadcn/utils.js';
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		...restProps
-	}: SheetPrimitive.DescriptionProps = $props();
+	}: DrawerPrimitive.DescriptionProps = $props();
 </script>
 
-<SheetPrimitive.Description
+<DrawerPrimitive.Description
 	class={cn('text-sm text-muted-foreground', className)}
-	data-slot="sheet-description"
+	data-slot="drawer-description"
 	bind:ref
 	{...restProps}
 />

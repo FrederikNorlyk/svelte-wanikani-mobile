@@ -1,10 +1,12 @@
 <script lang="ts">
 	import type { Subject } from '$lib/functions/subjects.remote';
 	import { Button } from '$lib/shadcn/components/ui/button';
-	import { toast } from 'svelte-sonner';
 	import { Progress } from '$lib/shadcn/components/ui/progress';
 	// noinspection ES6UnusedImports
 	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import SettingsRepository from '$lib/repository/settingsRepository';
+	import AudioUtil from '$lib/util/audioUtil';
+	import CharacterHeader from '$lib/components/CharacterHeader.svelte';
 
 	interface Props {
 		subject: Subject;
@@ -15,92 +17,34 @@
 
 	const { subject, progress, onCorrectAnswer, onWrongAnswer }: Props = $props();
 
+	const settings = SettingsRepository.get();
+
+	let audioElement: HTMLAudioElement | undefined = $state(undefined);
 	let isShowingAnswer = $state(false);
-	let audio: HTMLAudioElement | undefined = $state(undefined);
 
-	async function loadAudio() {
-		audio = undefined;
-
-		if (subject.audio.length == 0) {
-			return;
-		}
-
-		let potentialAudios = subject.audio.filter(
-			(audio) => audio.reading.toLowerCase() === primaryReading?.toLowerCase()
-		);
-
-		if (potentialAudios.length === 0) {
-			potentialAudios = subject.audio;
-		}
-
-		const url =
-			potentialAudios[Math.floor(Math.random() * subject.audio.length)]?.url;
-
-		const response = await fetch(url);
-		const blob = await response.blob();
-		const objectUrl = URL.createObjectURL(blob);
-
-		audio = new Audio(objectUrl);
-
-		audio.onended = () => {
-			URL.revokeObjectURL(objectUrl);
-		};
-	}
-
-	async function playAudio() {
-		try {
-			await audio?.play();
-		} catch (e) {
-			toast.error('Could not play audio: ' + e);
-		}
-	}
+	const primaryMeaning = $derived(subject.primaryMeaning);
+	const primaryReading = $derived(subject.primaryReading);
+	const secondaryMeanings = $derived(subject.secondaryMeanings);
+	const secondaryReadings = $derived(subject.secondaryReadings);
 
 	$effect(() => {
 		void subject; // Track changes
 		isShowingAnswer = false;
-		void loadAudio();
+
+		if (settings.playAudio) {
+			AudioUtil.createAudioElement(subject, settings.preferredAudio).then(
+				(audio) => (audioElement = audio)
+			);
+		}
 	});
-
-	const primaryMeaning = $derived(
-		subject.meanings.find((meaning) => meaning.primary)?.meaning
-	);
-	const primaryReading = $derived(
-		subject.readings?.find((reading) => reading.primary)?.reading
-	);
-
-	const secondaryMeanings = $derived(
-		subject.meanings
-			.filter(
-				(meaning) =>
-					!meaning.primary &&
-					meaning.meaning.toLowerCase() !== primaryMeaning?.toLowerCase()
-			)
-			.map((meaning) => meaning.meaning)
-	);
-
-	const secondaryReadings = $derived(
-		subject.readings
-			?.filter(
-				(reading) =>
-					!reading.primary &&
-					reading.reading.toLowerCase() !== primaryReading?.toLowerCase()
-			)
-			.map((reading) => reading.reading) ?? []
-	);
 </script>
 
 <div class="flex flex-1 flex-col gap-2">
 	<Progress value={progress} />
 
-	<h1
-		class="character-header"
-		class:character-header--kanji={subject.object === 'kanji'}
-		class:character-header--radical={subject.object === 'radical'}
-		class:character-header--vocab={subject.object === 'vocabulary' ||
-			subject.object === 'kana_vocabulary'}
-	>
+	<CharacterHeader type={subject.type}>
 		{subject.characters ?? 'No characters'}
-	</h1>
+	</CharacterHeader>
 
 	<div class="flex-1 space-y-2">
 		{#if isShowingAnswer}
@@ -125,21 +69,15 @@
 
 	<div class="flex space-x-4">
 		{#if isShowingAnswer}
-			<Button class="h-20 flex-1" onclick={onCorrectAnswer} size="lg"
-				>Knew it
-			</Button>
-			<Button
-				class="h-20 flex-1"
-				onclick={onWrongAnswer}
-				size="lg"
-				variant="secondary"
+			<Button class="h-20 flex-1" onclick={onCorrectAnswer}>Knew it</Button>
+			<Button class="h-20 flex-1" onclick={onWrongAnswer} variant="secondary"
 				>Didn't know
 			</Button>
 		{:else}
 			<Button
 				class="h-20 flex-1"
 				onclick={() => {
-					void playAudio();
+					void audioElement?.play();
 					isShowingAnswer = true;
 				}}
 				>Show answer

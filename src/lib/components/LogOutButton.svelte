@@ -29,7 +29,7 @@
 		class="w-full"
 		disabled={isLoggingOut}
 		type="submit"
-		variant="secondary"
+		variant="outline"
 	>
 		{#if isLoggingOut}
 			<Spinner />

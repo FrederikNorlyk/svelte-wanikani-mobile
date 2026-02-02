@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { HTMLAttributes } from 'svelte/elements';
 	import { cn, type WithElementRef } from '$lib/shadcn/utils.js';
+	import type { HTMLAttributes } from 'svelte/elements';
 
 	let {
 		ref = $bindable(null),
@@ -12,8 +12,8 @@
 
 <div
 	bind:this={ref}
-	class={cn('flex flex-col gap-1.5 p-4', className)}
-	data-slot="sheet-header"
+	class={cn('mt-auto flex flex-col gap-2 p-4', className)}
+	data-slot="drawer-footer"
 	{...restProps}
 >
 	{@render children?.()}
