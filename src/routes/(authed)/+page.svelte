@@ -80,6 +80,10 @@
 		} else {
 			currentSubject = undefined;
 			appState = 'finished';
+
+			setTimeout(() => {
+				appState = 'loaded';
+			}, 5000);
 		}
 	}
 
