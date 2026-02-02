@@ -3,10 +3,19 @@ import sendHTTPRequest from '$lib/util/httpUtil';
 import * as v from 'valibot';
 import { ValiError } from 'valibot';
 
+const subjectTypes = [
+	'vocabulary',
+	'kana_vocabulary',
+	'kanji',
+	'radical'
+] as const;
+
+export type SubjectType = (typeof subjectTypes)[number];
+
 const subjectSchema = v.pipe(
 	v.object({
 		id: v.number(),
-		object: v.picklist(['vocabulary', 'kana_vocabulary', 'kanji', 'radical']),
+		object: v.picklist(subjectTypes),
 		data: v.object({
 			document_url: v.string(),
 			characters: v.nullable(v.string()),
@@ -42,7 +51,7 @@ const subjectSchema = v.pipe(
 	}),
 	v.transform((data) => ({
 		id: data.id,
-		object: data.object,
+		type: data.object,
 		documentUrl: data.data.document_url,
 		characters: data.data.characters,
 		meanings: data.data.meanings,
@@ -52,7 +61,34 @@ const subjectSchema = v.pipe(
 				url: audio.url,
 				gender: audio.metadata.gender,
 				reading: audio.metadata.pronunciation
-			})) ?? []
+			})) ?? [],
+		get primaryMeaning() {
+			return this.meanings.find((meaning) => meaning.primary)?.meaning;
+		},
+		get primaryReading() {
+			return this.readings?.find((reading) => reading.primary)?.reading;
+		},
+		get secondaryMeanings() {
+			return this.meanings
+				.filter(
+					(meaning) =>
+						!meaning.primary &&
+						meaning.meaning.toLowerCase() !== this.primaryMeaning?.toLowerCase()
+				)
+				.map((meaning) => meaning.meaning);
+		},
+		get secondaryReadings() {
+			return (
+				this.readings
+					?.filter(
+						(reading) =>
+							!reading.primary &&
+							reading.reading.toLowerCase() !==
+								this.primaryReading?.toLowerCase()
+					)
+					.map((reading) => reading.reading) ?? []
+			);
+		}
 	}))
 );
 

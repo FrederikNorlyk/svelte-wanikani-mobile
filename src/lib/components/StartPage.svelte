@@ -5,6 +5,13 @@
 	import study_chienetsu_boy from '$lib/assets/irasutoya/study_chienetsu_boy.png';
 	import kokage_tree_necchusyou from '$lib/assets/irasutoya/kokage_tree_necchusyou.png';
 	import Illustration from '$lib/components/Illustration.svelte';
+	// noinspection ES6UnusedImports
+	import Settings from '@lucide/svelte/icons/settings';
+	import {
+		ButtonGroup,
+		ButtonGroupSeparator
+	} from '$lib/shadcn/components/ui/button-group';
+	import SettingsDrawer from '$lib/components/SettingsDrawer.svelte';
 
 	interface Props {
 		numberOfAssignments: number;
@@ -12,6 +19,8 @@
 	}
 
 	const { numberOfAssignments, onStartReview }: Props = $props();
+
+	let isSettingsOpen = $state(false);
 </script>
 
 <div class="flex flex-1 flex-col items-center justify-center">
@@ -38,6 +47,22 @@
 	{/if}
 </div>
 
-{#if numberOfAssignments > 0}
-	<Button class="flex h-20" onclick={onStartReview}>Start reviewing!</Button>
-{/if}
+<ButtonGroup class="flex w-full justify-end">
+	{#if numberOfAssignments > 0}
+		<Button class="h-20 flex-1" onclick={onStartReview}
+			>Start reviewing!
+		</Button>
+		<ButtonGroupSeparator />
+	{/if}
+	<Button
+		class="h-20 w-15"
+		onclick={() => {
+			isSettingsOpen = true;
+		}}
+		size="icon-lg"
+	>
+		<Settings class="size-5" />
+	</Button>
+</ButtonGroup>
+
+<SettingsDrawer bind:isOpen={isSettingsOpen} />
