@@ -53,7 +53,7 @@
 					<FieldLegend>Audio</FieldLegend>
 					<div class="flex items-center space-x-2">
 						<Switch id="autoplay" bind:checked={settings.playAudio} />
-						<Label for="autoplay">Play audio during reviews</Label>
+						<Label for="autoplay">Play pronunciation audio</Label>
 					</div>
 					<FieldGroup>
 						<Field>
