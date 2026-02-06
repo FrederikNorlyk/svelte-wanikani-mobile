@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Button } from '$lib/shadcn/components/ui/button';
 	import slump_good_man_study from '$lib/assets/irasutoya/slump_good_man_study.png';
 	import study_night_boy from '$lib/assets/irasutoya/study_night_boy.png';
 	import study_chienetsu_boy from '$lib/assets/irasutoya/study_chienetsu_boy.png';
@@ -12,6 +11,10 @@
 		ButtonGroupSeparator
 	} from '$lib/shadcn/components/ui/button-group';
 	import SettingsDrawer from '$lib/components/SettingsDrawer.svelte';
+	import { onMount } from 'svelte';
+	import { uiState } from '$lib/ui/uiState.svelte';
+	import Button from '$lib/components/Button.svelte';
+	import { Kbd } from '$lib/shadcn/components/ui/kbd';
 
 	interface Props {
 		numberOfAssignments: number;
@@ -21,6 +24,19 @@
 	const { numberOfAssignments, onStartReview }: Props = $props();
 
 	let isSettingsOpen = $state(false);
+
+	onMount(() => {
+		const onKeyUp = (e: KeyboardEvent) => {
+			if (e.key === '?') {
+				uiState.isShowingKeyboardShortcuts =
+					!uiState.isShowingKeyboardShortcuts;
+			}
+		};
+
+		window.addEventListener('keyup', onKeyUp, { passive: false });
+
+		return () => window.removeEventListener('keyup', onKeyUp);
+	});
 </script>
 
 <div class="flex flex-1 flex-col items-center justify-center">
@@ -49,8 +65,16 @@
 
 <ButtonGroup class="flex w-full justify-end">
 	{#if numberOfAssignments > 0}
-		<Button class="h-20 flex-1" onclick={onStartReview}
-			>Start reviewing!
+		<Button
+			class="flex-1"
+			keyboardShortcut={{
+				handler: (e) => e.key === 'r',
+				hintElement: reviewShortcut
+			}}
+			onclick={onStartReview}
+			size="lg"
+		>
+			Review
 		</Button>
 		<ButtonGroupSeparator />
 	{/if}
@@ -66,3 +90,7 @@
 </ButtonGroup>
 
 <SettingsDrawer bind:isOpen={isSettingsOpen} />
+
+{#snippet reviewShortcut()}
+	<Kbd>R</Kbd>
+{/snippet}
