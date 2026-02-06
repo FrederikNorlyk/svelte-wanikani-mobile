@@ -1,8 +1,10 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/noto-sans';
 
 @import 'tw-animate-css';
 
 :root {
+	--font-sans: 'Noto Sans', 'Noto Sans JP', 'Noto Sans SC', sans-serif;
 	--radius: 0.625rem;
 	--background: oklch(1 0 0);
 	--foreground: oklch(0.13 0.028 261.692);
@@ -78,6 +80,7 @@
 }
 
 @theme inline {
+	--font-sans: var(--font-sans);
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
@@ -121,7 +124,7 @@
 	}
 
 	body {
-		@apply bg-background text-foreground;
+		@apply bg-background font-sans text-foreground;
 
 		/* Graph paper grid */
 		--grid-size: 50px;
