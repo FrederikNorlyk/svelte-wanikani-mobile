@@ -4,7 +4,8 @@ import type { AudioChoice } from '$lib/repository/settingsRepository';
 export default class AudioUtil {
 	public static async createAudioElement(
 		subject: Subject,
-		preferredAudio: AudioChoice
+		preferredAudio: AudioChoice,
+		options?: { signal?: AbortSignal }
 	): Promise<HTMLAudioElement | undefined> {
 		const url = this.getAudioURL(subject, preferredAudio);
 
@@ -12,7 +13,7 @@ export default class AudioUtil {
 			return undefined;
 		}
 
-		const response = await fetch(url);
+		const response = await fetch(url, { signal: options?.signal });
 		const blob = await response.blob();
 		const objectUrl = URL.createObjectURL(blob);
 
