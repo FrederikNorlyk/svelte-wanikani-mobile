@@ -167,7 +167,6 @@
 		</Centered>
 	{:else if appState === 'level-up'}
 		<LevelUpPage
-			level={58}
 			onContinue={() => {
 				appState = 'reviewing';
 			}}
