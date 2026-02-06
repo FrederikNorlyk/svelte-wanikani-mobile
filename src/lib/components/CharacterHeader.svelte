@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { SubjectType } from '$lib/functions/subjects.remote';
 	import type { Snippet } from 'svelte';
+	import type { SubjectType } from '$lib/types/subjectType';
 
 	interface Props {
 		type: SubjectType;

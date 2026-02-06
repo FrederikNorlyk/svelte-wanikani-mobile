@@ -18,12 +18,16 @@
 	import LevelUpPage from '$lib/components/LevelUpPage.svelte';
 	import { getUser } from '$lib/functions/user.remote';
 	import UserRepository from '$lib/repository/userRepository';
+	import PracticeSessionBuilder from '$lib/components/PracticeSessionBuilder.svelte';
+	import { practiceSession } from '$lib/ui/practiceSession.svelte';
 
 	type AppState =
 		| 'loading'
 		| 'synchronizing'
 		| 'loaded'
 		| 'reviewing'
+		| 'defining-practice-session'
+		| 'practicing'
 		| 'finished'
 		| 'level-up';
 
@@ -31,20 +35,45 @@
 	let currentAssignment = $state<Assignment | undefined>(undefined);
 	let currentSubject = $state<Subject | undefined>(undefined);
 	let appState = $state<AppState>('loading');
+	let startingNumberOfAssignments = $state(0);
 
 	const totalNumberOfAssignments = $derived(
 		remainingAssignments.length + (currentAssignment ? 1 : 0)
 	);
 
-	let startingNumberOfAssignments = $state(0);
-
 	const progress = $derived(() => {
-		if (startingNumberOfAssignments <= 0) return 0;
+		let completed;
+		let total;
 
-		const completed = startingNumberOfAssignments - totalNumberOfAssignments;
-		const percent = Math.floor((completed / startingNumberOfAssignments) * 100);
+		if (appState === 'practicing') {
+			completed = practiceSession.index;
+			total = practiceSession.subjects.length;
+		} else {
+			if (startingNumberOfAssignments === 0) {
+				return 0;
+			}
+
+			completed = startingNumberOfAssignments - totalNumberOfAssignments;
+			total = startingNumberOfAssignments;
+		}
+
+		const percent = Math.floor((completed / total) * 100);
 
 		return Math.min(100, Math.max(0, percent));
+	});
+
+	$effect(() => {
+		if (appState !== 'finished') {
+			return;
+		}
+
+		const id = window.setTimeout(() => {
+			appState = 'loaded';
+		}, 2000);
+
+		return () => {
+			clearTimeout(id);
+		};
 	});
 
 	onMount(async () => {
@@ -80,10 +109,6 @@
 		} else {
 			currentSubject = undefined;
 			appState = 'finished';
-
-			setTimeout(() => {
-				appState = 'loaded';
-			}, 5000);
 		}
 	}
 
@@ -133,6 +158,17 @@
 
 		void getNextSubject();
 	}
+
+	// TODO: Reviews and practice should be implemented the same way, using a StudySession with an index.
+	function getNextPracticeSubject() {
+		if (practiceSession.index === practiceSession.subjects.length - 1) {
+			practiceSession.index = 0;
+			practiceSession.subjects = [];
+			appState = 'finished';
+		} else {
+			practiceSession.index = practiceSession.index + 1;
+		}
+	}
 </script>
 
 <main class="flex flex-1 flex-col gap-2">
@@ -141,6 +177,9 @@
 	{:else if appState === 'loaded'}
 		<StartPage
 			numberOfAssignments={totalNumberOfAssignments}
+			onStartPractice={() => {
+				appState = 'defining-practice-session';
+			}}
 			onStartReview={() => {
 				appState = 'reviewing';
 			}}
@@ -156,6 +195,19 @@
 				subject={currentSubject}
 			/>
 		{/if}
+	{:else if appState === 'defining-practice-session'}
+		<PracticeSessionBuilder
+			onStartPractice={() => {
+				appState = 'practicing';
+			}}
+		/>
+	{:else if appState === 'practicing'}
+		<Review
+			onCorrectAnswer={getNextPracticeSubject}
+			onWrongAnswer={getNextPracticeSubject}
+			progress={progress()}
+			subject={practiceSession.subjects[practiceSession.index]}
+		/>
 	{:else if appState === 'finished'}
 		<Centered>
 			<Illustration

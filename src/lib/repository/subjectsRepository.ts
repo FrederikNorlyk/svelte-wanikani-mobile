@@ -2,29 +2,33 @@ import type { Subject } from '$lib/functions/subjects.remote';
 import * as API from '$lib/functions/subjects.remote';
 
 const DB_NAME = 'wanikani';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 const SUBJECTS_STORE = 'subjects';
 
+const IDX_SUBJECT_LEVEL = 'by_level';
+const IDX_SUBJECT_TYPE = 'by_type';
+const IDX_SUBJECT_LEVEL_TYPE = 'by_level_type';
+
+interface SyncHandlers {
+	onSynchronize: () => void;
+	afterSynchronize: () => void;
+}
+
+// TODO: Replace with `idb` npm package.
 export default class SubjectsRepository {
 	private static openPromise: Promise<IDBDatabase> | null = null;
 
 	public static async getSubject(
 		id: number,
-		{
-			onSynchronize,
-			afterSynchronize
-		}: {
-			onSynchronize: () => void;
-			afterSynchronize: () => void;
-		}
+		{ onSynchronize, afterSynchronize }: SyncHandlers
 	): Promise<Subject | undefined> {
 		let subject: Subject | undefined = await this.readSubject(id);
 
 		if (!subject) {
 			onSynchronize();
-			await this.deleteAll();
 			const subjects = await API.getAllSubjects();
+			// TODO: Chunking, pr page
 			await this.writeSubjects(subjects);
 			afterSynchronize();
 
@@ -36,6 +40,29 @@ export default class SubjectsRepository {
 
 	public static async deleteAll(): Promise<void> {
 		await this.withStore('readwrite', (store) => store.clear());
+	}
+
+	public static async getSubjectsByLevel(level: number): Promise<Subject[]> {
+		return this.withStore('readonly', (store) =>
+			store.index(IDX_SUBJECT_LEVEL).getAll(level)
+		);
+	}
+
+	public static async getSubjectsByType(
+		type: Subject['type']
+	): Promise<Subject[]> {
+		return this.withStore('readonly', (store) =>
+			store.index(IDX_SUBJECT_TYPE).getAll(type)
+		);
+	}
+
+	public static async getSubjectsByLevelAndType(
+		level: number,
+		type: Subject['type']
+	): Promise<Subject[]> {
+		return this.withStore('readonly', (store) =>
+			store.index(IDX_SUBJECT_LEVEL_TYPE).getAll([level, type])
+		);
 	}
 
 	private static open(): Promise<IDBDatabase> {
@@ -54,12 +81,30 @@ export default class SubjectsRepository {
 			request.onupgradeneeded = () => {
 				const db = request.result;
 
-				if (!db.objectStoreNames.contains(SUBJECTS_STORE)) {
-					db.createObjectStore(SUBJECTS_STORE, { keyPath: 'id' });
+				let store: IDBObjectStore;
+				if (db.objectStoreNames.contains(SUBJECTS_STORE)) {
+					store = request.transaction!.objectStore(SUBJECTS_STORE);
+				} else {
+					store = db.createObjectStore(SUBJECTS_STORE, { keyPath: 'id' });
+				}
+
+				if (!store.indexNames.contains(IDX_SUBJECT_LEVEL)) {
+					store.createIndex(IDX_SUBJECT_LEVEL, 'level', { unique: false });
+				}
+
+				if (!store.indexNames.contains(IDX_SUBJECT_TYPE)) {
+					store.createIndex(IDX_SUBJECT_TYPE, 'type', { unique: false });
+				}
+
+				if (!store.indexNames.contains(IDX_SUBJECT_LEVEL_TYPE)) {
+					store.createIndex(IDX_SUBJECT_LEVEL_TYPE, ['level', 'type'], {
+						unique: false
+					});
 				}
 			};
 
 			request.onsuccess = () => resolve(request.result);
+
 			request.onerror = () =>
 				reject(request.error ?? new Error('Failed to open IndexedDB.'));
 		});

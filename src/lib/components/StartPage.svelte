@@ -19,9 +19,11 @@
 	interface Props {
 		numberOfAssignments: number;
 		onStartReview: () => void;
+		onStartPractice: () => void;
 	}
 
-	const { numberOfAssignments, onStartReview }: Props = $props();
+	const { numberOfAssignments, onStartReview, onStartPractice }: Props =
+		$props();
 
 	let isSettingsOpen = $state(false);
 
@@ -79,7 +81,18 @@
 		<ButtonGroupSeparator />
 	{/if}
 	<Button
-		class="h-20 w-15"
+		class="flex-1"
+		keyboardShortcut={{
+			handler: (e) => e.key === 'p',
+			hintElement: practiceShortcut
+		}}
+		onclick={onStartPractice}
+		size="lg"
+	>
+		Practice
+	</Button>
+	<ButtonGroupSeparator />
+	<Button
 		onclick={() => {
 			isSettingsOpen = true;
 		}}
@@ -93,4 +106,8 @@
 
 {#snippet reviewShortcut()}
 	<Kbd>R</Kbd>
+{/snippet}
+
+{#snippet practiceShortcut()}
+	<Kbd>P</Kbd>
 {/snippet}

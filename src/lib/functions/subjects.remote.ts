@@ -1,37 +1,27 @@
 import { query } from '$app/server';
+import { subjectTypes } from '$lib/types/subjectType';
 import sendHTTPRequest from '$lib/util/httpUtil';
 import * as v from 'valibot';
 import { ValiError } from 'valibot';
-
-const subjectTypes = [
-	'vocabulary',
-	'kana_vocabulary',
-	'kanji',
-	'radical'
-] as const;
-
-export type SubjectType = (typeof subjectTypes)[number];
 
 const subjectSchema = v.pipe(
 	v.object({
 		id: v.number(),
 		object: v.picklist(subjectTypes),
 		data: v.object({
+			level: v.number(),
 			document_url: v.string(),
 			characters: v.nullable(v.string()),
 			meanings: v.array(
 				v.object({
 					meaning: v.string(),
-					primary: v.boolean(),
-					accepted_answer: v.boolean()
+					primary: v.boolean()
 				})
 			),
 			readings: v.optional(
 				v.array(
 					v.object({
-						type: v.optional(v.string()),
 						primary: v.boolean(),
-						accepted_answer: v.boolean(),
 						reading: v.string()
 					})
 				)
@@ -52,6 +42,7 @@ const subjectSchema = v.pipe(
 	v.transform((data) => ({
 		id: data.id,
 		type: data.object,
+		level: data.data.level,
 		documentUrl: data.data.document_url,
 		characters: data.data.characters,
 		meanings: data.data.meanings,
