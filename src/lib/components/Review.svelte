@@ -1,12 +1,19 @@
 <script lang="ts">
 	import type { Subject } from '$lib/functions/subjects.remote';
-	import { Button } from '$lib/shadcn/components/ui/button';
 	import { Progress } from '$lib/shadcn/components/ui/progress';
 	// noinspection ES6UnusedImports
 	import ExternalLink from '@lucide/svelte/icons/external-link';
+	// noinspection ES6UnusedImports
+	import ArrowBigLeft from '@lucide/svelte/icons/arrow-big-left';
+	// noinspection ES6UnusedImports
+	import ArrowBigRight from '@lucide/svelte/icons/arrow-big-right';
 	import SettingsRepository from '$lib/repository/settingsRepository';
 	import AudioUtil from '$lib/util/audioUtil';
 	import CharacterHeader from '$lib/components/CharacterHeader.svelte';
+	import { onMount } from 'svelte';
+	import { Kbd } from '$lib/shadcn/components/ui/kbd';
+	import { uiState } from '$lib/ui/uiState.svelte';
+	import Button from '$lib/components/Button.svelte';
 
 	interface Props {
 		subject: Subject;
@@ -37,6 +44,36 @@
 			);
 		}
 	});
+
+	onMount(() => {
+		const onKeyUp = (e: KeyboardEvent) => {
+			if (e.key === '?') {
+				uiState.isShowingKeyboardShortcuts =
+					!uiState.isShowingKeyboardShortcuts;
+			} else if (isShowingAnswer && e.key === 'f') {
+				window.open(subject.documentUrl, '_blank');
+			}
+		};
+
+		window.addEventListener('keyup', onKeyUp, { passive: false });
+
+		return () => window.removeEventListener('keyup', onKeyUp);
+	});
+
+	onMount(() => {
+		const onKeyUp = (e: KeyboardEvent) => {
+			if (e.key === '?') {
+				uiState.isShowingKeyboardShortcuts =
+					!uiState.isShowingKeyboardShortcuts;
+			} else if (isShowingAnswer && e.key === 'f') {
+				window.open(subject.documentUrl, '_blank');
+			}
+		};
+
+		window.addEventListener('keyup', onKeyUp, { passive: false });
+
+		return () => window.removeEventListener('keyup', onKeyUp);
+	});
 </script>
 
 <div class="flex flex-1 flex-col gap-2">
@@ -53,7 +90,8 @@
 					'Meanings',
 					primaryMeaning,
 					secondaryMeanings,
-					'meaning'
+					'meaning',
+					uiState.isShowingKeyboardShortcuts
 				)}
 			{/if}
 			{#if primaryReading}
@@ -69,17 +107,39 @@
 
 	<div class="flex space-x-4">
 		{#if isShowingAnswer}
-			<Button class="h-20 flex-1" onclick={onCorrectAnswer}>Knew it</Button>
-			<Button class="h-20 flex-1" onclick={onWrongAnswer} variant="secondary"
+			<Button
+				class="flex-1"
+				keyboardShortcut={{
+					handler: (e) => e.code === 'ArrowLeft' || e.key === 'h',
+					hintElement: arrowLeftShortcut
+				}}
+				onclick={onCorrectAnswer}
+				size="lg"
+				>Knew it
+			</Button>
+			<Button
+				class="flex-1"
+				keyboardShortcut={{
+					handler: (e) => e.code === 'ArrowRight' || e.key === 'l',
+					hintElement: arrowRightShortcut
+				}}
+				onclick={onWrongAnswer}
+				size="lg"
+				variant="secondary"
 				>Didn't know
 			</Button>
 		{:else}
 			<Button
-				class="h-20 flex-1"
+				class="flex-1"
+				keyboardShortcut={{
+					handler: (e) => e.code === 'Space',
+					hintElement: spacebarShortcut
+				}}
 				onclick={() => {
 					void audioElement?.play();
 					isShowingAnswer = true;
 				}}
+				size="lg"
 				>Show answer
 			</Button>
 		{/if}
@@ -90,7 +150,8 @@
 	label: string,
 	primaryAnswer: string,
 	secondaryAnswers: string[],
-	anchor: string
+	anchor: string,
+	shouldRenderKeyboardShortcut: boolean = false
 )}
 	<a
 		class="answer"
@@ -98,7 +159,12 @@
 		rel="external"
 		target="_blank"
 	>
-		<ExternalLink class="absolute right-4 size-4 text-muted-foreground" />
+		<div class="absolute right-4 flex gap-2">
+			<ExternalLink class="size-4 text-muted-foreground" />
+			{#if shouldRenderKeyboardShortcut}
+				<Kbd class="bg-secondary-foreground text-secondary">f</Kbd>
+			{/if}
+		</div>
 		<p class="answer__label">{label}</p>
 		<b class="answer__text answer__text--primary">{primaryAnswer}</b>
 		{#if secondaryAnswers.length > 0}
@@ -109,4 +175,16 @@
 			</div>
 		{/if}
 	</a>
+{/snippet}
+
+{#snippet arrowLeftShortcut()}
+	<Kbd><ArrowBigLeft /></Kbd>
+{/snippet}
+
+{#snippet arrowRightShortcut()}
+	<Kbd class="bg-secondary-foreground text-secondary"><ArrowBigRight /></Kbd>
+{/snippet}
+
+{#snippet spacebarShortcut()}
+	<Kbd>Space</Kbd>
 {/snippet}
