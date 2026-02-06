@@ -5,14 +5,15 @@
 	import Centered from '$lib/components/Centered.svelte';
 	import { Button } from '$lib/shadcn/components/ui/button';
 	import ConfettiCannon from '$lib/ui/confettiCannon';
+	import UserRepository from '$lib/repository/userRepository';
 
 	interface Props {
-		level: number;
 		onContinue: () => void;
 	}
 
-	const { level, onContinue }: Props = $props();
+	const { onContinue }: Props = $props();
 
+	const level = (await UserRepository.getUser()).level;
 	const confettiCannon = new ConfettiCannon();
 
 	onMount(() => {
