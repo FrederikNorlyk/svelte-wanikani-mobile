@@ -43,6 +43,19 @@
 				(audio) => (audioElement = audio)
 			);
 		}
+	onMount(() => {
+		const onKeyUp = (e: KeyboardEvent) => {
+			if (e.key === '?') {
+				uiState.isShowingKeyboardShortcuts =
+					!uiState.isShowingKeyboardShortcuts;
+			} else if (isShowingAnswer && e.key === 'f') {
+				window.open(subject.documentUrl, '_blank');
+			}
+		};
+
+		window.addEventListener('keyup', onKeyUp, { passive: false });
+
+		return () => window.removeEventListener('keyup', onKeyUp);
 	});
 
 	onMount(() => {
