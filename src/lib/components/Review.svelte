@@ -14,6 +14,7 @@
 	import { Kbd } from '$lib/shadcn/components/ui/kbd';
 	import { uiState } from '$lib/ui/uiState.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import { toast } from 'svelte-sonner';
 
 	interface Props {
 		subject: Subject;
@@ -38,26 +39,33 @@
 		void subject; // Track changes
 		isShowingAnswer = false;
 
+		const controller = new AbortController();
+
 		if (settings.playAudio) {
-			AudioUtil.createAudioElement(subject, settings.preferredAudio).then(
-				(audio) => (audioElement = audio)
-			);
+			AudioUtil.createAudioElement(subject, settings.preferredAudio, {
+				signal: controller.signal
+			})
+				.then((audio) => {
+					if (controller.signal.aborted) {
+						return;
+					}
+					audioElement = audio;
+				})
+				.catch((err) => {
+					if (controller.signal.aborted) {
+						return;
+					} else if (err instanceof DOMException && err.name === 'AbortError') {
+						return;
+					}
+					toast.error('Failed to load audio');
+				});
 		}
-	});
 
-	onMount(() => {
-		const onKeyUp = (e: KeyboardEvent) => {
-			if (e.key === '?') {
-				uiState.isShowingKeyboardShortcuts =
-					!uiState.isShowingKeyboardShortcuts;
-			} else if (isShowingAnswer && e.key === 'f') {
-				window.open(subject.documentUrl, '_blank');
-			}
+		return () => {
+			controller.abort();
+			audioElement?.pause();
+			audioElement = undefined;
 		};
-
-		window.addEventListener('keyup', onKeyUp, { passive: false });
-
-		return () => window.removeEventListener('keyup', onKeyUp);
 	});
 
 	onMount(() => {
