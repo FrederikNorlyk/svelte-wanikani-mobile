@@ -43,6 +43,8 @@
 				(audio) => (audioElement = audio)
 			);
 		}
+	});
+
 	onMount(() => {
 		const onKeyUp = (e: KeyboardEvent) => {
 			if (e.key === '?') {
