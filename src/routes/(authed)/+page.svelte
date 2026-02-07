@@ -19,7 +19,7 @@
 	import { getUser } from '$lib/functions/user.remote';
 	import UserRepository from '$lib/repository/userRepository';
 	import PracticeSessionBuilder from '$lib/components/PracticeSessionBuilder.svelte';
-	import { practiceSession } from '$lib/ui/practiceSession.svelte';
+	import { studySession } from '$lib/state/studySession.svelte';
 
 	type AppState =
 		| 'loading'
@@ -46,8 +46,8 @@
 		let total;
 
 		if (appState === 'practicing') {
-			completed = practiceSession.index;
-			total = practiceSession.subjects.length;
+			completed = studySession.index;
+			total = studySession.subjects.length;
 		} else {
 			if (startingNumberOfAssignments === 0) {
 				return 0;
@@ -161,12 +161,12 @@
 
 	// TODO: Reviews and practice should be implemented the same way, using a StudySession with an index.
 	function getNextPracticeSubject() {
-		if (practiceSession.index === practiceSession.subjects.length - 1) {
-			practiceSession.index = 0;
-			practiceSession.subjects = [];
+		if (studySession.index === studySession.subjects.length - 1) {
+			studySession.index = 0;
+			studySession.subjects = [];
 			appState = 'finished';
 		} else {
-			practiceSession.index = practiceSession.index + 1;
+			studySession.index = studySession.index + 1;
 		}
 	}
 </script>
@@ -206,7 +206,7 @@
 			onCorrectAnswer={getNextPracticeSubject}
 			onWrongAnswer={getNextPracticeSubject}
 			progress={progress()}
-			subject={practiceSession.subjects[practiceSession.index]}
+			subject={studySession.subjects[studySession.index]}
 		/>
 	{:else if appState === 'finished'}
 		<Centered>

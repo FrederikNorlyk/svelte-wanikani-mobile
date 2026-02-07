@@ -14,7 +14,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import { Kbd } from '$lib/shadcn/components/ui/kbd';
 	import SubjectsRepository from '$lib/repository/subjectsRepository';
-	import { practiceSession } from '$lib/ui/practiceSession.svelte';
+	import { studySession } from '$lib/state/studySession.svelte';
 
 	interface Props {
 		onStartPractice: () => void;
@@ -63,12 +63,9 @@
 
 		// Pick 5 unique random subjects (or fewer if not enough available)
 		const shuffled = [...allSubjects].sort(() => Math.random() - 0.5);
-		practiceSession.subjects = shuffled.slice(
-			0,
-			Math.min(5, allSubjects.length)
-		);
+		studySession.subjects = shuffled.slice(0, Math.min(5, allSubjects.length));
 
-		practiceSession.index = 0;
+		studySession.index = 0;
 	}
 </script>
 
