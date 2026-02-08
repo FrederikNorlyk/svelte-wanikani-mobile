@@ -140,7 +140,10 @@
 			<Button
 				class="flex-1"
 				keyboardShortcut={{
-					handler: (e) => e.code === 'Space',
+					handler: (e) =>
+						e.code === 'Space' ||
+						e.code === 'ArrowRight' ||
+						e.code === 'ArrowLeft',
 					hintElement: spacebarShortcut
 				}}
 				onclick={() => {
