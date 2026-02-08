@@ -56,6 +56,7 @@
 	"dependencies": {
 		"@base-ui/react": "^1.1.0",
 		"@fontsource-variable/noto-sans": "^5.2.10",
+		"@fontsource-variable/noto-sans-jp": "^5.2.10",
 		"canvas-confetti": "^1.9.4",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
