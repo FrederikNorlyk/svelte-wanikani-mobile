@@ -4,7 +4,10 @@
 	import { onMount } from 'svelte';
 	import Centered from '$lib/components/Centered.svelte';
 	import ConfettiCannon from '$lib/ui/confettiCannon';
-	import UserRepository from '$lib/repository/userRepository';
+	import UserRepository from '$lib/repository/local-storage/userRepository';
+	import Button from '$lib/components/Button.svelte';
+	import { Kbd } from '$lib/shadcn/components/ui/kbd';
+	import { uiState } from '$lib/state/uiState.svelte';
 
 	interface Props {
 		onContinue: () => void;

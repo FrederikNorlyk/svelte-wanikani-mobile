@@ -12,18 +12,21 @@
 	} from '$lib/shadcn/components/ui/button-group';
 	import SettingsDrawer from '$lib/components/SettingsDrawer.svelte';
 	import { onMount } from 'svelte';
-	import { uiState } from '$lib/ui/uiState.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { Kbd } from '$lib/shadcn/components/ui/kbd';
+	import { uiState } from '$lib/state/uiState.svelte';
 
 	interface Props {
 		numberOfAssignments: number;
-		onStartReview: () => void;
-		onStartPractice: () => void;
+		onReviewButtonPressed: () => void;
+		onPracticeButtonPressed: () => void;
 	}
 
-	const { numberOfAssignments, onStartReview, onStartPractice }: Props =
-		$props();
+	const {
+		numberOfAssignments,
+		onReviewButtonPressed,
+		onPracticeButtonPressed
+	}: Props = $props();
 
 	let isSettingsOpen = $state(false);
 
@@ -35,7 +38,7 @@
 			}
 		};
 
-		window.addEventListener('keyup', onKeyUp, { passive: false });
+		window.addEventListener('keyup', onKeyUp, { passive: true });
 
 		return () => window.removeEventListener('keyup', onKeyUp);
 	});
@@ -73,7 +76,7 @@
 				handler: (e) => e.key === 'r',
 				hintElement: reviewShortcut
 			}}
-			onclick={onStartReview}
+			onclick={onReviewButtonPressed}
 			size="lg"
 		>
 			Review
@@ -86,13 +89,19 @@
 			handler: (e) => e.key === 'p',
 			hintElement: practiceShortcut
 		}}
-		onclick={onStartPractice}
+		onclick={onPracticeButtonPressed}
 		size="lg"
 	>
 		Practice
 	</Button>
+
 	<ButtonGroupSeparator />
+
 	<Button
+		keyboardShortcut={{
+			handler: (e) => e.key === 's',
+			hintElement: settingsShortcut
+		}}
 		onclick={() => {
 			isSettingsOpen = true;
 		}}
@@ -110,4 +119,8 @@
 
 {#snippet practiceShortcut()}
 	<Kbd>P</Kbd>
+{/snippet}
+
+{#snippet settingsShortcut()}
+	<Kbd>S</Kbd>
 {/snippet}

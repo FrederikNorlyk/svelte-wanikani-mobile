@@ -1,42 +1,81 @@
 <script lang="ts">
 	// noinspection ES6UnusedImports
 	import LogOut from '@lucide/svelte/icons/log-out';
-	import { logout } from '$lib/functions/auth.remote';
+	import * as Remote from '$lib/functions/auth.remote';
 	import { toast } from 'svelte-sonner';
 	import SubjectsRepository from '$lib/repository/subjectsRepository';
 	import { Button } from '$lib/shadcn/components/ui/button';
 	import { Spinner } from '$lib/shadcn/components/ui/spinner';
+	import * as Database from '$lib/repository/database/database';
+	import {
+		AlertDialog,
+		AlertDialogAction,
+		AlertDialogCancel,
+		AlertDialogContent,
+		AlertDialogDescription,
+		AlertDialogFooter,
+		AlertDialogHeader,
+		AlertDialogTitle
+	} from '$lib/shadcn/components/ui/alert-dialog';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 
 	let isLoggingOut = $state(false);
-</script>
+	let isShowingAlertDialog = $state(false);
 
-<form
-	{...logout.enhance(async ({ form, submit }) => {
+	async function logOut() {
 		isLoggingOut = true;
 		try {
-			await submit();
+			await Remote.logOut({});
 		} catch {
 			toast.error('Could not log out');
 		} finally {
 			isLoggingOut = false;
 			localStorage.clear();
-			await SubjectsRepository.deleteAll();
-			form.reset();
+			await Database.deleteAll();
+			await goto(resolve('/login'), { replaceState: true });
 		}
-	})}
+	}
+</script>
+
+<Button
+	class="w-full"
+	disabled={isLoggingOut}
+	onclick={() => {
+		isShowingAlertDialog = true;
+	}}
+	type="button"
+	variant="outline"
 >
-	<Button
-		class="w-full"
-		disabled={isLoggingOut}
-		type="submit"
-		variant="outline"
-	>
-		{#if isLoggingOut}
-			<Spinner />
-			Logging out
-		{:else}
-			<LogOut />
-			Log out
-		{/if}
-	</Button>
-</form>
+	{#if isLoggingOut}
+		<Spinner />
+		Logging out
+	{:else}
+		<LogOut />
+		Log out
+	{/if}
+</Button>
+
+<AlertDialog bind:open={isShowingAlertDialog}>
+	<AlertDialogContent>
+		<AlertDialogHeader>
+			<AlertDialogTitle
+				>Are you sure that you want to log out?
+			</AlertDialogTitle>
+			<AlertDialogDescription
+				>This action will reset all of your practice progress.
+			</AlertDialogDescription>
+		</AlertDialogHeader>
+		<AlertDialogFooter>
+			<AlertDialogCancel class="h-12">Cancel</AlertDialogCancel>
+			<AlertDialogAction
+				class="h-12"
+				onclick={() => {
+					isShowingAlertDialog = false;
+					logOut();
+				}}
+				>Reset
+			</AlertDialogAction>
+		</AlertDialogFooter>
+	</AlertDialogContent>
+</AlertDialog>

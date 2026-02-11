@@ -1,6 +1,6 @@
 import * as UserAPI from '$lib/functions/user.remote';
 import { type User } from '$lib/functions/user.remote';
-import { Repository } from '$lib/repository/repository';
+import { Repository } from '$lib/repository/local-storage/repository';
 
 const KEY = 'user';
 
@@ -14,5 +14,9 @@ export default class UserRepository extends Repository {
 		}
 
 		return user;
+	}
+
+	public static setUser(user: User) {
+		Repository.write(KEY, user);
 	}
 }

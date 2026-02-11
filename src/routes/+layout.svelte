@@ -13,6 +13,6 @@
 
 <Toaster position="top-center" />
 
-<div class="box-border flex min-h-svh flex-col space-y-2 p-5 pb-7 sm:pb-5">
+<main class="box-border flex h-dvh min-h-0 flex-col gap-2 p-5 pb-7 sm:pb-5">
 	{@render children()}
-</div>
+</main>

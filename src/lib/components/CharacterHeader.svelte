@@ -1,21 +1,22 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-	import type { SubjectType } from '$lib/types/subjectType';
+	import type { Subject } from '$lib/functions/subjects.remote';
+	import { cn } from '$lib/shadcn/utils';
 
 	interface Props {
-		type: SubjectType;
-		children: Snippet;
+		class?: string;
+		subject: Subject;
 	}
 
-	const { type, children }: Props = $props();
+	const { class: className = '', subject, ...restProps }: Props = $props();
 </script>
 
 <h1
-	class="character-header"
-	class:character-header--kanji={type === 'kanji'}
-	class:character-header--radical={type === 'radical'}
-	class:character-header--vocab={type === 'vocabulary' ||
-		type === 'kana_vocabulary'}
+	class={cn('character-header', className)}
+	class:character-header--kanji={subject.type === 'kanji'}
+	class:character-header--radical={subject.type === 'radical'}
+	class:character-header--vocab={subject.type === 'vocabulary' ||
+		subject.type === 'kana_vocabulary'}
+	{...restProps}
 >
-	{@render children()}
+	{subject.characters}
 </h1>

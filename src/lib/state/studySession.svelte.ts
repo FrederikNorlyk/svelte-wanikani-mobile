@@ -1,11 +1,29 @@
-import type { Subject } from '$lib/functions/subjects.remote';
+type StudyType = 'review' | 'practice';
 
 interface StudySession {
-	subjects: Subject[];
+	subjectIds: number[];
 	index: number;
+	studyType: StudyType;
 }
 
-export const studySession: StudySession = $state({
-	subjects: [],
-	index: 0
+let _studySession: StudySession = $state({
+	subjectIds: [],
+	index: 0,
+	studyType: 'review'
 });
+
+export function studySession() {
+	return _studySession;
+}
+
+export function setStudySession(session: StudySession) {
+	_studySession = session;
+}
+
+export function resetStudySession() {
+	_studySession = {
+		index: 0,
+		subjectIds: [],
+		studyType: 'review'
+	};
+}

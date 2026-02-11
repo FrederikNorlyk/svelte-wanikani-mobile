@@ -7,23 +7,24 @@
 	import ArrowBigLeft from '@lucide/svelte/icons/arrow-big-left';
 	// noinspection ES6UnusedImports
 	import ArrowBigRight from '@lucide/svelte/icons/arrow-big-right';
-	import SettingsRepository from '$lib/repository/settingsRepository';
+	import SettingsRepository from '$lib/repository/local-storage/settingsRepository';
 	import AudioUtil from '$lib/util/audioUtil';
 	import CharacterHeader from '$lib/components/CharacterHeader.svelte';
 	import { onMount } from 'svelte';
 	import { Kbd } from '$lib/shadcn/components/ui/kbd';
-	import { uiState } from '$lib/ui/uiState.svelte';
+	import { uiState } from '$lib/state/uiState.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { toast } from 'svelte-sonner';
+	import { studySession } from '$lib/state/studySession.svelte';
+	import { calculatePercentage } from '$lib/util/mathUtil';
 
 	interface Props {
 		subject: Subject;
-		progress: number;
 		onCorrectAnswer: () => void;
 		onWrongAnswer: () => void;
 	}
 
-	const { subject, progress, onCorrectAnswer, onWrongAnswer }: Props = $props();
+	const { subject, onCorrectAnswer, onWrongAnswer }: Props = $props();
 
 	const settings = SettingsRepository.get();
 
@@ -34,6 +35,12 @@
 	const primaryReading = $derived(subject.primaryReading);
 	const secondaryMeanings = $derived(subject.secondaryMeanings);
 	const secondaryReadings = $derived(subject.secondaryReadings);
+
+	const progress = $derived(() => {
+		const completed = studySession().index;
+		const total = studySession().subjectIds.length;
+		return calculatePercentage(completed, total);
+	});
 
 	$effect(() => {
 		void subject; // Track changes
@@ -78,83 +85,79 @@
 			}
 		};
 
-		window.addEventListener('keyup', onKeyUp, { passive: false });
+		window.addEventListener('keyup', onKeyUp, { passive: true });
 
 		return () => window.removeEventListener('keyup', onKeyUp);
 	});
 </script>
 
-<div class="flex flex-1 flex-col gap-2">
-	<Progress value={progress} />
+<Progress value={progress()} />
 
-	<CharacterHeader type={subject.type}>
-		{subject.characters ?? 'No characters'}
-	</CharacterHeader>
+<CharacterHeader class="text-4xl" {subject} />
 
-	<div class="flex-1 space-y-2">
-		{#if isShowingAnswer}
-			{#if primaryMeaning}
-				{@render answerBlock(
-					'Meanings',
-					primaryMeaning,
-					secondaryMeanings,
-					'meaning',
-					uiState.isShowingKeyboardShortcuts
-				)}
-			{/if}
-			{#if primaryReading}
-				{@render answerBlock(
-					'Readings',
-					primaryReading,
-					secondaryReadings,
-					'reading'
-				)}
-			{/if}
+<div class="flex-1 space-y-2">
+	{#if isShowingAnswer}
+		{#if primaryMeaning}
+			{@render answerBlock(
+				'Meanings',
+				primaryMeaning,
+				secondaryMeanings,
+				'meaning',
+				uiState.isShowingKeyboardShortcuts
+			)}
 		{/if}
-	</div>
-
-	<div class="flex space-x-4">
-		{#if isShowingAnswer}
-			<Button
-				class="flex-1"
-				keyboardShortcut={{
-					handler: (e) => e.code === 'ArrowLeft' || e.key === 'h',
-					hintElement: arrowLeftShortcut
-				}}
-				onclick={onCorrectAnswer}
-				size="lg"
-				>Knew it
-			</Button>
-			<Button
-				class="flex-1"
-				keyboardShortcut={{
-					handler: (e) => e.code === 'ArrowRight' || e.key === 'l',
-					hintElement: arrowRightShortcut
-				}}
-				onclick={onWrongAnswer}
-				size="lg"
-				variant="secondary"
-				>Didn't know
-			</Button>
-		{:else}
-			<Button
-				class="flex-1"
-				keyboardShortcut={{
-					handler: (e) =>
-						e.code === 'Space' ||
-						e.code === 'ArrowRight' ||
-						e.code === 'ArrowLeft',
-					hintElement: spacebarShortcut
-				}}
-				onclick={() => {
-					void audioElement?.play();
-					isShowingAnswer = true;
-				}}
-				size="lg"
-				>Show answer
-			</Button>
+		{#if primaryReading}
+			{@render answerBlock(
+				'Readings',
+				primaryReading,
+				secondaryReadings,
+				'reading'
+			)}
 		{/if}
-	</div>
+	{/if}
+</div>
+
+<div class="flex space-x-4">
+	{#if isShowingAnswer}
+		<Button
+			class="flex-1"
+			keyboardShortcut={{
+				handler: (e) => e.code === 'ArrowLeft' || e.key === 'h',
+				hintElement: arrowLeftShortcut
+			}}
+			onclick={onCorrectAnswer}
+			size="lg"
+			>Knew it
+		</Button>
+		<Button
+			class="flex-1"
+			keyboardShortcut={{
+				handler: (e) => e.code === 'ArrowRight' || e.key === 'l',
+				hintElement: arrowRightShortcut
+			}}
+			onclick={onWrongAnswer}
+			size="lg"
+			variant="secondary"
+			>Didn't know
+		</Button>
+	{:else}
+		<Button
+			class="flex-1"
+			keyboardShortcut={{
+				handler: (e) =>
+					e.code === 'Space' ||
+					e.code === 'ArrowRight' ||
+					e.code === 'ArrowLeft',
+				hintElement: spacebarShortcut
+			}}
+			onclick={() => {
+				void audioElement?.play();
+				isShowingAnswer = true;
+			}}
+			size="lg"
+			>Show answer
+		</Button>
+	{/if}
 </div>
 
 {#snippet answerBlock(
