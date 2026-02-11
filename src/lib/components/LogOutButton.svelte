@@ -3,7 +3,6 @@
 	import LogOut from '@lucide/svelte/icons/log-out';
 	import * as Remote from '$lib/functions/auth.remote';
 	import { toast } from 'svelte-sonner';
-	import SubjectsRepository from '$lib/repository/subjectsRepository';
 	import { Button } from '$lib/shadcn/components/ui/button';
 	import { Spinner } from '$lib/shadcn/components/ui/spinner';
 	import * as Database from '$lib/repository/database/database';
