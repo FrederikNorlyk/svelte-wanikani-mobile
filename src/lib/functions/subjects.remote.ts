@@ -44,7 +44,8 @@ const subjectSchema = v.pipe(
 		type: data.object,
 		level: data.data.level,
 		documentUrl: data.data.document_url,
-		characters: data.data.characters,
+		characters:
+			data.data.characters ?? data.data.meanings[0]?.meaning ?? String(data.id),
 		meanings: data.data.meanings,
 		readings: data.data.readings,
 		audio:
