@@ -6,17 +6,9 @@ import { ValiError } from 'valibot';
 
 const assignmentSchema = v.pipe(
 	v.object({
-		id: v.pipe(
-			v.number(),
-			v.integer(),
-			v.minValue(1, 'id must be a positive number')
-		),
+		id: v.number(),
 		data: v.object({
-			subject_id: v.pipe(
-				v.number(),
-				v.integer(),
-				v.minValue(1, 'subject_id must be a positive number')
-			),
+			subject_id: v.number(),
 			srs_stage: v.number()
 		})
 	}),

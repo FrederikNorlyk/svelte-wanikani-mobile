@@ -31,21 +31,6 @@ const schema = v.pipe(
 	)
 );
 
-const responseSchema = v.pipe(
-	v.object({
-		data: v.object({
-			starting_srs_stage: v.number(),
-			ending_srs_stage: v.number()
-		})
-	}),
-	v.transform((response) => ({
-		startingStage: response.data.starting_srs_stage,
-		endingStage: response.data.ending_srs_stage
-	}))
-);
-
-export type ReviewResult = v.InferOutput<typeof responseSchema>;
-
 export const createReview = query(schema, async (body) => {
 	try {
 		await sendHTTPRequest('https://api.wanikani.com/v2/reviews/', {
