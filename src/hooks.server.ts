@@ -7,11 +7,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	const apiToken = CookieUtil.get(event.cookies, 'api_token');
 
-	if (routeId?.startsWith('/(authed)')) {
-		if (!apiToken) {
-			throw redirect(303, '/login');
-		}
-	} else if (apiToken) {
+	if (routeId?.startsWith('/(authed)') && !apiToken) {
+		throw redirect(303, '/login');
+	}
+
+	if (routeId?.startsWith('/login') && apiToken) {
 		throw redirect(303, '/');
 	}
 
