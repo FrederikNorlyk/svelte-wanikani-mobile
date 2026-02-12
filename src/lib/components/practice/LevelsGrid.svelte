@@ -12,16 +12,29 @@
 
 	const { onSelectLevel }: Props = $props();
 
-	const [subjectCounts, progressCounts] = await Promise.all([
-		SubjectsRepository.countAllLevels(),
-		ProgressRepository.countAllLevels()
-	]);
+	let maxLevelGranted = $state(0);
+	let subjectCounts = $state<Record<number, number>>([]);
+	let progressCounts = $state<Record<number, number>>([]);
+
+	onMount(() => {
+		UserRepository.getUser().then(
+			(user) => (maxLevelGranted = user.maxLevelGranted)
+		);
+
+		Promise.all([
+			SubjectsRepository.countAllLevels(),
+			ProgressRepository.countAllLevels()
+		]).then(([s, p]) => {
+			subjectCounts = s;
+			progressCounts = p;
+		});
+	});
 </script>
 
 <div class="grid min-h-0 flex-1 grid-cols-4 gap-2 overflow-y-auto">
 	{#each Array.from({ length: 60 }, (_, i) => i + 1) as level (level)}
-		{@const completed = progressCounts[level]}
-		{@const total = subjectCounts[level]}
+		{@const completed = progressCounts[level] ?? 0}
+		{@const total = subjectCounts[level] ?? 1}
 
 		<Button
 			class="relative w-full"
