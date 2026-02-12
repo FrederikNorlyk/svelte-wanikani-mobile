@@ -1,7 +1,7 @@
 <script lang="ts">
 	import LevelsGrid from '$lib/components/practice/LevelsGrid.svelte';
 	import LevelPage from '$lib/components/practice/LevelPage.svelte';
-	import Button from '$lib/components/Button.svelte';
+	import NavBar from '$lib/components/practice/NavBar.svelte';
 
 	type PageState = 'select-level' | 'view-level';
 
@@ -17,10 +17,7 @@
 </script>
 
 {#if pageState === 'select-level'}
-	<div class="flex gap-2">
-		<Button onclick={onCancel}>Back</Button>
-		<h1 class="text-2xl">Levels</h1>
-	</div>
+	<NavBar onBackButtonPressed={onCancel}>Levels</NavBar>
 	<LevelsGrid
 		onSelectLevel={(level) => {
 			selectedLevel = level;
@@ -28,13 +25,12 @@
 		}}
 	/>
 {:else if pageState === 'view-level'}
-	<div class="flex gap-2">
-		<Button
-			onclick={() => {
-				pageState = 'select-level';
-			}}>Back</Button
-		>
-		<h1 class="text-2xl">Level {selectedLevel}</h1>
-	</div>
+	<NavBar
+		onBackButtonPressed={() => {
+			pageState = 'select-level';
+		}}
+	>
+		Level {selectedLevel}
+	</NavBar>
 	<LevelPage level={selectedLevel} {onStartPractice} />
 {/if}

@@ -34,7 +34,7 @@
 	});
 </script>
 
-<div class="grid min-h-0 flex-1 grid-cols-4 gap-2 overflow-y-auto">
+<ScrollableGrid>
 	{#each Array.from({ length: 60 }, (_, i) => i + 1) as level (level)}
 		{@const completed = progressCounts[level] ?? 0}
 		{@const total = subjectCounts[level] ?? 1}
@@ -44,10 +44,10 @@
 			disabled={maxLevelGranted < level}
 			onclick={() => onSelectLevel(level)}
 			size="lg"
-			variant="secondary"
+			variant="outline"
 		>
 			<Progress
-				class={cn('absolute bottom-0', {
+				class={cn('absolute bottom-0 rounded-t-none', {
 					"**:data-[slot='progress-indicator']:bg-amber-300":
 						completed === total
 				})}
@@ -56,4 +56,4 @@
 			{level}
 		</Button>
 	{/each}
-</div>
+</ScrollableGrid>
