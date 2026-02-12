@@ -1,20 +1,18 @@
 <script lang="ts">
-	import {
-		type Assignment,
-		getAllAssignments
-	} from '$lib/functions/assignments.remote';
+	import { type Assignment } from '$lib/functions/assignments.remote';
+	import * as AssignmentAPI from '$lib/functions/assignments.remote';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import SubjectsRepository from '$lib/repository/database/subjectsRepository';
 	import Review from '$lib/components/Review.svelte';
 	import Synchronizing from '$lib/components/Synchronizing.svelte';
-	import { createReview } from '$lib/functions/reviews.remote';
+	import * as ReviewAPI from '$lib/functions/reviews.remote';
 	import Centered from '$lib/components/Centered.svelte';
 	import Illustration from '$lib/components/Illustration.svelte';
 	import pose_happy_businessman_guts from '$lib/assets/irasutoya/pose_happy_businessman_guts.png';
 	import SRSStageToast from '$lib/components/SRSStageToast.svelte';
 	import LevelUpPage from '$lib/components/LevelUpPage.svelte';
-	import { getUser } from '$lib/functions/user.remote';
+	import * as UserAPI from '$lib/functions/user.remote';
 	import UserRepository from '$lib/repository/local-storage/userRepository';
 	import {
 		resetStudySession,
@@ -57,8 +55,11 @@
 			await SubjectsRepository.synchronize();
 		}
 
+		// Update the cached user
+		void UserRepository.getUser({ forceSync: true });
+
 		try {
-			assignments = await getAllAssignments();
+			assignments = await AssignmentAPI.getAllAssignments();
 		} catch {
 			toast.error('Could not get assignments');
 		} finally {
@@ -107,7 +108,7 @@
 				}
 			}
 
-			const reviewPromise = createReview({
+			const reviewPromise = ReviewAPI.createReview({
 				assignmentId: currentAssignment.id,
 				incorrectReadingAnswers: incorrectReadings,
 				incorrectMeaningAnswers: incorrectMeanings
@@ -116,7 +117,7 @@
 			// Keep the UI instant: don't await normally
 			void reviewPromise
 				.then(() => {
-					Promise.all([UserRepository.getUser(), getUser()]).then(
+					Promise.all([UserRepository.getUser(), UserAPI.getUser()]).then(
 						([oldUser, newUser]) => {
 							if (newUser.level > oldUser.level) {
 								UserRepository.setUser(newUser);
@@ -173,9 +174,9 @@
 			window.setTimeout(resolve, 2000);
 		});
 
-		getAllAssignments().refresh();
+		AssignmentAPI.getAllAssignments().refresh();
 
-		Promise.all([getAllAssignments(), minDelay]).then(
+		Promise.all([AssignmentAPI.getAllAssignments(), minDelay]).then(
 			([downloadedAssignments]) => {
 				assignments = downloadedAssignments;
 				appState = 'loaded';

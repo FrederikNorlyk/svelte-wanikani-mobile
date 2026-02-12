@@ -5,6 +5,9 @@
 	import ProgressRepository from '$lib/repository/database/progressRepository';
 	import { calculatePercentage } from '$lib/util/mathUtil';
 	import { cn } from '$lib/shadcn/utils';
+	import UserRepository from '$lib/repository/local-storage/userRepository';
+	import ScrollableGrid from '$lib/components/practice/ScrollableGrid.svelte';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		onSelectLevel: (level: number) => void;
@@ -38,6 +41,7 @@
 
 		<Button
 			class="relative w-full"
+			disabled={maxLevelGranted < level}
 			onclick={() => onSelectLevel(level)}
 			size="lg"
 			variant="secondary"
