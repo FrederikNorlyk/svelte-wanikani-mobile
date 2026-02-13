@@ -52,11 +52,18 @@
 	onMount(async () => {
 		if ((await SubjectsRepository.count()) === 0) {
 			appState = 'synchronizing';
-			await SubjectsRepository.synchronize();
+			try {
+				await SubjectsRepository.synchronize();
+			} catch {
+				toast.error('Could not synchronize with WaniKani');
+				appState = 'loading';
+			}
 		}
 
 		// Update the cached user
-		void UserRepository.getUser({ forceSync: true });
+		void UserRepository.getUser({ forceSync: true }).catch(() => {
+			toast.error('Could not get user information');
+		});
 
 		try {
 			assignments = await AssignmentAPI.getAllAssignments();
