@@ -48,7 +48,7 @@
 
 		const controller = new AbortController();
 
-		if (settings.playAudio) {
+		if (settings.playAudio && navigator.onLine) {
 			AudioUtil.createAudioElement(subject, settings.preferredAudio, {
 				signal: controller.signal
 			})
@@ -62,6 +62,8 @@
 					if (controller.signal.aborted) {
 						return;
 					} else if (err instanceof DOMException && err.name === 'AbortError') {
+						return;
+					} else if (!navigator.onLine) {
 						return;
 					}
 					toast.error('Failed to load audio');
