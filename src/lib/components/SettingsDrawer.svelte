@@ -11,7 +11,7 @@
 	import SettingsRepository, {
 		AUDIO_CHOICES,
 		type Settings
-	} from '$lib/repository/settingsRepository';
+	} from '$lib/repository/local-storage/settingsRepository';
 	import {
 		Field,
 		FieldGroup,

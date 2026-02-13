@@ -3,9 +3,11 @@
 	import Illustration from '$lib/components/Illustration.svelte';
 	import { onMount } from 'svelte';
 	import Centered from '$lib/components/Centered.svelte';
-	import { Button } from '$lib/shadcn/components/ui/button';
 	import ConfettiCannon from '$lib/ui/confettiCannon';
-	import UserRepository from '$lib/repository/userRepository';
+	import UserRepository from '$lib/repository/local-storage/userRepository';
+	import Button from '$lib/components/Button.svelte';
+	import { Kbd } from '$lib/shadcn/components/ui/kbd';
+	import { uiState } from '$lib/state/uiState.svelte';
 
 	interface Props {
 		onContinue: () => void;
@@ -18,6 +20,17 @@
 
 	onMount(() => {
 		confettiCannon.fire();
+
+		const onKeyUp = (e: KeyboardEvent) => {
+			if (e.key === '?') {
+				uiState.isShowingKeyboardShortcuts =
+					!uiState.isShowingKeyboardShortcuts;
+			}
+		};
+
+		window.addEventListener('keyup', onKeyUp, { passive: true });
+
+		return () => window.removeEventListener('keyup', onKeyUp);
 	});
 </script>
 
@@ -29,9 +42,17 @@
 
 <Button
 	class="flex h-20"
+	keyboardShortcut={{
+		handler: (e) => e.code === 'Space',
+		hintElement: spacebarShortcut
+	}}
 	onclick={() => {
 		confettiCannon.stop();
 		onContinue();
 	}}
 	>Continue
 </Button>
+
+{#snippet spacebarShortcut()}
+	<Kbd>Space</Kbd>
+{/snippet}

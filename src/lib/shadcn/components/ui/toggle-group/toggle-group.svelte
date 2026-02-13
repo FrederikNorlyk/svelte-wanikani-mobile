@@ -33,11 +33,19 @@
 	}: ToggleGroupPrimitive.RootProps &
 		ToggleVariants & { spacing?: number } = $props();
 
-	setToggleGroupCtx({
-		variant,
-		size,
-		spacing
+	const ctx = $state<ToggleGroupContext>({
+		variant: 'default',
+		size: 'default',
+		spacing: 0
 	});
+
+	$effect(() => {
+		ctx.variant = variant;
+		ctx.size = size;
+		ctx.spacing = spacing;
+	});
+
+	setToggleGroupCtx(ctx);
 </script>
 
 <!--

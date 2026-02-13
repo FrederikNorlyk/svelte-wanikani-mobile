@@ -1,0 +1,20 @@
+{
+	"name": "WaniKani Mobile",
+	"start_url": "/",
+	"lang": "en-US",
+	"icons": [
+		{
+			"src": "logo_512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		},
+		{
+			"src": "logo_192.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		}
+	],
+	"display": "standalone",
+	"scope": "/",
+	"description": "This is a community made mobile app for WaniKani. WaniKani is a Japanese radicals, kanji, and vocabulary learning web app that uses mnemonics and SRS to make kanji learning simple."
+}

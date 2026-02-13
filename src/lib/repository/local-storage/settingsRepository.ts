@@ -1,4 +1,4 @@
-import { Repository } from '$lib/repository/repository';
+import { Repository } from '$lib/repository/local-storage/repository';
 
 const KEY = 'settings';
 

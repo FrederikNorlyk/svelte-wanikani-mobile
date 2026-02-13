@@ -5,7 +5,6 @@ import { ValiError } from 'valibot';
 
 const userSchema = v.pipe(
 	v.object({
-		username: v.string(),
 		level: v.number(),
 		current_vacation_started_at: v.pipe(
 			v.union([v.null_(), v.string()]),
@@ -14,12 +13,15 @@ const userSchema = v.pipe(
 				(value) => value === undefined || !Number.isNaN(value.getTime()),
 				'current_vacation_started_at must be null or a valid date string'
 			)
-		)
+		),
+		subscription: v.object({
+			max_level_granted: v.number()
+		})
 	}),
 	v.transform((data) => ({
-		name: data.username,
 		level: data.level,
-		currentVacationStartedAt: data.current_vacation_started_at
+		currentVacationStartedAt: data.current_vacation_started_at,
+		maxLevelGranted: data.subscription.max_level_granted
 	}))
 );
 

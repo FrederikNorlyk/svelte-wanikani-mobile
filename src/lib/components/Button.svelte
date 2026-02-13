@@ -2,7 +2,7 @@
 	import * as Shadcn from '$lib/shadcn/components/ui/button';
 	import { onMount, type Snippet } from 'svelte';
 	import { cn } from '$lib/shadcn/utils';
-	import { uiState } from '$lib/ui/uiState.svelte';
+	import { uiState } from '$lib/state/uiState.svelte';
 
 	export type Props = Shadcn.ButtonProps & {
 		children: Snippet;

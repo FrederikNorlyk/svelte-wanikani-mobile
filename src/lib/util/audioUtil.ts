@@ -1,5 +1,5 @@
 import type { Subject } from '$lib/functions/subjects.remote';
-import type { AudioChoice } from '$lib/repository/settingsRepository';
+import type { AudioChoice } from '$lib/repository/local-storage/settingsRepository';
 
 export default class AudioUtil {
 	public static async createAudioElement(

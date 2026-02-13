@@ -1,5 +1,5 @@
-import { form, getRequestEvent } from '$app/server';
-import { getUser } from '$lib/functions/user.remote';
+import { command, form, getRequestEvent } from '$app/server';
+import * as UserAPI from '$lib/functions/user.remote';
 import CookieUtil from '$lib/util/cookieUtil';
 import { invalid, redirect } from '@sveltejs/kit';
 import * as v from 'valibot';
@@ -13,7 +13,7 @@ export const login = form(
 		CookieUtil.set(cookies, 'api_token', _apiToken);
 
 		try {
-			await getUser();
+			await UserAPI.getUser();
 		} catch {
 			CookieUtil.delete(cookies, 'api_token');
 			invalid(issue._apiToken('Invalid API token'));
@@ -23,9 +23,7 @@ export const login = form(
 	}
 );
 
-export const logout = form(v.object({}), async () => {
+export const logOut = command(v.object({}), async () => {
 	const { cookies } = getRequestEvent();
 	CookieUtil.delete(cookies, 'api_token');
-
-	redirect(303, '/login');
 });

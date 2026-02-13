@@ -72,7 +72,8 @@ export default async function sendHTTPRequest(
 	}
 
 	const headers: Record<string, string> = {
-		Authorization: `Bearer ${apiToken}`
+		Authorization: `Bearer ${apiToken}`,
+		'Wanikani-Revision': '20170710'
 	};
 
 	if (body) {
