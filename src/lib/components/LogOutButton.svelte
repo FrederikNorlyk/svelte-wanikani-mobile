@@ -73,7 +73,7 @@
 					isShowingAlertDialog = false;
 					logOut();
 				}}
-				>Reset
+				>Log out
 			</AlertDialogAction>
 		</AlertDialogFooter>
 	</AlertDialogContent>
