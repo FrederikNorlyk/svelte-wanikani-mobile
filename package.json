@@ -20,7 +20,7 @@
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.0.2",
-		"@eslint/js": "^10.0.1",
+		"@eslint/js": "^9.39.1",
 		"@internationalized/date": "^3.11.0",
 		"@lucide/svelte": "^0.564.0",
 		"@sveltejs/adapter-auto": "^7.0.1",
@@ -31,7 +31,7 @@
 		"@types/canvas-confetti": "^1.9.0",
 		"@types/node": "^24",
 		"bits-ui": "^2.15.5",
-		"eslint": "^10.0.0",
+		"eslint": "^9.39.1",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.15.0",
 		"globals": "^17.3.0",
