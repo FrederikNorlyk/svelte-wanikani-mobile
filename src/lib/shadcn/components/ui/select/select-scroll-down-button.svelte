@@ -1,5 +1,4 @@
 <script lang="ts">
-	// noinspection ES6UnusedImports
 	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down';
 	import { Select as SelectPrimitive } from 'bits-ui';
 	import { cn, type WithoutChildrenOrChild } from '$lib/shadcn/utils.js';

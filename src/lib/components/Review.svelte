@@ -1,11 +1,8 @@
 <script lang="ts">
 	import type { Subject } from '$lib/functions/subjects.remote';
 	import { Progress } from '$lib/shadcn/components/ui/progress';
-	// noinspection ES6UnusedImports
 	import ExternalLink from '@lucide/svelte/icons/external-link';
-	// noinspection ES6UnusedImports
 	import ArrowBigLeft from '@lucide/svelte/icons/arrow-big-left';
-	// noinspection ES6UnusedImports
 	import ArrowBigRight from '@lucide/svelte/icons/arrow-big-right';
 	import SettingsRepository from '$lib/repository/local-storage/settingsRepository';
 	import AudioUtil from '$lib/util/audioUtil';

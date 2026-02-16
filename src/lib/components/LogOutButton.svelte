@@ -1,5 +1,4 @@
 <script lang="ts">
-	// noinspection ES6UnusedImports
 	import LogOut from '@lucide/svelte/icons/log-out';
 	import * as Remote from '$lib/functions/auth.remote';
 	import { toast } from 'svelte-sonner';

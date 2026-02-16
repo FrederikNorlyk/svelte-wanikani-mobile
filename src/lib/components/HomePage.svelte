@@ -4,7 +4,6 @@
 	import study_chienetsu_boy from '$lib/assets/irasutoya/study_chienetsu_boy.png';
 	import kokage_tree_necchusyou from '$lib/assets/irasutoya/kokage_tree_necchusyou.png';
 	import Illustration from '$lib/components/Illustration.svelte';
-	// noinspection ES6UnusedImports
 	import Settings from '@lucide/svelte/icons/settings';
 	import {
 		ButtonGroup,

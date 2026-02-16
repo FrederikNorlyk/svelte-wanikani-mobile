@@ -1,5 +1,4 @@
 <script lang="ts">
-	// noinspection ES6UnusedImports
 	import BadgeAlert from '@lucide/svelte/icons/badge-alert';
 	import { Input } from '$lib/shadcn/components/ui/input';
 	import { Button } from '$lib/shadcn/components/ui/button';

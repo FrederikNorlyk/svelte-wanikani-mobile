@@ -1,5 +1,4 @@
 <script lang="ts">
-	// noinspection ES6UnusedImports
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import Button from '$lib/components/Button.svelte';
 	import { type Snippet } from 'svelte';
