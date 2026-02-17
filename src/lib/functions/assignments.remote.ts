@@ -55,5 +55,7 @@ export const getAllAssignments = query(async () => {
 		nextUrl = parsed.pages.next_url;
 	}
 
+	// TODO: Notify the backend with next_review_at. Perhaps store push notification endpoint in a cookie
+
 	return assignments;
 });

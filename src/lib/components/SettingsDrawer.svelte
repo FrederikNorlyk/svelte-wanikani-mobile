@@ -26,6 +26,10 @@
 	} from '$lib/shadcn/components/ui/toggle-group';
 	import { Switch } from '$lib/shadcn/components/ui/switch';
 	import { Label } from '$lib/shadcn/components/ui/label';
+	import Button from '$lib/components/Button.svelte';
+	import { registerPushNotification } from '$lib/functions/notifications.remote';
+	import { PUBLIC_VAPID } from '$env/static/public';
+	import { base64UrlToUint8Array } from '$lib/util/base64';
 
 	interface Props {
 		isOpen: boolean;
@@ -38,6 +42,34 @@
 	$effect(() => {
 		SettingsRepository.set(settings);
 	});
+
+	async function subscribeNotifications() {
+		if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+			return;
+		}
+
+		const registration = await navigator.serviceWorker.ready;
+		const permission = await Notification.requestPermission();
+
+		if (permission !== 'granted') {
+			return;
+		}
+
+		let subscription = await registration.pushManager.getSubscription();
+
+		if (!subscription) {
+			subscription = await registration.pushManager.subscribe({
+				userVisibleOnly: true,
+				applicationServerKey: base64UrlToUint8Array(PUBLIC_VAPID)
+			});
+		}
+
+		await registerPushNotification({
+			endpoint: subscription.endpoint,
+			subscription: JSON.stringify(subscription),
+			nextReviewAt: new Date()
+		});
+	}
 </script>
 
 <Drawer bind:open={isOpen}>
@@ -74,6 +106,8 @@
 						</Field>
 					</FieldGroup>
 				</FieldSet>
+
+				<Button onclick={subscribeNotifications}>Subscribe</Button>
 			</div>
 			<DrawerFooter>
 				<LogOutButton />
