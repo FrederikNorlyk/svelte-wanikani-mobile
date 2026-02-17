@@ -19,6 +19,7 @@
 	let isFormDisabled = $state(false);
 	let apiTokenInput = $state<HTMLInputElement | null>(null);
 	let loginButton = $state<HTMLButtonElement | null>(null);
+	let form = $state<HTMLFormElement | null>(null);
 	let shouldTryClipboardAutopaste = $state(false);
 
 	async function tryAutoPasteFromClipboard() {
@@ -62,28 +63,25 @@
 		return () => {
 			window.removeEventListener('focus', onFocus);
 			document.removeEventListener('visibilitychange', onVisibility);
+			form?.reset();
 		};
-	});
-
-	$effect(() => {
-		// This seems to be the only way to act on form validation errors
-		if (login.fields.allIssues()) {
-			isFormDisabled = false;
-		}
 	});
 </script>
 
 <form
-	{...login.enhance(async ({ form, submit }) => {
+	{...login.enhance(async ({ submit }) => {
 		isFormDisabled = true;
 		try {
 			await submit();
-			form.reset();
+			if (login.fields.allIssues()) {
+				isFormDisabled = false;
+			}
 		} catch {
 			toast.error('Could not log in');
 			isFormDisabled = false;
 		}
 	})}
+	bind:this={form}
 	class="space-y-4"
 >
 	<FieldSet>
