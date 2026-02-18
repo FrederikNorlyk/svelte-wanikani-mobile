@@ -28,7 +28,7 @@ const schema = v.object({
 
 export type Assignment = v.InferOutput<typeof assignmentSchema>;
 
-export const getAllAssignments = query(async () => {
+export const getAvailableAssignments = query(async () => {
 	let nextUrl: string | null = 'https://api.wanikani.com/v2/assignments';
 	let assignments: Assignment[] = [];
 
@@ -55,7 +55,72 @@ export const getAllAssignments = query(async () => {
 		nextUrl = parsed.pages.next_url;
 	}
 
-	// TODO: Notify the backend with next_review_at. Perhaps store push notification endpoint in a cookie
-
 	return assignments;
+});
+
+const nextReviewAtSchema = v.object({
+	pages: v.object({
+		next_url: v.nullable(v.string())
+	}),
+	data: v.array(
+		v.object({
+			data: v.object({
+				available_at: v.pipe(
+					v.string(),
+					v.transform((dateString) => {
+						return new Date(dateString);
+					})
+				)
+			})
+		})
+	)
+});
+
+export const getNextReviewAvailableAt = query(async () => {
+	let nextUrl: string | null = 'https://api.wanikani.com/v2/assignments';
+	let mostNearbyDate = null;
+
+	const now = Date.now();
+	const oneHourFromNow = new Date(now + 60 * 60 * 1000);
+	const availableBefore = new Date(now + 24 * 60 * 60 * 1000).toISOString(); // +24 hours
+	const availableAfter = new Date(now + 60 * 1000).toISOString(); // +1 minute
+
+	while (nextUrl) {
+		const json = await sendHTTPRequest(nextUrl, {
+			method: 'GET',
+			searchParams: new URLSearchParams({
+				in_review: 'true',
+				available_before: availableBefore,
+				available_after: availableAfter
+			})
+		});
+
+		let parsed;
+		try {
+			parsed = v.parse(nextReviewAtSchema, json);
+		} catch (e) {
+			if (e instanceof ValiError && e.issues) {
+				const issue = e.issues[0];
+				throw new Error(issue.message);
+			}
+			throw e;
+		}
+
+		for (const assignment of parsed.data) {
+			const availableAt = assignment.data.available_at;
+
+			// Exit early if anything is coming up within the next hour
+			if (availableAt <= oneHourFromNow) {
+				return availableAt;
+			}
+
+			if (!mostNearbyDate || availableAt < mostNearbyDate) {
+				mostNearbyDate = availableAt;
+			}
+		}
+
+		nextUrl = parsed.pages.next_url;
+	}
+
+	return mostNearbyDate;
 });

@@ -1,0 +1,11 @@
+### GET Get all assignments ready for review
+GET https://api.wanikani.com/v2/assignments
+    ?immediately_available_for_review=true
+Authorization: Bearer {{WANIKANI_API_TOKEN}}
+
+### GET Get all assignments for review in the next 24 hours
+GET https://api.wanikani.com/v2/assignments
+    ?in_review=true
+    &available_before=2026-02-19T11:50:00.000000Z
+    &available_after=2026-02-18T11:50:00.000000Z
+Authorization: Bearer {{WANIKANI_API_TOKEN}}

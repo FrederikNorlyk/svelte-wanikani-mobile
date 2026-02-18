@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { type Assignment } from '$lib/functions/assignments.remote';
 	import * as AssignmentAPI from '$lib/functions/assignments.remote';
+	import * as AssignmentService from '$lib/services/assignmentService';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import SubjectsRepository from '$lib/repository/database/subjectsRepository';
@@ -66,7 +67,7 @@
 		});
 
 		try {
-			assignments = await AssignmentAPI.getAllAssignments();
+			assignments = await AssignmentService.getAssignments();
 		} catch {
 			toast.error('Could not get assignments');
 		} finally {
@@ -181,9 +182,9 @@
 			window.setTimeout(resolve, 2000);
 		});
 
-		AssignmentAPI.getAllAssignments().refresh();
+		AssignmentAPI.getAvailableAssignments().refresh();
 
-		Promise.all([AssignmentAPI.getAllAssignments(), minDelay]).then(
+		Promise.all([AssignmentService.getAssignments(), minDelay]).then(
 			([downloadedAssignments]) => {
 				assignments = downloadedAssignments;
 				appState = 'loaded';

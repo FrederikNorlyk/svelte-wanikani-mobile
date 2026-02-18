@@ -23,3 +23,15 @@ export const registerPushNotification = command(
 		`;
 	}
 );
+
+export const unregisterPushNotification = command(
+	v.string(),
+	async (endpoint) => {
+		const sql = neon(DATABASE_URL);
+
+		await sql`
+		delete from user_notifications
+		where endpoint = ${endpoint}
+	`;
+	}
+);
