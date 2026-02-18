@@ -1,4 +1,5 @@
 <script lang="ts">
+	import BellPlus from '@lucide/svelte/icons/bell-plus';
 	import LogOutButton from '$lib/components/LogOutButton.svelte';
 	import {
 		Drawer,
@@ -17,9 +18,11 @@
 		FieldGroup,
 		FieldLabel,
 		FieldLegend,
-		FieldSet
+		FieldSet,
+		FieldSeparator,
+		FieldDescription,
+		FieldError
 	} from '$lib/shadcn/components/ui/field';
-	import { FieldDescription } from '$lib/shadcn/components/ui/field/index';
 	import {
 		ToggleGroup,
 		ToggleGroupItem
@@ -27,9 +30,7 @@
 	import { Switch } from '$lib/shadcn/components/ui/switch';
 	import { Label } from '$lib/shadcn/components/ui/label';
 	import Button from '$lib/components/Button.svelte';
-	import { registerPushNotification } from '$lib/functions/notifications.remote';
-	import { PUBLIC_VAPID } from '$env/static/public';
-	import { base64UrlToUint8Array } from '$lib/util/base64';
+	import * as AssignmentService from '$lib/services/assignmentService';
 
 	interface Props {
 		isOpen: boolean;
@@ -38,43 +39,29 @@
 	let { isOpen = $bindable(false) }: Props = $props();
 
 	const settings = $state<Settings>(SettingsRepository.get());
+	let notificationPermission = $state(Notification.permission);
 
 	$effect(() => {
 		SettingsRepository.set(settings);
 	});
 
-	async function subscribeNotifications() {
+	async function subscribeToPushNotifications() {
 		if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
 			return;
 		}
 
-		const registration = await navigator.serviceWorker.ready;
-		const permission = await Notification.requestPermission();
+		notificationPermission = await Notification.requestPermission();
 
-		if (permission !== 'granted') {
-			return;
+		if (notificationPermission === 'granted') {
+			// As a side effect this updates the "next push notification date"
+			void AssignmentService.getAssignments();
 		}
-
-		let subscription = await registration.pushManager.getSubscription();
-
-		if (!subscription) {
-			subscription = await registration.pushManager.subscribe({
-				userVisibleOnly: true,
-				applicationServerKey: base64UrlToUint8Array(PUBLIC_VAPID)
-			});
-		}
-
-		await registerPushNotification({
-			endpoint: subscription.endpoint,
-			subscription: JSON.stringify(subscription),
-			nextReviewAt: new Date()
-		});
 	}
 </script>
 
 <Drawer bind:open={isOpen}>
 	<DrawerContent>
-		<div class="mx-auto w-full max-w-sm">
+		<div class="mx-auto w-full max-w-sm overflow-scroll">
 			<DrawerHeader>
 				<DrawerTitle>Settings</DrawerTitle>
 				<DrawerDescription>Customize your experience.</DrawerDescription>
@@ -107,7 +94,30 @@
 					</FieldGroup>
 				</FieldSet>
 
-				<Button onclick={subscribeNotifications}>Subscribe</Button>
+				{#if notificationPermission !== 'granted'}
+					<FieldSeparator class="my-2" />
+
+					<FieldSet>
+						<FieldLegend>Notifications</FieldLegend>
+						<FieldDescription
+							>Receive notifications when new reviews are ready
+						</FieldDescription>
+
+						{#if notificationPermission === 'default'}
+							<Button onclick={subscribeToPushNotifications}
+								>Subscribe
+								<BellPlus />
+							</Button>
+						{:else}
+							<FieldError
+								>Notifications have been disabled. To enable them go to your
+								device's settings</FieldError
+							>
+						{/if}
+					</FieldSet>
+
+					<FieldSeparator class="my-2" />
+				{/if}
 			</div>
 			<DrawerFooter>
 				<LogOutButton />
