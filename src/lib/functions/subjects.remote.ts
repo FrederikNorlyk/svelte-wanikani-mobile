@@ -105,7 +105,7 @@ export const getAllSubjects = query(async () => {
 		} catch (e) {
 			if (e instanceof ValiError && e.issues) {
 				const issue = e.issues[0];
-				throw new Error(issue.message);
+				throw new Error(issue.message, { cause: e });
 			}
 			throw e;
 		}
