@@ -12,7 +12,6 @@ export async function getSubscription(): Promise<PushSubscription | undefined> {
 	}
 
 	const registration = await navigator.serviceWorker.ready;
-
 	const subscription = await registration.pushManager.getSubscription();
 
 	if (subscription) {
@@ -25,6 +24,7 @@ export async function getSubscription(): Promise<PushSubscription | undefined> {
 	});
 }
 
+// TODO: trigger this on logout
 export async function unregisterPushNotifications() {
 	const subscription = await getSubscription();
 
