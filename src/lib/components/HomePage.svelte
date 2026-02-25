@@ -14,15 +14,18 @@
 	import Button from '$lib/components/Button.svelte';
 	import { Kbd } from '$lib/shadcn/components/ui/kbd';
 	import { uiState } from '$lib/state/uiState.svelte';
+	import type { NextReviewData } from '$lib/functions/assignments.remote';
 
 	interface Props {
 		numberOfAssignments: number;
+		nextReviewData: NextReviewData | null;
 		onReviewButtonPressed: () => void;
 		onPracticeButtonPressed: () => void;
 	}
 
 	const {
 		numberOfAssignments,
+		nextReviewData,
 		onReviewButtonPressed,
 		onPracticeButtonPressed
 	}: Props = $props();
@@ -46,7 +49,22 @@
 <div class="flex flex-1 flex-col items-center justify-center">
 	{#if numberOfAssignments === 0}
 		<Illustration alt="Boy resting under a tree" src={kokage_tree_necchusyou}>
-			You have no reviews
+			<p>All caught up!</p>
+
+			{#if nextReviewData}
+				{@const formattedHour = new Intl.DateTimeFormat(undefined, {
+					hour: 'numeric',
+					minute: '2-digit'
+				}).format(nextReviewData.nextReviewAt)}
+				<p>
+					{#if nextReviewData.numberOfReviews === 1}
+						Come back at {formattedHour} for a single review.
+					{:else}
+						Come back at {formattedHour}
+						for {nextReviewData.numberOfReviews} more reviews.
+					{/if}
+				</p>
+			{/if}
 		</Illustration>
 	{:else if numberOfAssignments < 10}
 		<Illustration alt="Man working effortlessly" src={slump_good_man_study}>
@@ -82,6 +100,7 @@
 		</Button>
 		<ButtonGroupSeparator />
 	{/if}
+
 	<Button
 		class="flex-1"
 		keyboardShortcut={{

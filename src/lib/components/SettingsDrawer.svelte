@@ -54,7 +54,7 @@
 
 		if (notificationPermission === 'granted') {
 			// As a side effect this updates the "next push notification date"
-			void AssignmentService.getAssignments();
+			void AssignmentService.refresh();
 		}
 	}
 </script>

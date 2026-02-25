@@ -1,4 +1,7 @@
-import type { Assignment } from '$lib/functions/assignments.remote';
+import type {
+	Assignment,
+	NextReviewData
+} from '$lib/functions/assignments.remote';
 import * as AssignmentAPI from '$lib/functions/assignments.remote';
 import {
 	registerPushNotification,
@@ -6,24 +9,32 @@ import {
 } from '$lib/functions/notifications.remote';
 import * as NotificationUtil from '$lib/util/notificationUtil';
 
-export async function getAssignments(): Promise<Assignment[]> {
+export async function refresh(): Promise<
+	[Assignment[], NextReviewData | null]
+> {
 	const assignments = await AssignmentAPI.getAvailableAssignments();
 
+	let nextReviewData: NextReviewData | null = null;
+
 	if (assignments.length === 0) {
-		void updateNextPushNotificationDate();
+		nextReviewData = await AssignmentAPI.getNextReviewData();
+
+		if (nextReviewData) {
+			void updateNextPushNotificationDate(nextReviewData.nextReviewAt);
+		}
 	}
 
-	return assignments;
+	return [assignments, nextReviewData];
 }
 
-async function updateNextPushNotificationDate(): Promise<void> {
+async function updateNextPushNotificationDate(
+	nextReviewAt: Date
+): Promise<void> {
 	const subscription = await NotificationUtil.getSubscription();
 
 	if (!subscription) {
 		return;
 	}
-
-	const nextReviewAt = await AssignmentAPI.getNextReviewAvailableAt();
 
 	if (nextReviewAt) {
 		await registerPushNotification({

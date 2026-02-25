@@ -76,51 +76,70 @@ const nextReviewAtSchema = v.object({
 	)
 });
 
-export const getNextReviewAvailableAt = query(async () => {
-	let nextUrl: string | null = 'https://api.wanikani.com/v2/assignments';
-	let mostNearbyDate = null;
+export type NextReviewData = {
+	nextReviewAt: Date;
+	numberOfReviews: number;
+};
 
-	const now = Date.now();
-	const oneHourFromNow = new Date(now + 60 * 60 * 1000);
-	const availableBefore = new Date(now + 24 * 60 * 60 * 1000).toISOString(); // +24 hours
-	const availableAfter = new Date(now + 60 * 1000).toISOString(); // +1 minute
+export const getNextReviewData = query(
+	async (): Promise<NextReviewData | null> => {
+		let nextUrl: string | null = 'https://api.wanikani.com/v2/assignments';
 
-	while (nextUrl) {
-		const json = await sendHTTPRequest(nextUrl, {
-			method: 'GET',
-			searchParams: new URLSearchParams({
-				in_review: 'true',
-				available_before: availableBefore,
-				available_after: availableAfter
-			})
-		});
+		const now = Date.now();
+		const availableBefore = new Date(now + 24 * 60 * 60 * 1000).toISOString(); // +24 hours
+		const availableAfter = new Date(now + 60 * 1000).toISOString(); // +1 minute
+		const numberOfReviewsPerHour = new Map<number, number>();
 
-		let parsed;
-		try {
-			parsed = v.parse(nextReviewAtSchema, json);
-		} catch (e) {
-			if (e instanceof ValiError && e.issues) {
-				const issue = e.issues[0];
-				throw new Error(issue.message, { cause: e });
+		while (nextUrl) {
+			const json = await sendHTTPRequest(nextUrl, {
+				method: 'GET',
+				searchParams: new URLSearchParams({
+					in_review: 'true',
+					available_before: availableBefore,
+					available_after: availableAfter
+				})
+			});
+
+			let parsed;
+			try {
+				parsed = v.parse(nextReviewAtSchema, json);
+			} catch (e) {
+				if (e instanceof ValiError && e.issues) {
+					const issue = e.issues[0];
+					throw new Error(issue.message, { cause: e });
+				}
+				throw e;
 			}
-			throw e;
+
+			for (const assignment of parsed.data) {
+				const availableAt = assignment.data.available_at;
+
+				const trimmedDateMS = new Date(
+					availableAt.getFullYear(),
+					availableAt.getMonth(),
+					availableAt.getDate(),
+					availableAt.getHours()
+				).getTime();
+
+				const currentValue = numberOfReviewsPerHour.get(trimmedDateMS) ?? 0;
+
+				numberOfReviewsPerHour.set(trimmedDateMS, currentValue + 1);
+			}
+
+			nextUrl = parsed.pages.next_url;
 		}
 
-		for (const assignment of parsed.data) {
-			const availableAt = assignment.data.available_at;
+		const lowestDateMS = numberOfReviewsPerHour.size
+			? Math.min(...numberOfReviewsPerHour.keys())
+			: null;
 
-			// Exit early if anything is coming up within the next hour
-			if (availableAt <= oneHourFromNow) {
-				return availableAt;
-			}
-
-			if (!mostNearbyDate || availableAt < mostNearbyDate) {
-				mostNearbyDate = availableAt;
-			}
+		if (lowestDateMS === null) {
+			return null;
 		}
 
-		nextUrl = parsed.pages.next_url;
+		return {
+			nextReviewAt: new Date(lowestDateMS),
+			numberOfReviews: numberOfReviewsPerHour.get(lowestDateMS) ?? 0
+		};
 	}
-
-	return mostNearbyDate;
-});
+);
