@@ -24,7 +24,6 @@ export async function getSubscription(): Promise<PushSubscription | undefined> {
 	});
 }
 
-// TODO: trigger this on logout
 export async function unregisterPushNotifications() {
 	const subscription = await getSubscription();
 
