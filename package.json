@@ -56,6 +56,8 @@
 		"@base-ui/react": "^1.2.0",
 		"@fontsource-variable/noto-sans": "^5.2.10",
 		"@fontsource-variable/noto-sans-jp": "^5.2.10",
+		"@neondatabase/serverless": "^1.0.2",
+		"@types/web-push": "^3.6.4",
 		"canvas-confetti": "^1.9.4",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
@@ -63,7 +65,8 @@
 		"radix-ui": "^1.4.3",
 		"shadcn": "^3.8.4",
 		"tailwind-merge": "^3.5.0",
-		"valibot": "^1.2.0"
+		"valibot": "^1.2.0",
+		"web-push": "^3.6.7"
 	},
 	"engines": {
 		"node": "24.x"

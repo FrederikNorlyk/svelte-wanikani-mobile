@@ -1,6 +1,10 @@
 <script lang="ts">
-	import { type Assignment } from '$lib/functions/assignments.remote';
 	import * as AssignmentAPI from '$lib/functions/assignments.remote';
+	import {
+		type Assignment,
+		type NextReviewData
+	} from '$lib/functions/assignments.remote';
+	import * as AssignmentService from '$lib/services/assignmentService';
 	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import SubjectsRepository from '$lib/repository/database/subjectsRepository';
@@ -33,6 +37,7 @@
 		| 'level-up';
 
 	let assignments = $state<Assignment[]>([]);
+	let nextReviewData = $state<NextReviewData | null>(null);
 	let appState = $state<AppState>('loading');
 
 	const subject = $derived(async () => {
@@ -50,28 +55,37 @@
 	});
 
 	onMount(async () => {
-		if ((await SubjectsRepository.count()) === 0) {
-			appState = 'synchronizing';
-			try {
-				await SubjectsRepository.synchronize();
-			} catch {
-				toast.error('Could not synchronize with WaniKani');
-				appState = 'loading';
-			}
-		}
-
 		// Update the cached user
 		void UserRepository.getUser({ forceSync: true }).catch(() => {
 			toast.error('Could not get user information');
 		});
 
-		try {
-			assignments = await AssignmentAPI.getAllAssignments();
-		} catch {
-			toast.error('Could not get assignments');
-		} finally {
-			appState = 'loaded';
+		const promises: Promise<void>[] = [];
+
+		const assignmentPromise = AssignmentService.refresh()
+			.then(([a, n]) => {
+				assignments = a;
+				nextReviewData = n;
+			})
+			.catch(() => {
+				toast.error('Could not get assignments');
+			});
+
+		promises.push(assignmentPromise);
+
+		if ((await SubjectsRepository.count()) === 0) {
+			appState = 'synchronizing';
+
+			promises.push(
+				SubjectsRepository.synchronize().catch(() => {
+					toast.error('Could not synchronize with WaniKani');
+				})
+			);
 		}
+
+		Promise.all(promises).finally(() => {
+			appState = 'loaded';
+		});
 	});
 
 	async function onAnswer(wasCorrect: boolean) {
@@ -181,14 +195,21 @@
 			window.setTimeout(resolve, 2000);
 		});
 
-		AssignmentAPI.getAllAssignments().refresh();
+		// Invalidate the SvelteKit cache
+		AssignmentAPI.getAvailableAssignments().refresh();
 
-		Promise.all([AssignmentAPI.getAllAssignments(), minDelay]).then(
-			([downloadedAssignments]) => {
-				assignments = downloadedAssignments;
-				appState = 'loaded';
-			}
-		);
+		const assignmentPromise = AssignmentService.refresh()
+			.then(([a, n]) => {
+				assignments = a;
+				nextReviewData = n;
+			})
+			.catch(() => {
+				toast.error('Could not get assignments');
+			});
+
+		Promise.all([assignmentPromise, minDelay]).finally(() => {
+			appState = 'loaded';
+		});
 	});
 </script>
 
@@ -196,6 +217,7 @@
 	<Synchronizing />
 {:else if appState === 'loaded'}
 	<HomePage
+		{nextReviewData}
 		numberOfAssignments={assignments.length}
 		onPracticeButtonPressed={() => {
 			appState = 'defining-practice-session';

@@ -27,4 +27,4 @@
 	{src}
 />
 
-<p class="text-lg">{@render children()}</p>
+<div class="text-center text-lg">{@render children()}</div>

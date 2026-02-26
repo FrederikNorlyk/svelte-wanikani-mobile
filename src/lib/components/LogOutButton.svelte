@@ -17,6 +17,7 @@
 	} from '$lib/shadcn/components/ui/alert-dialog';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import * as NotificationUtil from '$lib/util/notificationUtil';
 
 	let isLoggingOut = $state(false);
 	let isShowingAlertDialog = $state(false);
@@ -24,6 +25,7 @@
 	async function logOut() {
 		isLoggingOut = true;
 		try {
+			await NotificationUtil.unregisterPushNotifications();
 			await Remote.logOut({});
 		} catch {
 			toast.error('Could not log out');

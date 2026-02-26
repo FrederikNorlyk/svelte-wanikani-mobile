@@ -1,4 +1,5 @@
 <script lang="ts">
+	import BellPlus from '@lucide/svelte/icons/bell-plus';
 	import LogOutButton from '$lib/components/LogOutButton.svelte';
 	import {
 		Drawer,
@@ -17,15 +18,19 @@
 		FieldGroup,
 		FieldLabel,
 		FieldLegend,
-		FieldSet
+		FieldSet,
+		FieldSeparator,
+		FieldDescription,
+		FieldError
 	} from '$lib/shadcn/components/ui/field';
-	import { FieldDescription } from '$lib/shadcn/components/ui/field/index';
 	import {
 		ToggleGroup,
 		ToggleGroupItem
 	} from '$lib/shadcn/components/ui/toggle-group';
 	import { Switch } from '$lib/shadcn/components/ui/switch';
 	import { Label } from '$lib/shadcn/components/ui/label';
+	import Button from '$lib/components/Button.svelte';
+	import * as AssignmentService from '$lib/services/assignmentService';
 
 	interface Props {
 		isOpen: boolean;
@@ -34,15 +39,29 @@
 	let { isOpen = $bindable(false) }: Props = $props();
 
 	const settings = $state<Settings>(SettingsRepository.get());
+	let notificationPermission = $state(Notification.permission);
 
 	$effect(() => {
 		SettingsRepository.set(settings);
 	});
+
+	async function subscribeToPushNotifications() {
+		if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+			return;
+		}
+
+		notificationPermission = await Notification.requestPermission();
+
+		if (notificationPermission === 'granted') {
+			// As a side effect this updates the "next push notification date"
+			void AssignmentService.refresh();
+		}
+	}
 </script>
 
 <Drawer bind:open={isOpen}>
 	<DrawerContent>
-		<div class="mx-auto w-full max-w-sm">
+		<div class="mx-auto w-full max-w-sm overflow-scroll">
 			<DrawerHeader>
 				<DrawerTitle>Settings</DrawerTitle>
 				<DrawerDescription>Customize your experience.</DrawerDescription>
@@ -74,6 +93,31 @@
 						</Field>
 					</FieldGroup>
 				</FieldSet>
+
+				{#if notificationPermission !== 'granted'}
+					<FieldSeparator class="my-2" />
+
+					<FieldSet>
+						<FieldLegend>Notifications</FieldLegend>
+						<FieldDescription
+							>Receive notifications when new reviews are ready
+						</FieldDescription>
+
+						{#if notificationPermission === 'default'}
+							<Button onclick={subscribeToPushNotifications}
+								>Subscribe
+								<BellPlus />
+							</Button>
+						{:else}
+							<FieldError
+								>Notifications have been disabled. To enable them go to your
+								device's settings</FieldError
+							>
+						{/if}
+					</FieldSet>
+
+					<FieldSeparator class="my-2" />
+				{/if}
 			</div>
 			<DrawerFooter>
 				<LogOutButton />
