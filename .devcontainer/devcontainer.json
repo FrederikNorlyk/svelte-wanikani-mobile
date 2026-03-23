@@ -8,5 +8,10 @@
 	"appPort": [5173],
 	"runArgs": ["-p", "5173:5173"],
 	"remoteUser": "node",
-	"containerUser": "node"
+	"containerUser": "node",
+	"customizations": {
+		"jetbrains": {
+			"plugins": ["dev.blachut.svelte.lang", "intellij.prettierJS"]
+		}
+	}
 }
