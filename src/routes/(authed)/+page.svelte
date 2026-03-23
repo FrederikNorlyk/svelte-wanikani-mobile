@@ -26,6 +26,7 @@
 	import HomePage from '$lib/components/HomePage.svelte';
 	import PracticePage from '$lib/components/practice/PracticePage.svelte';
 	import ProgressRepository from '$lib/repository/database/progressRepository';
+	import type { User } from '$lib/functions/user.remote';
 
 	type AppState =
 		| 'loading'
@@ -39,6 +40,7 @@
 	let assignments = $state<Assignment[]>([]);
 	let nextReviewData = $state<NextReviewData | null>(null);
 	let appState = $state<AppState>('loading');
+	let user = $state<User | undefined>(undefined);
 
 	const subject = $derived(async () => {
 		if (studySession().index >= studySession().subjectIds.length) {
@@ -56,13 +58,17 @@
 
 	onMount(async () => {
 		// Update the cached user
-		void UserRepository.getUser({ forceSync: true }).catch(() => {
+		try {
+			user = await UserRepository.getUser({ forceSync: true });
+		} catch {
 			toast.error('Could not get user information');
-		});
+		}
 
 		const promises: Promise<void>[] = [];
 
-		const assignmentPromise = AssignmentService.refresh()
+		const assignmentPromise = AssignmentService.refresh(
+			user?.reviewsPresentationOrder ?? 'shuffled'
+		)
 			.then(([a, n]) => {
 				assignments = a;
 				nextReviewData = n;
@@ -198,7 +204,9 @@
 		// Invalidate the SvelteKit cache
 		AssignmentAPI.getAvailableAssignments().refresh();
 
-		const assignmentPromise = AssignmentService.refresh()
+		const assignmentPromise = AssignmentService.refresh(
+			user?.reviewsPresentationOrder ?? 'shuffled'
+		)
 			.then(([a, n]) => {
 				assignments = a;
 				nextReviewData = n;
