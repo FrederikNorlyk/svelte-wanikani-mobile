@@ -1,0 +1,3 @@
+### GET Get the current user
+GET https://api.wanikani.com/v2/user
+Authorization: Bearer {{WANIKANI_API_TOKEN}}

@@ -23,4 +23,4 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 /doc/http/http-client.private.env.json
-
+/doc/http/wanikani/http-client.private.env.json
