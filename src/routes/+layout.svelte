@@ -1,10 +1,37 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.png';
-
+	import { onMount } from 'svelte';
 	import { Toaster } from '$lib/shadcn/components/ui/sonner/index.js';
 
 	let { children } = $props();
+
+	onMount(() => {
+		const clearNotifications = async () => {
+			const registration = await navigator.serviceWorker?.ready;
+
+			if (!registration) {
+				return;
+			}
+
+			const notifications = await registration.getNotifications();
+			notifications.map((notification) => notification.close());
+		};
+
+		void clearNotifications();
+
+		const handleVisibilityChange = () => {
+			if (document.visibilityState === 'visible') {
+				void clearNotifications();
+			}
+		};
+
+		document.addEventListener('visibilitychange', handleVisibilityChange);
+
+		return () => {
+			document.removeEventListener('visibilitychange', handleVisibilityChange);
+		};
+	});
 </script>
 
 <svelte:head>
