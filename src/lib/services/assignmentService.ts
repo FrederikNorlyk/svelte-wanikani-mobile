@@ -7,6 +7,7 @@ import {
 	registerPushNotification,
 	unregisterPushNotification
 } from '$lib/functions/notifications.remote';
+import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
 import type { ReviewsPresentationOrder } from '$lib/types/reviewsPresentationOrder';
 import * as NotificationUtil from '$lib/util/notificationUtil';
 
@@ -26,6 +27,8 @@ export async function refresh(
 	} else {
 		sortAssignments(assignments, reviewsPresentationOrder);
 	}
+
+	AppMetadataRepository.set({ lastAssignmentsFetchTimestamp: new Date() });
 
 	return [assignments, nextReviewData];
 }

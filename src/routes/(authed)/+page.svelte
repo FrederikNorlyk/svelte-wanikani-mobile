@@ -16,6 +16,7 @@
 	import pose_happy_businessman_guts from '$lib/assets/irasutoya/pose_happy_businessman_guts.png';
 	import SRSStageToast from '$lib/components/SRSStageToast.svelte';
 	import LevelUpPage from '$lib/components/LevelUpPage.svelte';
+	import type { User } from '$lib/functions/user.remote';
 	import * as UserAPI from '$lib/functions/user.remote';
 	import UserRepository from '$lib/repository/local-storage/userRepository';
 	import {
@@ -26,7 +27,7 @@
 	import HomePage from '$lib/components/HomePage.svelte';
 	import PracticePage from '$lib/components/practice/PracticePage.svelte';
 	import ProgressRepository from '$lib/repository/database/progressRepository';
-	import type { User } from '$lib/functions/user.remote';
+	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
 
 	type AppState =
 		| 'loading'
@@ -56,42 +57,81 @@
 		});
 	});
 
-	onMount(async () => {
-		// Update the cached user
-		try {
-			user = await UserRepository.getUser({ forceSync: true });
-		} catch {
-			toast.error('Could not get user information');
-		}
+	onMount(() => {
+		const refreshData = async () => {
+			console.trace('Refreshing data');
 
-		const promises: Promise<void>[] = [];
+			// Update the cached user
+			try {
+				user = await UserRepository.getUser({ forceSync: true });
+			} catch {
+				toast.error('Could not get user information');
+			}
 
-		const assignmentPromise = AssignmentService.refresh(
-			user?.reviewsPresentationOrder ?? 'shuffled'
-		)
-			.then(([a, n]) => {
-				assignments = a;
-				nextReviewData = n;
-			})
-			.catch(() => {
-				toast.error('Could not get assignments');
-			});
+			const promises: Promise<void>[] = [];
 
-		promises.push(assignmentPromise);
-
-		if ((await SubjectsRepository.count()) === 0) {
-			appState = 'synchronizing';
-
-			promises.push(
-				SubjectsRepository.synchronize().catch(() => {
-					toast.error('Could not synchronize with WaniKani');
+			const assignmentPromise = AssignmentService.refresh(
+				user?.reviewsPresentationOrder ?? 'shuffled'
+			)
+				.then(([a, n]) => {
+					assignments = a;
+					nextReviewData = n;
 				})
-			);
-		}
+				.catch(() => {
+					toast.error('Could not get assignments');
+				});
 
-		Promise.all(promises).finally(() => {
-			appState = 'loaded';
-		});
+			promises.push(assignmentPromise);
+
+			if ((await SubjectsRepository.count()) === 0) {
+				appState = 'synchronizing';
+
+				promises.push(
+					SubjectsRepository.synchronize().catch(() => {
+						toast.error('Could not synchronize with WaniKani');
+					})
+				);
+			}
+
+			Promise.all(promises).finally(() => {
+				appState = 'loaded';
+			});
+		};
+
+		void refreshData();
+
+		const handleVisibilityChange = () => {
+			if (document.visibilityState !== 'visible') {
+				return;
+			}
+
+			if (appState !== 'loaded') {
+				return;
+			}
+
+			const metadata = AppMetadataRepository.get();
+
+			// eslint-disable-next-line svelte/prefer-svelte-reactivity
+			const lastFetchedDate = new Date(metadata.lastAssignmentsFetchTimestamp);
+			lastFetchedDate.setMinutes(0, 0, 0);
+
+			// eslint-disable-next-line svelte/prefer-svelte-reactivity
+			const currentDate = new Date();
+			currentDate.setMinutes(0, 0, 0);
+
+			if (lastFetchedDate.getTime() === currentDate.getTime()) {
+				console.trace('No need to refresh data. Still in same hour');
+				return;
+			}
+
+			void refreshData();
+		};
+
+		document.addEventListener('visibilitychange', handleVisibilityChange);
+
+		return () => {
+			document.removeEventListener('visibilitychange', handleVisibilityChange);
+		};
 	});
 
 	async function onAnswer(wasCorrect: boolean) {
@@ -146,6 +186,11 @@
 				.then(() => {
 					Promise.all([UserRepository.getUser(), UserAPI.getUser()]).then(
 						([oldUser, newUser]) => {
+							console.log('Old user:');
+							console.dir(oldUser);
+							console.log('New user:');
+							console.dir(newUser);
+
 							if (newUser.level > oldUser.level) {
 								UserRepository.setUser(newUser);
 								appState = 'level-up';
