@@ -241,9 +241,9 @@
 			return;
 		}
 
-		// Linger on the "Study session finished" illustration for at least 3 seconds
+		// Linger on the "Study session finished" illustration for at least 5 seconds
 		const minDelay = new Promise<void>((resolve) => {
-			window.setTimeout(resolve, 3000);
+			window.setTimeout(resolve, 5000);
 		});
 
 		// Invalidate the SvelteKit cache
@@ -306,7 +306,7 @@
 		}}
 	/>
 {:else if appState === 'finished'}
-	<StudySessionFinished />
+	<StudySessionFinished onContinue={() => (appState = 'loaded')} />
 {:else if appState === 'level-up'}
 	<LevelUpPage
 		onContinue={() => {
