@@ -11,16 +11,12 @@
 	import Review from '$lib/components/Review.svelte';
 	import Synchronizing from '$lib/components/Synchronizing.svelte';
 	import * as ReviewAPI from '$lib/functions/reviews.remote';
-	import Centered from '$lib/components/Centered.svelte';
-	import Illustration from '$lib/components/Illustration.svelte';
-	import pose_happy_businessman_guts from '$lib/assets/irasutoya/pose_happy_businessman_guts.png';
 	import SRSStageToast from '$lib/components/SRSStageToast.svelte';
 	import LevelUpPage from '$lib/components/LevelUpPage.svelte';
 	import type { User } from '$lib/functions/user.remote';
 	import * as UserAPI from '$lib/functions/user.remote';
 	import UserRepository from '$lib/repository/local-storage/userRepository';
 	import {
-		resetStudySession,
 		setStudySession,
 		studySession
 	} from '$lib/state/studySession.svelte';
@@ -28,6 +24,7 @@
 	import PracticePage from '$lib/components/practice/PracticePage.svelte';
 	import ProgressRepository from '$lib/repository/database/progressRepository';
 	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
+	import StudySessionFinished from '$lib/components/StudySessionFinished.svelte';
 
 	type AppState =
 		| 'loading'
@@ -142,6 +139,10 @@
 			return;
 		}
 
+		if (wasCorrect) {
+			studySession().numberOfCorrectAnswers++;
+		}
+
 		if (studySession().studyType === 'practice') {
 			if (wasCorrect) {
 				void ProgressRepository.set({
@@ -229,10 +230,9 @@
 			studySession().index === studySession().subjectIds.length - 1;
 
 		if (wasLastQuestion) {
-			resetStudySession();
 			appState = 'finished';
 		} else {
-			studySession().index += 1;
+			studySession().index++;
 		}
 	}
 
@@ -241,9 +241,9 @@
 			return;
 		}
 
-		// Linger on the "Good job" graphic for at least 2 seconds
+		// Linger on the "Study session finished" illustration for at least 3 seconds
 		const minDelay = new Promise<void>((resolve) => {
-			window.setTimeout(resolve, 2000);
+			window.setTimeout(resolve, 3000);
 		});
 
 		// Invalidate the SvelteKit cache
@@ -279,7 +279,8 @@
 			setStudySession({
 				subjectIds: assignments.map((assignment) => assignment.subjectId),
 				index: 0,
-				studyType: 'review'
+				studyType: 'review',
+				numberOfCorrectAnswers: 0
 			});
 			appState = 'studying';
 		}}
@@ -305,14 +306,7 @@
 		}}
 	/>
 {:else if appState === 'finished'}
-	<Centered>
-		<Illustration
-			alt="An illustration of a male office worker in a suit, celebrating with a triumphant fist pump."
-			src={pose_happy_businessman_guts}
-		>
-			<p>Great job!</p>
-		</Illustration>
-	</Centered>
+	<StudySessionFinished />
 {:else if appState === 'level-up'}
 	<LevelUpPage
 		onContinue={() => {

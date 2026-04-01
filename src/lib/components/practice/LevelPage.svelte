@@ -79,7 +79,8 @@
 		setStudySession({
 			subjectIds: remainingSubjects.map((subject) => subject.id),
 			index: 0,
-			studyType: 'practice'
+			studyType: 'practice',
+			numberOfCorrectAnswers: 0
 		});
 	}
 </script>
