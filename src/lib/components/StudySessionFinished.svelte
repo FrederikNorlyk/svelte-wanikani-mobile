@@ -9,8 +9,6 @@
 	import { studySession } from '$lib/state/studySession.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { Kbd } from '$lib/shadcn/components/ui/kbd';
-	import { Progress } from '$lib/shadcn/components/ui/progress';
-	import { onMount } from 'svelte';
 
 	interface Props {
 		onContinue: () => void;
@@ -24,32 +22,6 @@
 				studySession().subjectIds.length
 		)
 	);
-
-	let progress = $state(0);
-	const duration = 5000;
-	let rafId: number | undefined;
-	let startTime = 0;
-
-	onMount(() => {
-		startTime = performance.now();
-
-		const tick = (now: number) => {
-			const elapsed = now - startTime;
-			progress = Math.min((elapsed / duration) * 100, 100);
-
-			if (elapsed < duration) {
-				rafId = requestAnimationFrame(tick);
-			}
-		};
-
-		rafId = requestAnimationFrame(tick);
-
-		return () => {
-			if (rafId !== undefined) {
-				cancelAnimationFrame(rafId);
-			}
-		};
-	});
 </script>
 
 <Centered>
@@ -102,7 +74,7 @@
 </Centered>
 
 <Button
-	class="relative w-full"
+	class="relative w-full overflow-hidden"
 	keyboardShortcut={{
 		handler: (e) => e.code === 'Space',
 		hintElement: spacebarShortcut
@@ -110,13 +82,29 @@
 	onclick={onContinue}
 	size="lg"
 >
-	<Progress
-		class="absolute bottom-0 rounded-t-none **:data-[slot='progress-indicator']:bg-primary-foreground"
-		value={progress}
-	/>
+	<div
+		class="progress-bar absolute inset-x-0 bottom-0 h-full origin-left bg-primary-foreground/20"
+		aria-hidden="true"
+	></div>
 	Continue
 </Button>
 
 {#snippet spacebarShortcut()}
 	<Kbd>Space</Kbd>
 {/snippet}
+
+<style>
+	.progress-bar {
+		animation: progress-fill 5s linear forwards;
+	}
+
+	@keyframes progress-fill {
+		from {
+			transform: scaleX(0);
+		}
+
+		to {
+			transform: scaleX(1);
+		}
+	}
+</style>
