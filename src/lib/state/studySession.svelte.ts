@@ -4,12 +4,14 @@ interface StudySession {
 	subjectIds: number[];
 	index: number;
 	studyType: StudyType;
+	numberOfCorrectAnswers: number;
 }
 
 let _studySession: StudySession = $state({
 	subjectIds: [],
 	index: 0,
-	studyType: 'review'
+	studyType: 'review',
+	numberOfCorrectAnswers: 0
 });
 
 export function studySession() {
@@ -18,12 +20,4 @@ export function studySession() {
 
 export function setStudySession(session: StudySession) {
 	_studySession = session;
-}
-
-export function resetStudySession() {
-	_studySession = {
-		index: 0,
-		subjectIds: [],
-		studyType: 'review'
-	};
 }
