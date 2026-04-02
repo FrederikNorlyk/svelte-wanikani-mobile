@@ -14,6 +14,12 @@
 		onContinue: () => void;
 	}
 
+	interface IllustrationProps {
+		alt: string;
+		src: string;
+		paragraph: string;
+	}
+
 	const { onContinue }: Props = $props();
 
 	const percentageCorrect = $derived(
@@ -22,6 +28,40 @@
 				studySession().subjectIds.length
 		)
 	);
+
+	const illustration: IllustrationProps = $derived.by(() => {
+		if (percentageCorrect === 100) {
+			return {
+				alt: 'An illustration of a male office worker in a suit, celebrating with a triumphant fist pump.',
+				src: pose_happy_businessman_guts,
+				paragraph: 'Fantastic job!'
+			};
+		} else if (percentageCorrect >= 60) {
+			return {
+				alt: 'An illustration of a man relaxing comfortably in an outdoor hot spring.',
+				src: onsen_man,
+				paragraph: 'Well done!'
+			};
+		} else if (percentageCorrect > 30) {
+			return {
+				alt: 'Illustration of a businessman lying on the grass, resting or sleeping.',
+				src: hirune_soto_businessman,
+				paragraph: 'All done!'
+			};
+		} else if (percentageCorrect > 0) {
+			return {
+				alt: 'An illustration of a family staring with blank, emotionless expressions.',
+				src: ochanoma_mu_notv,
+				paragraph: 'Better luck next time'
+			};
+		} else {
+			return {
+				alt: 'An illustration of a man who has experienced failure collapsing forward in despair.',
+				src: pose_zasetsu,
+				paragraph: 'Better luck next time...'
+			};
+		}
+	});
 </script>
 
 <Centered>
@@ -35,42 +75,9 @@
 		{/if}
 	</p>
 
-	{#if percentageCorrect === 100}
-		<Illustration
-			alt="An illustration of a male office worker in a suit, celebrating with a triumphant fist pump."
-			src={pose_happy_businessman_guts}
-		>
-			<p>Fantastic job!</p>
-		</Illustration>
-	{:else if percentageCorrect >= 60}
-		<Illustration
-			alt="An illustration of a man relaxing comfortably in an outdoor hot spring."
-			src={onsen_man}
-		>
-			<p>Well done!</p>
-		</Illustration>
-	{:else if percentageCorrect > 30}
-		<Illustration
-			alt="Illustration of a businessman lying on the grass, resting or sleeping."
-			src={hirune_soto_businessman}
-		>
-			<p>All done!</p>
-		</Illustration>
-	{:else if percentageCorrect > 0}
-		<Illustration
-			alt="An illustration of a family staring with blank, emotionless expressions."
-			src={ochanoma_mu_notv}
-		>
-			<p>Better luck next time</p>
-		</Illustration>
-	{:else}
-		<Illustration
-			alt="An illustration of a man who has experienced failure collapsing forward in despair."
-			src={pose_zasetsu}
-		>
-			<p>Better luck next time...</p>
-		</Illustration>
-	{/if}
+	<Illustration alt={illustration.alt} src={illustration.src}>
+		<p>{illustration.paragraph}</p>
+	</Illustration>
 </Centered>
 
 <Button
