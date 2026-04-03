@@ -15,6 +15,8 @@
 	import { Kbd } from '$lib/shadcn/components/ui/kbd';
 	import { uiState } from '$lib/state/uiState.svelte';
 	import type { NextReviewData } from '$lib/functions/assignments.remote';
+	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
+	import NotificationBadge from '$lib/components/NotificationBadge.svelte';
 
 	interface Props {
 		numberOfAssignments: number;
@@ -31,6 +33,10 @@
 	}: Props = $props();
 
 	let isSettingsOpen = $state(false);
+
+	let hasSeenNotificationSubscribeButton = $state(
+		AppMetadataRepository.get().hasSeenNotificationSubscribeButton
+	);
 
 	onMount(() => {
 		const onKeyUp = (e: KeyboardEvent) => {
@@ -116,6 +122,7 @@
 	<ButtonGroupSeparator />
 
 	<Button
+		class="relative"
 		keyboardShortcut={{
 			handler: (e) => e.key === 's',
 			hintElement: settingsShortcut
@@ -125,11 +132,17 @@
 		}}
 		size="icon-lg"
 	>
+		{#if !hasSeenNotificationSubscribeButton}
+			<NotificationBadge />
+		{/if}
 		<Settings class="size-5" />
 	</Button>
 </ButtonGroup>
 
-<SettingsDrawer bind:isOpen={isSettingsOpen} />
+<SettingsDrawer
+	bind:isOpen={isSettingsOpen}
+	bind:hasSeenNotificationSubscribeButton
+/>
 
 {#snippet reviewShortcut()}
 	<Kbd>R</Kbd>

@@ -4,6 +4,7 @@ const KEY = 'appMetadata';
 
 export interface AppMetadata {
 	lastAssignmentsFetchTimestamp: Date;
+	hasSeenNotificationSubscribeButton: boolean;
 }
 
 export default class AppMetadataRepository extends Repository {
@@ -11,13 +12,24 @@ export default class AppMetadataRepository extends Repository {
 		let metadata: AppMetadata | undefined = Repository.read(KEY);
 
 		metadata ??= {
-			lastAssignmentsFetchTimestamp: new Date()
+			lastAssignmentsFetchTimestamp: new Date(),
+			hasSeenNotificationSubscribeButton: false
 		};
 
 		return metadata;
 	}
 
-	public static set(appState: AppMetadata) {
+	private static set(appState: AppMetadata) {
 		Repository.write(KEY, appState);
+	}
+
+	public static setLastAssignmentsFetchTimestamp(date: Date) {
+		const existing = this.get();
+		this.set({ ...existing, lastAssignmentsFetchTimestamp: date });
+	}
+
+	public static setHasSeenNotificationSubscribeButton(value: boolean) {
+		const existing = this.get();
+		this.set({ ...existing, hasSeenNotificationSubscribeButton: value });
 	}
 }

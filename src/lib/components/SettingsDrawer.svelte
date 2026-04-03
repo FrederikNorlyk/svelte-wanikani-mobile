@@ -31,18 +31,35 @@
 	import { Label } from '$lib/shadcn/components/ui/label';
 	import Button from '$lib/components/Button.svelte';
 	import * as AssignmentService from '$lib/services/assignmentService';
+	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
+	import NotificationBadge from '$lib/components/NotificationBadge.svelte';
 
 	interface Props {
 		isOpen: boolean;
+		hasSeenNotificationSubscribeButton: boolean;
 	}
 
-	let { isOpen = $bindable(false) }: Props = $props();
+	let {
+		isOpen = $bindable(false),
+		hasSeenNotificationSubscribeButton = $bindable()
+	}: Props = $props();
 
 	const settings = $state<Settings>(SettingsRepository.get());
 	let notificationPermission = $state(Notification.permission);
+	let hasBeenOpen = $state(isOpen);
 
 	$effect(() => {
 		SettingsRepository.set(settings);
+	});
+
+	$effect(() => {
+		if (isOpen) {
+			hasBeenOpen = true;
+		} else if (hasBeenOpen && !hasSeenNotificationSubscribeButton) {
+			// The drawer is instantiated as closed, so we only mark this when closing the drawer after opening it
+			AppMetadataRepository.setHasSeenNotificationSubscribeButton(true);
+			hasSeenNotificationSubscribeButton = true;
+		}
 	});
 
 	async function subscribeToPushNotifications() {
@@ -104,8 +121,11 @@
 						</FieldDescription>
 
 						{#if notificationPermission === 'default'}
-							<Button onclick={subscribeToPushNotifications}
-								>Subscribe
+							<Button class="relative" onclick={subscribeToPushNotifications}>
+								{#if !hasSeenNotificationSubscribeButton}
+									<NotificationBadge />
+								{/if}
+								Subscribe
 								<BellPlus />
 							</Button>
 						{:else}

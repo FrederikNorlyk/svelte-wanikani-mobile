@@ -28,7 +28,7 @@ export async function refresh(
 		sortAssignments(assignments, reviewsPresentationOrder);
 	}
 
-	AppMetadataRepository.set({ lastAssignmentsFetchTimestamp: new Date() });
+	AppMetadataRepository.setLastAssignmentsFetchTimestamp(new Date());
 
 	return [assignments, nextReviewData];
 }
