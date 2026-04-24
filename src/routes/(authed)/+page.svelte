@@ -189,6 +189,9 @@
 				incorrectMeaningAnswers: incorrectMeanings
 			});
 
+			// Invalidate the SvelteKit cache
+			UserAPI.getUser().refresh();
+
 			// Keep the UI instant: don't await normally
 			void reviewPromise
 				.then(() => {
