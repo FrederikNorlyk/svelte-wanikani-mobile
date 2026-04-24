@@ -25,6 +25,7 @@
 	import ProgressRepository from '$lib/repository/database/progressRepository';
 	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
 	import StudySessionFinished from '$lib/components/StudySessionFinished.svelte';
+	import { Spinner } from '$lib/shadcn/components/ui/spinner';
 
 	type AppState =
 		| 'loading'
@@ -39,6 +40,9 @@
 	let nextReviewData = $state<NextReviewData | null>(null);
 	let appState = $state<AppState>('loading');
 	let user = $state<User | undefined>(undefined);
+
+	// Used by the StudySessionFinished component to skip the 5-second wait
+	let timeoutAbortController = $state(new AbortController());
 
 	const subject = $derived(async () => {
 		if (studySession().index >= studySession().subjectIds.length) {
@@ -243,7 +247,15 @@
 
 		// Linger on the "Study session finished" illustration for at least 5 seconds
 		const minDelay = new Promise<void>((resolve) => {
-			window.setTimeout(resolve, 5000);
+			const id = window.setTimeout(resolve, 5000);
+
+			timeoutAbortController.signal.addEventListener('abort', () => {
+				window.clearTimeout(id);
+				resolve();
+			});
+		}).then(() => {
+			// If the delay ends before the assignments promise, then we enter a loading state.
+			appState = 'loading';
 		});
 
 		// Invalidate the SvelteKit cache
@@ -268,6 +280,10 @@
 
 {#if appState === 'synchronizing'}
 	<Synchronizing />
+{:else if appState === 'loading'}
+	<Spinner
+		class="absolute top-1/2 left-1/2 size-40 -translate-x-1/2 -translate-y-1/2 text-primary/10"
+	/>
 {:else if appState === 'loaded'}
 	<HomePage
 		{nextReviewData}
@@ -306,7 +322,12 @@
 		}}
 	/>
 {:else if appState === 'finished'}
-	<StudySessionFinished onContinue={() => (appState = 'loaded')} />
+	<StudySessionFinished
+		onContinue={() => {
+			timeoutAbortController.abort();
+			timeoutAbortController = new AbortController();
+		}}
+	/>
 {:else if appState === 'level-up'}
 	<LevelUpPage
 		onContinue={() => {
