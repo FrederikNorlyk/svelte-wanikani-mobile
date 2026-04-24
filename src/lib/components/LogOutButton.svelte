@@ -27,7 +27,8 @@
 		try {
 			await NotificationUtil.unregisterPushNotifications();
 			await Remote.logOut({});
-		} catch {
+		} catch (e) {
+			console.error(e);
 			toast.error('Could not log out');
 		} finally {
 			isLoggingOut = false;

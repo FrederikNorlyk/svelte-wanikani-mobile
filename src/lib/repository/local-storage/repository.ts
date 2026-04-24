@@ -9,7 +9,8 @@ export abstract class Repository {
 		let parsed;
 		try {
 			parsed = JSON.parse(raw);
-		} catch {
+		} catch (e) {
+			console.error(e);
 			return undefined;
 		}
 

@@ -65,7 +65,8 @@
 			// Update the cached user
 			try {
 				user = await UserRepository.getUser({ forceSync: true });
-			} catch {
+			} catch (e) {
+				console.error(e);
 				toast.error('Could not get user information');
 			}
 
@@ -78,7 +79,8 @@
 					assignments = a;
 					nextReviewData = n;
 				})
-				.catch(() => {
+				.catch((e) => {
+					console.error(e);
 					toast.error('Could not get assignments');
 				});
 
@@ -88,7 +90,8 @@
 				appState = 'synchronizing';
 
 				promises.push(
-					SubjectsRepository.synchronize().catch(() => {
+					SubjectsRepository.synchronize().catch((e) => {
+						console.error(e);
 						toast.error('Could not synchronize with WaniKani');
 					})
 				);
@@ -203,7 +206,8 @@
 						}
 					);
 				})
-				.catch(() => {
+				.catch((e) => {
+					console.error(e);
 					toast.error('Could not create review');
 				});
 
@@ -268,7 +272,8 @@
 				assignments = a;
 				nextReviewData = n;
 			})
-			.catch(() => {
+			.catch((e) => {
+				console.error(e);
 				toast.error('Could not get assignments');
 			});
 

@@ -76,7 +76,8 @@
 			if (login.fields.allIssues()) {
 				isFormDisabled = false;
 			}
-		} catch {
+		} catch (e) {
+			console.error(e);
 			toast.error('Could not log in');
 			isFormDisabled = false;
 		}

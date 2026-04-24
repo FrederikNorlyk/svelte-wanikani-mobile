@@ -14,7 +14,8 @@ export const login = form(
 
 		try {
 			await UserAPI.getUser();
-		} catch {
+		} catch (e) {
+			console.error(e);
 			CookieUtil.delete(cookies, 'api_token');
 			invalid(issue._apiToken('Invalid API token'));
 		}

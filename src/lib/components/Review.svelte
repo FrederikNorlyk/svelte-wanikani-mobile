@@ -63,6 +63,7 @@
 					} else if (!navigator.onLine) {
 						return;
 					}
+					console.error(err);
 					toast.error('Failed to load audio');
 				});
 		}
