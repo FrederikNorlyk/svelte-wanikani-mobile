@@ -36,7 +36,7 @@
 				src: pose_happy_businessman_guts,
 				paragraph: 'Fantastic job!'
 			};
-		} else if (percentageCorrect >= 60) {
+		} else if (percentageCorrect >= 80) {
 			return {
 				alt: 'An illustration of a man relaxing comfortably in an outdoor hot spring.',
 				src: onsen_man,
@@ -52,7 +52,7 @@
 			return {
 				alt: 'An illustration of a family staring with blank, emotionless expressions.',
 				src: ochanoma_mu_notv,
-				paragraph: 'Better luck next time'
+				paragraph: ''
 			};
 		} else {
 			return {
