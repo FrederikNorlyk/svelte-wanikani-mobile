@@ -61,6 +61,7 @@
 	onMount(() => {
 		const refreshData = async () => {
 			console.trace('Refreshing data');
+			appState = 'loading';
 
 			// Update the cached user
 			try {
