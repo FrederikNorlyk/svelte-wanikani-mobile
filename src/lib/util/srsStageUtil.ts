@@ -1,9 +1,5 @@
 export type SRSStage =
-	| 'Apprentice'
-	| 'Guru'
-	| 'Master'
-	| 'Enlightened'
-	| 'Burned';
+	'Apprentice' | 'Guru' | 'Master' | 'Enlightened' | 'Burned';
 
 export function getSrsStage(stage: number): SRSStage {
 	if (stage <= 4) {
