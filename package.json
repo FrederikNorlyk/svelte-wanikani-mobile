@@ -28,8 +28,9 @@
 		"@tailwindcss/vite": "^4.3.2",
 		"@types/canvas-confetti": "^1.9.0",
 		"@types/node": "^24",
+		"@types/web-push": "^3.6.4",
 		"bits-ui": "^2.18.1",
-		"eslint": "^10.7.0",
+		"eslint": "^10.6.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.20.0",
 		"globals": "^17.7.0",
@@ -56,7 +57,6 @@
 		"@fontsource-variable/noto-sans": "^5.2.10",
 		"@fontsource-variable/noto-sans-jp": "^5.2.10",
 		"@neondatabase/serverless": "^1.1.0",
-		"@types/web-push": "^3.6.4",
 		"canvas-confetti": "^1.9.4",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
@@ -69,5 +69,6 @@
 	},
 	"engines": {
 		"node": "24.x"
-	}
+	},
+	"packageManager": "pnpm@11.11.0"
 }

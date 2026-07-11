@@ -3,7 +3,7 @@
 {
 	"name": "WaniKani Mobile",
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:24",
-	"postCreateCommand": "npm install",
+	"postCreateCommand": "corepack enable && corepack prepare pnpm@11.11.0 --activate && pnpm install",
 	"forwardPorts": [5173],
 	"appPort": [5173],
 	"runArgs": ["-p", "5173:5173"],

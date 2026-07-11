@@ -19,13 +19,13 @@ This project contains a [devcontainer configuration](.devcontainer/devcontainer.
 I use the Vercel CLI to link the application with my project in Vercel ([Read more](https://vercel.com/docs/cli)).
 
 ```bash
-npx vercel link
+pnpm dlx vercel link
 ```
 
 After linking the project, create an `.env.local` file by running:
 
 ```bash
-npx vercel env pull
+pnpm dlx vercel env pull
 ```
 
 These required variables should now be present.
