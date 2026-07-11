@@ -8,27 +8,31 @@ permissions:
   contents: read
 
 jobs:
-  lint:
+  quality:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [24.x]
+        command:
+          - lint
+          - check
+          - format:check
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - name: 'Create dummy .env file'
+      - name: Create dummy .env file
         run: cp .env.example .env
-        shell: bash
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v6
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: npm
+          version: 11.11.0
+          run_install: false
 
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run check
-      - run: npm run format:check
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm ${{ matrix.command }}
