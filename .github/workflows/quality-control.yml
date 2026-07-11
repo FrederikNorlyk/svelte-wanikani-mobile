@@ -10,6 +10,7 @@ permissions:
 jobs:
   quality:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         command:
@@ -19,12 +20,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+
+      - name: Create dummy .env file
+        run: cp .env.example .env
+
       - uses: pnpm/action-setup@v6
         with:
           version: 11.11.0
+          run_install: false
+
       - uses: actions/setup-node@v6
         with:
           node-version: 24.x
           cache: pnpm
+
       - run: pnpm install --frozen-lockfile
       - run: pnpm ${{ matrix.command }}
