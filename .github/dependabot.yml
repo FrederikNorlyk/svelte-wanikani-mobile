@@ -7,6 +7,9 @@ updates:
       day: 'saturday'
       time: '06:00'
 
+    cooldown:
+      default-days: 7
+
     ignore:
       - dependency-name: '@types/node'
         update-types:
@@ -24,3 +27,6 @@ updates:
       interval: 'weekly'
       day: 'saturday'
       time: '06:00'
+
+    cooldown:
+      default-days: 7
