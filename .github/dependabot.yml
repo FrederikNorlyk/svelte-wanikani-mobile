@@ -15,6 +15,11 @@ updates:
         update-types:
           - 'version-update:semver-major'
 
+      # Wait for TypeScript 7.1, which should expose an API allowing typescript-eslint to support TypeScript 7
+      - dependency-name: 'typescript'
+        versions:
+          - '>=7.0.0 <7.1.0'
+
     groups:
       all:
         patterns:
