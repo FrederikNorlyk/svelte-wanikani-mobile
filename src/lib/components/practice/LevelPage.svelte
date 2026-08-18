@@ -6,7 +6,6 @@
 	import type { Subject } from '$lib/functions/subjects.remote';
 	import { setStudySession } from '$lib/state/studySession.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import CharacterHeader from '$lib/components/CharacterHeader.svelte';
 	import { cn } from '$lib/shadcn/utils';
 	import { Kbd } from '$lib/shadcn/components/ui/kbd';
 	import {
@@ -22,6 +21,7 @@
 	import { onMount } from 'svelte';
 	import { uiState } from '$lib/state/uiState.svelte';
 	import ScrollableGrid from '$lib/components/practice/ScrollableGrid.svelte';
+	import SubjectCard from '../SubjectCard.svelte';
 
 	interface Props {
 		level: number;
@@ -90,9 +90,9 @@
 		{@const isCompleted = progress.find((p) => p.subjectId === subject.id)}
 
 		<a href={subject.documentUrl} rel="external" target="_blank">
-			<CharacterHeader class={cn('', { 'opacity-50': isCompleted })} {subject}>
+			<SubjectCard class={cn('', { 'opacity-50': isCompleted })} {subject}>
 				<p>{subject.characters}</p>
-			</CharacterHeader>
+			</SubjectCard>
 		</a>
 	{/each}
 </ScrollableGrid>

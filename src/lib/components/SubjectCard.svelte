@@ -18,10 +18,10 @@
 </script>
 
 <div
-	class={cn('character-header', className)}
-	class:character-header--kanji={subject.type === 'kanji'}
-	class:character-header--radical={subject.type === 'radical'}
-	class:character-header--vocab={subject.type === 'vocabulary' ||
+	class={cn('subject-card', className)}
+	class:subject-card--kanji={subject.type === 'kanji'}
+	class:subject-card--radical={subject.type === 'radical'}
+	class:subject-card--vocab={subject.type === 'vocabulary' ||
 		subject.type === 'kana_vocabulary'}
 	{...restProps}
 >

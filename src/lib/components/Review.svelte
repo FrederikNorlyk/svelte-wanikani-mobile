@@ -6,7 +6,6 @@
 	import ArrowBigRight from '@lucide/svelte/icons/arrow-big-right';
 	import SettingsRepository from '$lib/repository/local-storage/settingsRepository';
 	import AudioUtil from '$lib/util/audioUtil';
-	import CharacterHeader from '$lib/components/CharacterHeader.svelte';
 	import { onMount } from 'svelte';
 	import { Kbd } from '$lib/shadcn/components/ui/kbd';
 	import { uiState } from '$lib/state/uiState.svelte';
@@ -14,6 +13,7 @@
 	import { toast } from 'svelte-sonner';
 	import { studySession } from '$lib/state/studySession.svelte';
 	import { calculatePercentage } from '$lib/util/mathUtil';
+	import SubjectCard from './SubjectCard.svelte';
 
 	interface Props {
 		subject: Subject;
@@ -93,7 +93,7 @@
 
 <Progress value={progress()} />
 
-<CharacterHeader {subject}>
+<SubjectCard {subject}>
 	{#if isShowingAnswer && primaryReading}
 		<p>{primaryReading}</p>
 	{:else}
@@ -105,7 +105,7 @@
 	{:else}
 		<div class="h-6 w-full"></div>
 	{/if}
-</CharacterHeader>
+</SubjectCard>
 
 <div class="flex-1 space-y-2">
 	{#if isShowingAnswer}
