@@ -94,12 +94,12 @@
 <Progress value={progress()} />
 
 <SubjectCard {subject}>
+	<p class="text-4xl">{subject.characters}</p>
 	{#if isShowingAnswer && primaryReading}
 		<p>{primaryReading}</p>
 	{:else}
 		<div class="h-6 w-full"></div>
 	{/if}
-	<p class="text-4xl">{subject.characters}</p>
 	{#if isShowingAnswer && primaryMeaning}
 		<p>{primaryMeaning}</p>
 	{:else}
