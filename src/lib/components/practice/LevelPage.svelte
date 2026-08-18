@@ -90,11 +90,10 @@
 		{@const isCompleted = progress.find((p) => p.subjectId === subject.id)}
 
 		<a href={subject.documentUrl} rel="external" target="_blank">
-			<CharacterHeader
-				class={cn('', { 'opacity-50': isCompleted })}
-				{subject}
-			/></a
-		>
+			<CharacterHeader class={cn('', { 'opacity-50': isCompleted })} {subject}>
+				<p>{subject.characters}</p>
+			</CharacterHeader>
+		</a>
 	{/each}
 </ScrollableGrid>
 
