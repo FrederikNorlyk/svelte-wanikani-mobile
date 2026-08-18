@@ -160,10 +160,10 @@
 }
 
 @layer components {
-	.character-header {
+	.subject-card {
 		@apply rounded-lg border p-6 text-center;
 
-		&.character-header--kanji {
+		&.subject-card--kanji {
 			@apply border-fuchsia-600 bg-fuchsia-300 text-fuchsia-700;
 
 			@media (prefers-color-scheme: dark) {
@@ -171,7 +171,7 @@
 			}
 		}
 
-		&.character-header--vocab {
+		&.subject-card--vocab {
 			@apply border-purple-600 bg-purple-300 text-purple-700;
 
 			@media (prefers-color-scheme: dark) {
@@ -179,7 +179,7 @@
 			}
 		}
 
-		&.character-header--radical {
+		&.subject-card--radical {
 			@apply border-blue-600 bg-blue-300 text-blue-700;
 
 			@media (prefers-color-scheme: dark) {

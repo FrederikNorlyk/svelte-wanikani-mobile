@@ -6,7 +6,6 @@
 	import ArrowBigRight from '@lucide/svelte/icons/arrow-big-right';
 	import SettingsRepository from '$lib/repository/local-storage/settingsRepository';
 	import AudioUtil from '$lib/util/audioUtil';
-	import CharacterHeader from '$lib/components/CharacterHeader.svelte';
 	import { onMount } from 'svelte';
 	import { Kbd } from '$lib/shadcn/components/ui/kbd';
 	import { uiState } from '$lib/state/uiState.svelte';
@@ -14,6 +13,7 @@
 	import { toast } from 'svelte-sonner';
 	import { studySession } from '$lib/state/studySession.svelte';
 	import { calculatePercentage } from '$lib/util/mathUtil';
+	import SubjectCard from './SubjectCard.svelte';
 
 	interface Props {
 		subject: Subject;
@@ -93,25 +93,36 @@
 
 <Progress value={progress()} />
 
-<CharacterHeader class="text-4xl" {subject} />
+<SubjectCard {subject}>
+	{#if isShowingAnswer && primaryReading}
+		<p>{primaryReading}</p>
+	{:else}
+		<div class="h-6 w-full"></div>
+	{/if}
+	<p class="text-4xl">{subject.characters}</p>
+	{#if isShowingAnswer && primaryMeaning}
+		<p>{primaryMeaning}</p>
+	{:else}
+		<div class="h-6 w-full"></div>
+	{/if}
+</SubjectCard>
 
 <div class="flex-1 space-y-2">
 	{#if isShowingAnswer}
-		{#if primaryMeaning}
+		{#if secondaryMeanings.length > 0}
 			{@render answerBlock(
-				'Meanings',
-				primaryMeaning,
+				'Secondary meanings',
 				secondaryMeanings,
 				'meaning',
 				uiState.isShowingKeyboardShortcuts
 			)}
 		{/if}
-		{#if primaryReading}
+		{#if secondaryReadings.length > 0}
 			{@render answerBlock(
-				'Readings',
-				primaryReading,
+				'Secondary readings',
 				secondaryReadings,
-				'reading'
+				'reading',
+				uiState.isShowingKeyboardShortcuts && secondaryMeanings.length == 0
 			)}
 		{/if}
 	{/if}
@@ -162,10 +173,9 @@
 
 {#snippet answerBlock(
 	label: string,
-	primaryAnswer: string,
-	secondaryAnswers: string[],
+	answers: string[],
 	anchor: string,
-	shouldRenderKeyboardShortcut: boolean = false
+	shouldRenderKeyboardShortcut: boolean
 )}
 	<a
 		class="answer"
@@ -180,14 +190,11 @@
 			{/if}
 		</div>
 		<p class="answer__label">{label}</p>
-		<b class="answer__text answer__text--primary">{primaryAnswer}</b>
-		{#if secondaryAnswers.length > 0}
-			<div>
-				{#each secondaryAnswers as answer (answer)}
-					<p class="answer__text answer__text--secondary">{answer}</p>
-				{/each}
-			</div>
-		{/if}
+		<div>
+			{#each answers as answer (answer)}
+				<p class="answer__text answer__text--secondary">{answer}</p>
+			{/each}
+		</div>
 	</a>
 {/snippet}
 
