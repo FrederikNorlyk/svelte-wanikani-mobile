@@ -5,7 +5,7 @@
 		type NextReviewData
 	} from '$lib/functions/assignments.remote';
 	import * as AssignmentService from '$lib/services/assignmentService';
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import SubjectsRepository from '$lib/repository/database/subjectsRepository';
 	import Review from '$lib/components/Review.svelte';
@@ -60,7 +60,6 @@
 
 	onMount(() => {
 		const refreshData = async () => {
-			console.trace('Refreshing data');
 			appState = 'loading';
 
 			// Update the cached user
@@ -198,11 +197,6 @@
 				.then(() => {
 					Promise.all([UserRepository.getUser(), UserAPI.getUser()]).then(
 						([oldUser, newUser]) => {
-							console.log('Old user:');
-							console.dir(oldUser);
-							console.log('New user:');
-							console.dir(newUser);
-
 							if (newUser.level > oldUser.level) {
 								UserRepository.setUser(newUser);
 								appState = 'level-up';
@@ -253,6 +247,12 @@
 			return;
 		}
 
+		untrack(() => {
+			void finishStudySession();
+		});
+	});
+
+	async function finishStudySession() {
 		// Linger on the "Study session finished" illustration for at least 5 seconds
 		const minDelay = new Promise<void>((resolve) => {
 			const id = window.setTimeout(resolve, 5000);
@@ -281,10 +281,10 @@
 				toast.error('Could not get assignments');
 			});
 
-		Promise.all([assignmentPromise, minDelay]).finally(() => {
-			appState = 'loaded';
-		});
-	});
+		await Promise.all([assignmentPromise, minDelay]);
+
+		appState = 'loaded';
+	}
 </script>
 
 {#if appState === 'synchronizing'}
