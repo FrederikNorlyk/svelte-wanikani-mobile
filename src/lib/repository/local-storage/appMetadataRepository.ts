@@ -19,8 +19,8 @@ export default class AppMetadataRepository extends Repository {
 		return metadata;
 	}
 
-	private static set(appState: AppMetadata) {
-		Repository.write(KEY, appState);
+	private static set(metadata: AppMetadata) {
+		Repository.write(KEY, metadata);
 	}
 
 	public static setLastAssignmentsFetchTimestamp(date: Date) {
