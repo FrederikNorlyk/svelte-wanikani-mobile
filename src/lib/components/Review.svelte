@@ -14,6 +14,7 @@
 	import { studySession } from '$lib/state/studySession.svelte';
 	import { calculatePercentage } from '$lib/util/mathUtil';
 	import SubjectCard from './SubjectCard.svelte';
+	import SubjectCharacter from '$lib/components/SubjectCharacter.svelte';
 
 	interface Props {
 		subject: Subject;
@@ -99,7 +100,9 @@
 	{:else}
 		<div class="h-6 w-full"></div>
 	{/if}
-	<p class="text-4xl">{subject.characters}</p>
+
+	<SubjectCharacter class="text-4xl" {subject} />
+
 	{#if isShowingAnswer && primaryMeaning}
 		<p>{primaryMeaning}</p>
 	{:else}
@@ -199,11 +202,15 @@
 {/snippet}
 
 {#snippet arrowLeftShortcut()}
-	<Kbd><ArrowBigLeft /></Kbd>
+	<Kbd>
+		<ArrowBigLeft />
+	</Kbd>
 {/snippet}
 
 {#snippet arrowRightShortcut()}
-	<Kbd class="bg-secondary-foreground text-secondary"><ArrowBigRight /></Kbd>
+	<Kbd class="bg-secondary-foreground text-secondary">
+		<ArrowBigRight />
+	</Kbd>
 {/snippet}
 
 {#snippet spacebarShortcut()}

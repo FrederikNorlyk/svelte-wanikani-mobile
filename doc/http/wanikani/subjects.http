@@ -1,0 +1,9 @@
+### GET Get all subjects
+GET https://api.wanikani.com/v2/subjects
+Authorization: Bearer {{WANIKANI_API_TOKEN}}
+
+### GET Get a specific subjects
+@subject_id = 8766
+GET https://api.wanikani.com/v2/subjects/{{subject_id}}
+Authorization: Bearer {{WANIKANI_API_TOKEN}}
+

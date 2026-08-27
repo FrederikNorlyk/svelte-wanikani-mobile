@@ -22,6 +22,7 @@
 	import { uiState } from '$lib/state/uiState.svelte';
 	import ScrollableGrid from '$lib/components/practice/ScrollableGrid.svelte';
 	import SubjectCard from '../SubjectCard.svelte';
+	import SubjectCharacter from '$lib/components/SubjectCharacter.svelte';
 
 	interface Props {
 		level: number;
@@ -91,7 +92,7 @@
 
 		<a href={subject.documentUrl} rel="external" target="_blank">
 			<SubjectCard class={cn('', { 'opacity-50': isCompleted })} {subject}>
-				<p>{subject.characters}</p>
+				<SubjectCharacter {subject} />
 			</SubjectCard>
 		</a>
 	{/each}
@@ -131,8 +132,9 @@
 					ProgressRepository.deleteByLevel(level).then(() => {
 						refreshCounter += 1;
 						isShowingAlertDialog = false;
-					})}>Reset</AlertDialogAction
-			>
+					})}
+				>Reset
+			</AlertDialogAction>
 		</AlertDialogFooter>
 	</AlertDialogContent>
 </AlertDialog>
