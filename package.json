@@ -21,16 +21,16 @@
 	"devDependencies": {
 		"@eslint/compat": "^2.1.0",
 		"@eslint/js": "^10.0.1",
-		"@lucide/svelte": "^1.31.0",
+		"@lucide/svelte": "^1.33.0",
 		"@sveltejs/adapter-vercel": "^6.3.4",
-		"@sveltejs/kit": "2.70.2",
+		"@sveltejs/kit": "2.70.3",
 		"@sveltejs/vite-plugin-svelte": "^7.3.0",
 		"@tailwindcss/vite": "^4.3.2",
 		"@types/canvas-confetti": "^1.9.0",
 		"@types/node": "^24",
 		"@types/web-push": "^3.6.4",
-		"bits-ui": "^2.18.1",
-		"eslint": "^10.8.1",
+		"bits-ui": "^2.19.0",
+		"eslint": "^10.9.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.23.0",
 		"globals": "^17.11.0",
@@ -41,7 +41,7 @@
 		"prettier-plugin-organize-imports": "^4.3.0",
 		"prettier-plugin-svelte": "^4.1.1",
 		"prettier-plugin-tailwindcss": "^0.8.0",
-		"svelte": "^5.56.9",
+		"svelte": "^5.56.10",
 		"svelte-check": "^4.7.6",
 		"svelte-sonner": "^1.2.1",
 		"tailwind-variants": "^3.3.1",
@@ -50,7 +50,7 @@
 		"typescript": "6.0.3",
 		"typescript-eslint": "^8.67.0",
 		"vaul-svelte": "^1.0.0-next.7",
-		"vite": "^8.2.1"
+		"vite": "^8.2.2"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.7.0",
@@ -62,7 +62,7 @@
 		"clsx": "^2.1.1",
 		"idb": "^8.0.3",
 		"radix-ui": "^1.6.7",
-		"shadcn": "^4.18.0",
+		"shadcn": "^4.19.0",
 		"tailwind-merge": "^3.6.0",
 		"valibot": "^1.4.2",
 		"web-push": "^3.6.7"
