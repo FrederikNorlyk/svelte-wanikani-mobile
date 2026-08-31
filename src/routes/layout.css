@@ -191,26 +191,19 @@
 		}
 	}
 
-	.answer {
-		@apply relative block rounded-lg border border-border bg-secondary p-4;
+	.answer-card {
+		@apply rounded-lg border border-border bg-secondary p-4;
 
-		& .answer__label {
+		& .answer-card__label {
 			@apply text-sm font-medium text-muted-foreground;
 		}
 
-		& .answer__text {
-			@apply text-secondary-foreground;
+		& .answer-card__text {
+			@apply inline-block text-secondary-foreground opacity-75;
 		}
 
-		& .answer__text--primary {
-			@apply text-xl;
-		}
-
-		& .answer__text--secondary {
-			@apply inline-block opacity-75;
-		}
-
-		& .answer__text--secondary + .answer__text--secondary::before {
+		/* Separate each answer with a dot */
+		& .answer-card__text + .answer-card__text::before {
 			content: '·';
 			margin-right: 0.25rem;
 			margin-left: 0.25rem;
