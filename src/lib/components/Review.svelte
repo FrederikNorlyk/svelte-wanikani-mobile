@@ -94,39 +94,28 @@
 
 <Progress value={progress()} />
 
-<SubjectCard {subject}>
-	{#if isShowingAnswer && primaryReading}
-		<p>{primaryReading}</p>
-	{:else}
-		<div class="h-6 w-full"></div>
-	{/if}
+{#if isShowingAnswer}
+	<a class="relative" href={subject.documentUrl} rel="external" target="_blank">
+		<div class="absolute top-4 right-4 flex gap-2">
+			<ExternalLink class="size-4 text-muted-foreground" />
+			{#if uiState.isShowingKeyboardShortcuts}
+				<Kbd class="bg-secondary-foreground text-secondary">f</Kbd>
+			{/if}
+		</div>
 
-	<SubjectCharacter class="text-4xl" {subject} />
-
-	{#if isShowingAnswer && primaryMeaning}
-		<p>{primaryMeaning}</p>
-	{:else}
-		<div class="h-6 w-full"></div>
-	{/if}
-</SubjectCard>
+		{@render subjectCard()}
+	</a>
+{:else}
+	{@render subjectCard()}
+{/if}
 
 <div class="flex-1 space-y-2">
 	{#if isShowingAnswer}
 		{#if secondaryMeanings.length > 0}
-			{@render answerBlock(
-				'Secondary meanings',
-				secondaryMeanings,
-				'meaning',
-				uiState.isShowingKeyboardShortcuts
-			)}
+			{@render answerBlock('Secondary meanings', secondaryMeanings)}
 		{/if}
 		{#if secondaryReadings.length > 0}
-			{@render answerBlock(
-				'Secondary readings',
-				secondaryReadings,
-				'reading',
-				uiState.isShowingKeyboardShortcuts && secondaryMeanings.length == 0
-			)}
+			{@render answerBlock('Secondary readings', secondaryReadings)}
 		{/if}
 	{/if}
 </div>
@@ -174,31 +163,33 @@
 	{/if}
 </div>
 
-{#snippet answerBlock(
-	label: string,
-	answers: string[],
-	anchor: string,
-	shouldRenderKeyboardShortcut: boolean
-)}
-	<a
-		class="answer"
-		href={`${subject.documentUrl}#${anchor}`}
-		rel="external"
-		target="_blank"
-	>
-		<div class="absolute right-4 flex gap-2">
-			<ExternalLink class="size-4 text-muted-foreground" />
-			{#if shouldRenderKeyboardShortcut}
-				<Kbd class="bg-secondary-foreground text-secondary">f</Kbd>
-			{/if}
-		</div>
-		<p class="answer__label">{label}</p>
+{#snippet subjectCard()}
+	<SubjectCard {subject}>
+		{#if isShowingAnswer && primaryReading}
+			<p>{primaryReading}</p>
+		{:else}
+			<div class="h-6 w-full"></div>
+		{/if}
+
+		<SubjectCharacter class="text-4xl" {subject} />
+
+		{#if isShowingAnswer && primaryMeaning}
+			<p>{primaryMeaning}</p>
+		{:else}
+			<div class="h-6 w-full"></div>
+		{/if}
+	</SubjectCard>
+{/snippet}
+
+{#snippet answerBlock(label: string, answers: string[])}
+	<div class="answer-card">
+		<p class="answer-card__label">{label}</p>
 		<div>
 			{#each answers as answer (answer)}
-				<p class="answer__text answer__text--secondary">{answer}</p>
+				<p class="answer-card__text">{answer}</p>
 			{/each}
 		</div>
-	</a>
+	</div>
 {/snippet}
 
 {#snippet arrowLeftShortcut()}
