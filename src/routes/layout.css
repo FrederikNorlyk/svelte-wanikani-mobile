@@ -153,9 +153,13 @@
 		background-attachment: fixed;
 	}
 
-	/* Make sure your app content paints above the overlay */
 	:root {
 		isolation: isolate;
+	}
+
+	main {
+		position: relative;
+		z-index: 0;
 	}
 }
 

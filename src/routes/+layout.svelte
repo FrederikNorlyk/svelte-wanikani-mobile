@@ -3,6 +3,7 @@
 	import favicon from '$lib/assets/favicon.png';
 	import { onMount } from 'svelte';
 	import { Toaster } from '$lib/shadcn/components/ui/sonner/index.js';
+	import LandscapeWallpaper from '$lib/components/LandscapeWallpaper.svelte';
 
 	let { children } = $props();
 
@@ -39,6 +40,7 @@
 </svelte:head>
 
 <Toaster position="top-center" />
+<LandscapeWallpaper />
 
 <main class="box-border flex h-dvh min-h-0 flex-col gap-2">
 	{@render children()}
