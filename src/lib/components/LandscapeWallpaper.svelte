@@ -74,13 +74,19 @@
 	}
 
 	onMount(() => {
-		const context = canvas.getContext('2d');
+		let context: CanvasRenderingContext2D | null;
+		try {
+			context = canvas.getContext('2d');
+		} catch {
+			return;
+		}
 		if (!context) return;
 
 		let animationFrame: number | undefined;
 		let elapsed = Math.random() * 90_000;
 		let previousFrame: number | undefined;
 		let disposed = false;
+		let renderingFailed = false;
 		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 		const atlas = new Image();
 
@@ -89,15 +95,28 @@
 			animationFrame = undefined;
 		};
 
+		const drawSafely = (time: number) => {
+			if (renderingFailed) return false;
+			try {
+				drawScene(context, atlas, time);
+				return true;
+			} catch {
+				renderingFailed = true;
+				stopAnimation();
+				context.clearRect(0, 0, canvas.width, canvas.height);
+				return false;
+			}
+		};
+
 		const render = (now: number) => {
 			if (disposed) return;
 			if (previousFrame !== undefined) elapsed += now - previousFrame;
 			previousFrame = now;
-			drawScene(context, atlas, elapsed / 1000);
-			animationFrame = requestAnimationFrame(render);
+			if (drawSafely(elapsed / 1000))
+				animationFrame = requestAnimationFrame(render);
 		};
 
-		const drawStatic = () => drawScene(context, atlas, STATIC_WIND_TIME);
+		const drawStatic = () => drawSafely(STATIC_WIND_TIME);
 
 		const startAnimation = () => {
 			stopAnimation();
@@ -106,7 +125,8 @@
 		};
 
 		const updateAnimation = () => {
-			if (!atlas.complete || atlas.naturalWidth === 0) return;
+			if (renderingFailed || !atlas.complete || atlas.naturalWidth === 0)
+				return;
 			if (reducedMotion.matches) {
 				stopAnimation();
 				drawStatic();
