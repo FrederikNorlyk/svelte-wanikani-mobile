@@ -29,15 +29,18 @@
 		const viewportWidth = window.innerWidth;
 		const viewportHeight = window.innerHeight;
 		const pixelRatio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
+
 		const coverScale = Math.max(
 			viewportWidth / SCENE_WIDTH,
 			viewportHeight / SCENE_HEIGHT
 		);
+
 		const cropX = (viewportWidth - SCENE_WIDTH * coverScale) / 2;
 		const cropY = viewportHeight - SCENE_HEIGHT * coverScale;
 
 		const displayWidth = Math.round(viewportWidth * pixelRatio);
 		const displayHeight = Math.round(viewportHeight * pixelRatio);
+
 		if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
 			canvas.width = displayWidth;
 			canvas.height = displayHeight;
@@ -77,10 +80,15 @@
 		let context: CanvasRenderingContext2D | null;
 		try {
 			context = canvas.getContext('2d');
-		} catch {
+		} catch (e) {
+			console.error(e);
 			return;
 		}
-		if (!context) return;
+
+		if (!context) {
+			console.error('No context');
+			return;
+		}
 
 		let animationFrame: number | undefined;
 		let elapsed = Math.random() * 90_000;

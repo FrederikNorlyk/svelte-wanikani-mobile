@@ -4,12 +4,51 @@ import atlasMetadata from '$lib/assets/background/grass-atlas.json';
 export const grassSprites = atlasMetadata;
 
 export type GrassTuft = {
+	/**
+	 * Index of the atlas sprite used to draw this tuft.
+	 */
 	sprite: number;
+
+	/**
+	 * Horizontal root position in the landscape coordinate space.
+	 * Increase to move the tuft farther right; decrease to move it farther left.
+	 * This controls where the base of the tuft is anchored before scaling and screen cropping are applied.
+	 */
 	x: number;
+
+	/**
+	 * Vertical root position in the landscape coordinate space.
+	 * Increase to move the tuft lower; decrease to move it higher.
+	 * This controls where the base of the tuft is anchored before scaling and screen cropping are applied.
+	 */
 	y: number;
+
+	/**
+	 * Size multiplier applied when drawing the tuft.
+	 * Increase to make the tuft appear larger; decrease to make it appear smaller.
+	 * This scales the sprite around its root pivot, so the base stays anchored while the blades grow or shrink.
+	 */
 	scale: number;
+
+	/**
+	 * Resistance to wind-driven bending.
+	 * Increase to make the tuft stiffer, so it bends and rotates less for the same wind.
+	 * Decrease to make the tuft more flexible, so it leans, shears, and sways more dramatically.
+	 */
 	stiffness: number;
+
+	/**
+	 * The strength of the wind effect applied to this tuft.
+	 * Increase to make the tuft react more strongly to wind, producing wider sway and larger bends.
+	 * Decrease to make the tuft calmer, producing smaller movement even when the global wind is strong.
+	 */
 	amplitude: number;
+
+	/**
+	 * Time offset, in seconds, applied to this tuft's wind sampling.
+	 * Increase to make this tuft respond to an earlier/later phase of the wind pattern, separating its motion from nearby tufts.
+	 * Decrease to bring its motion closer to the current shared wind phase, making it move more in sync with tufts that have similar lag.
+	 */
 	lag: number;
 };
 
