@@ -141,10 +141,6 @@
 		background-repeat: no-repeat;
 		background-size: cover;
 	}
-
-	:root {
-		isolation: isolate;
-	}
 }
 
 @layer components {
