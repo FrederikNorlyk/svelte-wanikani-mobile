@@ -145,11 +145,6 @@
 	:root {
 		isolation: isolate;
 	}
-
-	main {
-		position: relative;
-		z-index: 0;
-	}
 }
 
 @layer components {
