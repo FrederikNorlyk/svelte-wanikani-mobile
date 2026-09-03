@@ -42,10 +42,12 @@
 	--safe-right: env(safe-area-inset-right);
 	--safe-bottom: env(safe-area-inset-bottom);
 	--safe-left: env(safe-area-inset-left);
+	--app-background-image: url('../lib/assets/background/light/background.png');
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
+		--app-background-image: url('../lib/assets/background/dark/background.png');
 		--background: oklch(0.13 0.028 261.692);
 		--foreground: oklch(0.985 0.002 247.839);
 		--card: oklch(0.21 0.034 264.665);
@@ -133,24 +135,11 @@
 
 	body {
 		@apply bg-background font-sans text-foreground;
-
-		/* Graph paper grid */
-		--grid-size: 50px;
-		--grid-line: color-mix(in oklch, var(--foreground) 3%, transparent);
-
-		background-image:
-			repeating-linear-gradient(
-				0deg,
-				var(--grid-line) 0 1px,
-				transparent 1px var(--grid-size)
-			),
-			repeating-linear-gradient(
-				90deg,
-				var(--grid-line) 0 1px,
-				transparent 1px var(--grid-size)
-			);
-
+		background-image: var(--app-background-image);
 		background-attachment: fixed;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
 	}
 
 	:root {
