@@ -43,7 +43,7 @@
 	--safe-bottom: env(safe-area-inset-bottom);
 	--safe-left: env(safe-area-inset-left);
 	--app-background-image: url('../lib/assets/background/light/background.png');
-	--app-background-color: #6dcff8;
+	--app-background-color: #2990ee;
 }
 
 @media (prefers-color-scheme: dark) {
