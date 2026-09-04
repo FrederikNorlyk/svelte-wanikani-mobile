@@ -21,18 +21,19 @@
 		...restProps
 	}: Props = $props();
 
-	let isAnimating = $state(false);
+	let buttonElement: HTMLButtonElement;
 
 	async function animateButtonPress() {
-		if (isAnimating) {
-			return;
-		}
+		const animation = buttonElement.animate(
+			[
+				{ transform: 'translateY(0)' },
+				{ transform: 'translateY(4px)' },
+				{ transform: 'translateY(0)' }
+			],
+			{ duration: 150, easing: 'ease-out' }
+		);
 
-		isAnimating = true;
-
-		await new Promise((r) => setTimeout(r, 120));
-
-		isAnimating = false;
+		await animation.finished;
 	}
 
 	onMount(() => {
@@ -45,10 +46,7 @@
 
 			if (keyboardShortcut?.handler(e)) {
 				e.preventDefault();
-
-				animateButtonPress().then(() => {
-					onclick();
-				});
+				buttonElement.click();
 			}
 		};
 
@@ -59,13 +57,11 @@
 </script>
 
 <button
-	class={cn(
-		'paper-effect paper-effect__strong',
-		'transition-transform duration-75 ease-out',
-		isAnimating && 'translate-y-2 scale-[0.98]',
-		className
-	)}
-	{onclick}
+	bind:this={buttonElement}
+	class={cn('paper-effect paper-effect__strong', className)}
+	onclick={() => {
+		animateButtonPress().then(onclick);
+	}}
 	type="button"
 	{...restProps}
 >
@@ -122,15 +118,6 @@
 			0 6px 0 #a83f35,
 			0 10px 16px rgb(75 45 30 / 20%),
 			inset 0 1px 0 rgb(255 255 255 / 30%);
-	}
-
-	button:active {
-		transform: translateY(4px);
-
-		box-shadow:
-			0 1px 0 #a83f35,
-			0 4px 8px rgb(75 45 30 / 16%),
-			inset 0 1px 0 rgb(255 255 255 / 22%);
 	}
 
 	button:focus-visible {
