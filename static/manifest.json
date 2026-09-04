@@ -15,6 +15,8 @@
 		}
 	],
 	"display": "standalone",
+	"background_color": "#145b99",
+	"theme_color": "#145b99",
 	"scope": "/",
 	"description": "This is a community-made mobile app for WaniKani. WaniKani is a Japanese language learning web app that uses mnemonics and SRS to make kanji learning simple."
 }

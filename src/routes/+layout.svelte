@@ -6,6 +6,20 @@
 
 	let { children } = $props();
 
+	const toasterOffset = {
+		top: 'calc(2rem + env(safe-area-inset-top, 0px))',
+		right: 'calc(2rem + env(safe-area-inset-right, 0px))',
+		bottom: 'calc(2rem + env(safe-area-inset-bottom, 0px))',
+		left: 'calc(2rem + env(safe-area-inset-left, 0px))'
+	};
+
+	const mobileToasterOffset = {
+		top: 'calc(1rem + env(safe-area-inset-top, 0px))',
+		right: 'calc(1rem + env(safe-area-inset-right, 0px))',
+		bottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))',
+		left: 'calc(1rem + env(safe-area-inset-left, 0px))'
+	};
+
 	onMount(() => {
 		const clearNotifications = async () => {
 			const registration = await navigator.serviceWorker?.ready;
@@ -58,7 +72,11 @@
 	</defs>
 </svg>
 
-<Toaster position="top-center" />
+<Toaster
+	mobileOffset={mobileToasterOffset}
+	offset={toasterOffset}
+	position="top-center"
+/>
 
 <main class="box-border flex h-dvh min-h-0 flex-col gap-2">
 	{@render children()}
