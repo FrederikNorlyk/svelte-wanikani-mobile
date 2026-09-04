@@ -87,7 +87,6 @@
 		hintElement: spacebarShortcut
 	}}
 	onclick={onContinue}
-	size="lg"
 >
 	<div
 		class="progress-bar absolute inset-x-0 bottom-0 h-full origin-left bg-primary-foreground/20"

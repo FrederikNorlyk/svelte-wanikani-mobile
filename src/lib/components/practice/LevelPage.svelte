@@ -110,7 +110,6 @@
 			buildPracticeSession().then(onStartPractice);
 		}
 	}}
-	size="lg"
 >
 	{isLevelCompleted ? 'Reset' : 'Start'}
 </Button>

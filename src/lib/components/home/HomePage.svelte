@@ -1,9 +1,4 @@
 <script lang="ts">
-	import slump_good_man_study from '$lib/assets/irasutoya/slump_good_man_study.png';
-	import study_night_boy from '$lib/assets/irasutoya/study_night_boy.png';
-	import study_chienetsu_boy from '$lib/assets/irasutoya/study_chienetsu_boy.png';
-	import kokage_tree_necchusyou from '$lib/assets/irasutoya/kokage_tree_necchusyou.png';
-	import Illustration from '$lib/components/Illustration.svelte';
 	import Settings from '@lucide/svelte/icons/settings';
 	import {
 		ButtonGroup,
@@ -13,10 +8,11 @@
 	import { onMount } from 'svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { Kbd } from '$lib/shadcn/components/ui/kbd';
-	import { uiState } from '$lib/state/uiState.svelte';
+	import { uiState } from '$lib/state/uiState.svelte.js';
 	import type { NextReviewData } from '$lib/functions/assignments.remote';
 	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
 	import NotificationBadge from '$lib/components/NotificationBadge.svelte';
+	import ReviewCard from '$lib/components/home/ReviewCard.svelte';
 
 	interface Props {
 		numberOfAssignments: number;
@@ -53,42 +49,7 @@
 </script>
 
 <div class="flex flex-1 flex-col items-center justify-center">
-	{#if numberOfAssignments === 0}
-		<Illustration alt="Boy resting under a tree" src={kokage_tree_necchusyou}>
-			<p>All caught up!</p>
-
-			{#if nextReviewData}
-				{@const formattedHour = new Intl.DateTimeFormat(undefined, {
-					hour: 'numeric',
-					minute: '2-digit'
-				}).format(nextReviewData.nextReviewAt)}
-				<p>
-					{#if nextReviewData.numberOfReviews === 1}
-						Come back at {formattedHour} for a single review.
-					{:else}
-						Come back at {formattedHour}
-						for {nextReviewData.numberOfReviews} more reviews.
-					{/if}
-				</p>
-			{/if}
-		</Illustration>
-	{:else if numberOfAssignments < 10}
-		<Illustration alt="Man working effortlessly" src={slump_good_man_study}>
-			{#if numberOfAssignments === 1}
-				You've got just a single review.
-			{:else}
-				You've only got <b>{numberOfAssignments}</b> reviews.
-			{/if}
-		</Illustration>
-	{:else if numberOfAssignments < 99}
-		<Illustration alt="Boy studying hard" src={study_night_boy}>
-			You've got <b>{numberOfAssignments}</b> reviews.
-		</Illustration>
-	{:else}
-		<Illustration alt="Boy overwhelmed by work" src={study_chienetsu_boy}>
-			Damn! You've got <b>{numberOfAssignments}</b> reviews.
-		</Illustration>
-	{/if}
+	<ReviewCard {nextReviewData} {numberOfAssignments} {onReviewButtonPressed} />
 </div>
 
 <ButtonGroup class="flex w-full justify-end">
@@ -100,7 +61,6 @@
 				hintElement: reviewShortcut
 			}}
 			onclick={onReviewButtonPressed}
-			size="lg"
 		>
 			Review
 		</Button>
@@ -114,7 +74,6 @@
 			hintElement: practiceShortcut
 		}}
 		onclick={onPracticeButtonPressed}
-		size="lg"
 	>
 		Practice
 	</Button>
@@ -130,7 +89,6 @@
 		onclick={() => {
 			isSettingsOpen = true;
 		}}
-		size="icon-lg"
 	>
 		{#if !hasSeenNotificationSubscribeButton}
 			<NotificationBadge />

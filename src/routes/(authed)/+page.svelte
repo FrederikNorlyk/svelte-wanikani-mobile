@@ -20,7 +20,7 @@
 		setStudySession,
 		studySession
 	} from '$lib/state/studySession.svelte';
-	import HomePage from '$lib/components/HomePage.svelte';
+	import HomePage from '$lib/components/home/HomePage.svelte';
 	import PracticePage from '$lib/components/practice/PracticePage.svelte';
 	import ProgressRepository from '$lib/repository/database/progressRepository';
 	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';

@@ -38,6 +38,26 @@
 	<link href={favicon} rel="icon" />
 </svelte:head>
 
+<!-- Global SVG filters -->
+<svg
+	style="position: absolute; pointer-events: none;"
+	aria-hidden="true"
+	height="0"
+	width="0"
+>
+	<defs>
+		<filter id="paper-noise">
+			<feTurbulence
+				baseFrequency="0.45"
+				numOctaves="3"
+				stitchTiles="stitch"
+				type="fractalNoise"
+			/>
+			<feColorMatrix type="saturate" values="0" />
+		</filter>
+	</defs>
+</svg>
+
 <Toaster position="top-center" />
 
 <main class="box-border flex h-dvh min-h-0 flex-col gap-2">

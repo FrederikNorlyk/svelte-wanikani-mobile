@@ -1,11 +1,11 @@
 @import 'tailwindcss';
-@import '@fontsource-variable/noto-sans';
 @import '@fontsource-variable/noto-sans-jp';
+@import '@fontsource-variable/fredoka';
 
 @import 'tw-animate-css';
 
 :root {
-	--font-sans: 'Noto Sans', 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+	--font-sans: 'Fredoka Variable', 'Noto Sans JP', 'Noto Sans SC', sans-serif;
 	--radius: 0.625rem;
 	--background: oklch(1 0 0);
 	--foreground: oklch(0.13 0.028 261.692);
@@ -144,6 +144,30 @@
 }
 
 @layer components {
+	.paper-effect {
+		position: relative;
+		overflow: hidden;
+	}
+
+	.paper-effect::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+
+		background: #6f5b45;
+		filter: url('#paper-noise');
+
+		opacity: 0.2;
+		mix-blend-mode: multiply;
+
+		pointer-events: none;
+	}
+
+	.paper-effect__strong::after {
+		opacity: 0.25;
+	}
+
 	.subject-card {
 		@apply flex flex-col items-center justify-center gap-2 rounded-lg border p-6 text-center;
 
@@ -187,6 +211,7 @@
 		}
 
 		/* Separate each answer with a dot */
+
 		& .answer-card__text + .answer-card__text::before {
 			content: '·';
 			margin-right: 0.25rem;
