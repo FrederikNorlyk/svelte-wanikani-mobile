@@ -52,21 +52,7 @@
 	<ReviewCard {nextReviewData} {numberOfAssignments} {onReviewButtonPressed} />
 </div>
 
-<ButtonGroup class="flex w-full justify-end">
-	{#if numberOfAssignments > 0}
-		<Button
-			class="flex-1"
-			keyboardShortcut={{
-				handler: (e) => e.key === 'r',
-				hintElement: reviewShortcut
-			}}
-			onclick={onReviewButtonPressed}
-		>
-			Review
-		</Button>
-		<ButtonGroupSeparator />
-	{/if}
-
+<ButtonGroup class="flex w-full justify-end gap-4">
 	<Button
 		class="flex-1"
 		keyboardShortcut={{
@@ -77,8 +63,6 @@
 	>
 		Practice
 	</Button>
-
-	<ButtonGroupSeparator />
 
 	<Button
 		class="relative"
@@ -101,10 +85,6 @@
 	bind:isOpen={isSettingsOpen}
 	bind:hasSeenNotificationSubscribeButton
 />
-
-{#snippet reviewShortcut()}
-	<Kbd>R</Kbd>
-{/snippet}
 
 {#snippet practiceShortcut()}
 	<Kbd>P</Kbd>

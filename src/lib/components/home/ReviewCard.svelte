@@ -6,6 +6,7 @@
 	import kokage_tree_necchusyou from '$lib/assets/irasutoya/kokage_tree_necchusyou.png';
 	import type { NextReviewData } from '$lib/functions/assignments.remote';
 	import Button from '$lib/components/Button.svelte';
+	import { Kbd } from '$lib/shadcn/components/ui/kbd';
 
 	interface Props {
 		numberOfAssignments: number;
@@ -83,13 +84,23 @@
 		</div>
 
 		{#if numberOfAssignments > 0}
-			<Button onclick={onReviewButtonPressed}>
+			<Button
+				keyboardShortcut={{
+					handler: (e) => e.key === 'r',
+					hintElement: reviewShortcut
+				}}
+				onclick={onReviewButtonPressed}
+			>
 				<BookOpen size={30} strokeWidth={2.2} />
 				<span>Start Reviewing</span>
 			</Button>
 		{/if}
 	</div>
 </section>
+
+{#snippet reviewShortcut()}
+	<Kbd>R</Kbd>
+{/snippet}
 
 <style>
 	section {
