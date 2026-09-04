@@ -49,7 +49,7 @@
 @media (prefers-color-scheme: dark) {
 	:root {
 		--app-background-image: url('../lib/assets/background/dark/background.png');
-		--app-background-color: #06338b;
+		--app-background-color: #01103c;
 		--background: oklch(0.13 0.028 261.692);
 		--foreground: oklch(0.985 0.002 247.839);
 		--card: oklch(0.21 0.034 264.665);
