@@ -36,7 +36,7 @@
 				src: kokage_tree_necchusyou,
 				alt: 'Boy resting under a tree',
 				message: 'All caught up!',
-				details: nextReviewMessage
+				instructions: nextReviewMessage
 			};
 		}
 
@@ -67,7 +67,7 @@
 	});
 </script>
 
-<section class="paper-effect w-full sm:w-auto">
+<section class="paper-effect">
 	<div class="review-card__content">
 		<img
 			class="review-card__illustration"
@@ -78,8 +78,8 @@
 		<div>
 			<p class="text-2xl font-medium">{reviewState.message}</p>
 
-			{#if reviewState.details}
-				<p class="mt-1">{reviewState.details}</p>
+			{#if reviewState.instructions}
+				<p class="mt-1">{reviewState.instructions}</p>
 			{/if}
 		</div>
 
@@ -107,18 +107,21 @@
 		position: relative;
 		overflow: hidden;
 
-		padding: 2rem;
+		padding: 2rem 3rem;
 
-		border: 2px solid #c8b58f;
+		border: 2px solid var(--card-border);
 		border-radius: 30px;
 
-		background: #fff4d6;
-		color: #624b38;
+		background:
+			linear-gradient(220deg, rgb(255 255 255 / 4%), transparent 40%),
+			var(--card);
+
+		color: var(--card-foreground);
 
 		box-shadow:
-			0 5px 0 rgb(143 119 84 / 28%),
-			0 10px 22px rgb(74 54 34 / 14%),
-			inset 0 1px 0 rgb(255 255 255 / 70%);
+			0 5px 0 var(--card-shadow-depth),
+			0 10px 22px var(--card-shadow-glow),
+			inset 0 1px 0 var(--card-shadow-highlight);
 	}
 
 	.review-card__content {

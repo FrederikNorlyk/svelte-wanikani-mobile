@@ -9,8 +9,18 @@
 	--radius: 0.625rem;
 	--background: oklch(1 0 0);
 	--foreground: oklch(0.13 0.028 261.692);
-	--card: oklch(1 0 0);
-	--card-foreground: oklch(0.13 0.028 261.692);
+
+	--card: #fff4d6;
+	--card-foreground: #624b38;
+	--card-border: #c8b58f;
+	--card-shadow-depth: rgb(143 119 84 / 28%);
+	--card-shadow-glow: rgb(255 128 0 / 14%);
+	--card-shadow-highlight: rgb(255 255 255 / 70%);
+
+	--paper-mix-blend-mode: multiply;
+	--paper-opacity: 0.15;
+	--paper-background: #6f5b45;
+
 	--popover: oklch(1 0 0);
 	--popover-foreground: oklch(0.13 0.028 261.692);
 	--primary: oklch(0.21 0.034 264.665);
@@ -52,8 +62,19 @@
 		--app-background-color: #01103c;
 		--background: oklch(0.13 0.028 261.692);
 		--foreground: oklch(0.985 0.002 247.839);
-		--card: oklch(0.21 0.034 264.665);
-		--card-foreground: oklch(0.985 0.002 247.839);
+
+		--card: #172540;
+		--card-foreground: #d4dced;
+		--card-border: #52627d;
+
+		--card-shadow-depth: rgb(2 8 24 / 55%);
+		--card-shadow-glow: rgb(73 115 170 / 18%);
+		--card-shadow-highlight: rgb(205 225 255 / 12%);
+
+		--paper-mix-blend-mode: soft-light;
+		--paper-opacity: 0.12;
+		--paper-background: #b8c9df;
+
 		--popover: oklch(0.21 0.034 264.665);
 		--popover-foreground: oklch(0.985 0.002 247.839);
 		--primary: oklch(0.928 0.006 264.531 / 0.5);
@@ -164,11 +185,11 @@
 		inset: 0;
 		z-index: 1;
 
-		background: #6f5b45;
+		background: var(--paper-background);
 		filter: url('#paper-noise');
 
-		opacity: 0.2;
-		mix-blend-mode: multiply;
+		opacity: var(--paper-opacity);
+		mix-blend-mode: var(--paper-mix-blend-mode);
 
 		pointer-events: none;
 	}
