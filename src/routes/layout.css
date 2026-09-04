@@ -131,6 +131,11 @@
 	html {
 		min-height: 100%;
 		background-color: var(--app-background-color);
+		background-image: var(--app-background-image);
+		background-attachment: fixed;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
 	}
 
 	main {
@@ -142,22 +147,8 @@
 
 	body {
 		@apply bg-background font-sans text-foreground;
-		position: relative;
 		min-height: 100dvh;
-		isolation: isolate;
-		background-color: var(--app-background-color);
-	}
-
-	body::before {
-		position: fixed;
-		z-index: -1;
-		inset: 0;
-		content: '';
-		background-image: var(--app-background-image);
-		background-position: center;
-		background-repeat: no-repeat;
-		background-size: cover;
-		pointer-events: none;
+		background-color: transparent;
 	}
 }
 
