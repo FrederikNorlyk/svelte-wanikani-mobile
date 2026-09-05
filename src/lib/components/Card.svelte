@@ -10,19 +10,14 @@
 	let { children, class: className = '' }: Props = $props();
 </script>
 
-<section
-	class={cn(
-		'paper-effect rounded-md border-2 border-(--card-border) p-8 text-(--card-foreground)',
-		className
-	)}
->
+<section class={cn('paper-effect', className)}>
 	{@render children()}
 </section>
 
 <style>
+	@reference '../../routes/layout.css';
+
 	section {
-		--card-background: light-dark(#fff4d6, #172540);
-		--card-foreground: light-dark(#624b38, #d4dced);
 		--card-border: light-dark(#c8b58f, #52627d);
 		--card-shadow-depth: light-dark(rgb(143 119 84 / 28%), rgb(2 8 24 / 55%));
 		--card-shadow-glow: light-dark(rgb(255 128 0 / 14%), rgb(73 115 170 / 18%));
@@ -32,9 +27,11 @@
 			rgb(205 225 255 / 12%)
 		);
 
+		@apply rounded-md border-2 border-(--card-border) p-8;
+
 		background:
 			linear-gradient(220deg, rgb(255 255 255 / 4%), transparent 40%),
-			var(--card-background);
+			var(--background);
 
 		box-shadow:
 			0 5px 0 var(--card-shadow-depth),

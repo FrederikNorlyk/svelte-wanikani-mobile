@@ -11,8 +11,9 @@
 	--radius: 4rem;
 
 	--app-background-image: url('../lib/assets/background/light/background.png');
-	--background: #2990ee;
-	--foreground: oklch(0.13 0.028 261.692);
+	--app-backgrounde: #2990ee;
+	--background: #fff4d6;
+	--foreground: #624b38;
 
 	--paper-mix-blend-mode: multiply;
 	--paper-opacity: 0.15;
@@ -54,8 +55,9 @@
 @media (prefers-color-scheme: dark) {
 	:root {
 		--app-background-image: url('../lib/assets/background/dark/background.png');
-		--background: #01103c;
-		--foreground: oklch(0.985 0.002 247.839);
+		--app-background: #01103c;
+		--background: #172540;
+		--foreground: #d4dced;
 
 		--paper-mix-blend-mode: soft-light;
 		--paper-opacity: 0.12;
@@ -137,7 +139,7 @@
 		height: 100%;
 		overflow: hidden;
 		overscroll-behavior-y: none;
-		background-color: var(--background);
+		background-color: var(--app-background);
 		background-image: var(--app-background-image);
 		background-attachment: fixed;
 		background-position: center;
