@@ -75,9 +75,8 @@
 		{/if}
 	</p>
 
-	<Illustration alt={illustration.alt} src={illustration.src}>
-		<p>{illustration.paragraph}</p>
-	</Illustration>
+	<Illustration alt={illustration.alt} src={illustration.src} />
+	<p>{illustration.paragraph}</p>
 </Centered>
 
 <Button

@@ -35,9 +35,12 @@
 </script>
 
 <Centered>
-	<Illustration alt="Three office workers cheering" src={business_group_happy}>
-		レベルアップ、おめでとう！<br />レベル{level}になりました！
-	</Illustration>
+	<Illustration
+		alt="Three office workers cheering"
+		src={business_group_happy}
+	/>
+	<p>レベルアップ、おめでとう！</p>
+	<p>レベル{level}になりました！</p>
 </Centered>
 
 <Button

@@ -7,6 +7,8 @@
 	import type { NextReviewData } from '$lib/functions/assignments.remote';
 	import Button from '$lib/components/Button.svelte';
 	import { Kbd } from '$lib/shadcn/components/ui/kbd';
+	import Card from '$lib/components/Card.svelte';
+	import Illustration from '$lib/components/Illustration.svelte';
 
 	interface Props {
 		numberOfAssignments: number;
@@ -19,7 +21,7 @@
 
 	let reviewState = $derived.by(() => {
 		if (numberOfAssignments === 0) {
-			const nextReviewMessage = (() => {
+			const instructions = (() => {
 				if (!nextReviewData) return '';
 
 				const formattedHour = new Intl.DateTimeFormat(undefined, {
@@ -36,7 +38,7 @@
 				src: kokage_tree_necchusyou,
 				alt: 'Boy resting under a tree',
 				message: 'All caught up!',
-				instructions: nextReviewMessage
+				instructions
 			};
 		}
 
@@ -67,16 +69,12 @@
 	});
 </script>
 
-<section class="paper-effect">
-	<div class="review-card__content">
-		<img
-			class="review-card__illustration"
-			alt={reviewState.alt}
-			src={reviewState.src}
-		/>
+<Card class="px-12 py-10">
+	<div class="flex flex-col items-center gap-4 text-center">
+		<Illustration alt={reviewState.alt} src={reviewState.src} />
 
 		<div>
-			<p class="text-2xl font-medium">{reviewState.message}</p>
+			<h2 class="text-2xl font-medium">{reviewState.message}</h2>
 
 			{#if reviewState.instructions}
 				<p class="mt-1">{reviewState.instructions}</p>
@@ -96,49 +94,8 @@
 			</Button>
 		{/if}
 	</div>
-</section>
+</Card>
 
 {#snippet reviewShortcut()}
 	<Kbd>R</Kbd>
 {/snippet}
-
-<style>
-	section {
-		position: relative;
-		overflow: hidden;
-
-		padding: 2rem 3rem;
-
-		border: 2px solid var(--card-border);
-		border-radius: 30px;
-
-		background:
-			linear-gradient(220deg, rgb(255 255 255 / 4%), transparent 40%),
-			var(--card);
-
-		color: var(--card-foreground);
-
-		box-shadow:
-			0 5px 0 var(--card-shadow-depth),
-			0 10px 22px var(--card-shadow-glow),
-			inset 0 1px 0 var(--card-shadow-highlight);
-	}
-
-	.review-card__content {
-		position: relative;
-		z-index: 2;
-
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 0.8rem;
-
-		text-align: center;
-	}
-
-	img {
-		width: 200px;
-		height: 200px;
-		object-fit: contain;
-	}
-</style>

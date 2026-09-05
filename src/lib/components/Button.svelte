@@ -30,7 +30,7 @@
 				{ transform: 'translateY(4px)' },
 				{ transform: 'translateY(0)' }
 			],
-			{ duration: 150, easing: 'ease-out' }
+			{ duration: 50, easing: 'ease-out' }
 		);
 
 		await animation.finished;
@@ -58,7 +58,7 @@
 
 <button
 	bind:this={buttonElement}
-	class={cn('paper-effect paper-effect__strong', className)}
+	class={cn('paper-effect paper-effect__strong rounded-2xl', className)}
 	onclick={() => {
 		animateButtonPress().then(onclick);
 	}}
@@ -82,7 +82,6 @@
 		padding: 0.9rem 1.8rem;
 
 		border: 2px solid #bd493d;
-		border-radius: 24px;
 
 		background:
 			linear-gradient(

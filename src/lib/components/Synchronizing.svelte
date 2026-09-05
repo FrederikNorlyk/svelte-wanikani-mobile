@@ -10,9 +10,8 @@
 		<Illustration
 			alt="Illustration of a crane game in Kushiro, Hokkaido where you can catch crabs"
 			src={crane_game_kani}
-		>
-			Synchronizing with WaniKani
-		</Illustration>
+		/>
+		<p>Synchronizing with WaniKani</p>
 
 		<div
 			class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center opacity-40"

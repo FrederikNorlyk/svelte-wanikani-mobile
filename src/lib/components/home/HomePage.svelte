@@ -52,7 +52,7 @@
 	<ReviewCard {nextReviewData} {numberOfAssignments} {onReviewButtonPressed} />
 </div>
 
-<ButtonGroup class="flex w-full justify-end gap-4">
+<div class="flex w-full justify-end gap-4">
 	<Button
 		class="flex-1"
 		keyboardShortcut={{
@@ -79,7 +79,7 @@
 		{/if}
 		<Settings class="size-5" />
 	</Button>
-</ButtonGroup>
+</div>
 
 <SettingsDrawer
 	bind:isOpen={isSettingsOpen}
