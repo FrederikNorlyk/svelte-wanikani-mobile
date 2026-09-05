@@ -34,6 +34,18 @@
 	const secondaryMeanings = $derived(subject.secondaryMeanings);
 	const secondaryReadings = $derived(subject.secondaryReadings);
 
+	const subjectType = $derived.by(() => {
+		switch (subject.type) {
+			case 'radical':
+				return 'Radical';
+			case 'kanji':
+				return 'Kanji';
+			case 'kana_vocabulary':
+			case 'vocabulary':
+				return 'Vocabulary';
+		}
+	});
+
 	const progress = $derived(() => {
 		const completed = studySession().index;
 		const total = studySession().subjectIds.length;
@@ -94,20 +106,48 @@
 
 <Progress value={progress()} />
 
-{#if isShowingAnswer}
-	<a class="relative" href={subject.documentUrl} rel="external" target="_blank">
-		<div class="absolute top-4 right-4 flex gap-2">
-			<ExternalLink class="size-4 text-muted-foreground" />
-			{#if uiState.isShowingKeyboardShortcuts}
-				<Kbd class="bg-secondary-foreground text-secondary">f</Kbd>
+<a
+	class="block"
+	href={isShowingAnswer ? subject.documentUrl : undefined}
+	rel="external"
+	target="_blank"
+>
+	<SubjectCard class="min-h-60 gap-3" {subject}>
+		<div class="flex w-full items-center text-left text-lg font-medium">
+			<span class="flex-1">{subjectType}</span>
+
+			{#if isShowingAnswer}
+				<div class="flex gap-2">
+					<ExternalLink class="inline-block size-5" />
+
+					{#if uiState.isShowingKeyboardShortcuts}
+						<Kbd class="inline-block bg-secondary-foreground text-secondary"
+							>f</Kbd
+						>
+					{/if}
+				</div>
 			{/if}
 		</div>
 
-		{@render subjectCard()}
-	</a>
-{:else}
-	{@render subjectCard()}
-{/if}
+		<div
+			class="grid flex-1 grid-rows-[1fr_auto_1fr] items-center justify-items-center gap-2"
+		>
+			<div class="self-end">
+				{#if isShowingAnswer && primaryReading}
+					<p class="text-xl">{primaryReading}</p>
+				{/if}
+			</div>
+
+			<SubjectCharacter class="text-5xl" {subject} />
+
+			<div class="self-start">
+				{#if isShowingAnswer && primaryMeaning}
+					<p class="text-xl">{primaryMeaning}</p>
+				{/if}
+			</div>
+		</div>
+	</SubjectCard>
+</a>
 
 <div class="flex-1 space-y-2">
 	{#if isShowingAnswer}
@@ -158,24 +198,6 @@
 		</Button>
 	{/if}
 </div>
-
-{#snippet subjectCard()}
-	<SubjectCard {subject}>
-		{#if isShowingAnswer && primaryReading}
-			<p>{primaryReading}</p>
-		{:else}
-			<div class="h-6 w-full"></div>
-		{/if}
-
-		<SubjectCharacter class="text-4xl" {subject} />
-
-		{#if isShowingAnswer && primaryMeaning}
-			<p>{primaryMeaning}</p>
-		{:else}
-			<div class="h-6 w-full"></div>
-		{/if}
-	</SubjectCard>
-{/snippet}
 
 {#snippet answerBlock(label: string, answers: string[])}
 	<div class="answer-card">

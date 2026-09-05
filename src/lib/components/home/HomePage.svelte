@@ -1,9 +1,5 @@
 <script lang="ts">
 	import Settings from '@lucide/svelte/icons/settings';
-	import {
-		ButtonGroup,
-		ButtonGroupSeparator
-	} from '$lib/shadcn/components/ui/button-group';
 	import SettingsDrawer from '$lib/components/SettingsDrawer.svelte';
 	import { onMount } from 'svelte';
 	import Button from '$lib/components/Button.svelte';

@@ -87,10 +87,10 @@
 
 @theme inline {
 	--font-sans: var(--font-sans);
-	--radius-sm: calc(var(--radius) - 4px);
-	--radius-md: calc(var(--radius) - 2px);
+	--radius-sm: calc(var(--radius) - 50px);
+	--radius-md: calc(var(--radius) - 40px);
 	--radius-lg: var(--radius);
-	--radius-xl: calc(var(--radius) + 4px);
+	--radius-xl: calc(var(--radius) + 40px);
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--color-popover: var(--popover);
@@ -181,37 +181,6 @@
 }
 
 @layer components {
-	.subject-card {
-		@apply flex flex-col items-center justify-center gap-2 rounded-lg border p-6 text-center;
-
-		/* svgs from WaniKani have a --color-text variable inside of them, that we can use to set the svg's color */
-		--color-text: currentColor;
-
-		&.subject-card--kanji {
-			@apply border-fuchsia-600 bg-fuchsia-300 text-fuchsia-700;
-
-			@media (prefers-color-scheme: dark) {
-				@apply border-fuchsia-400 bg-fuchsia-950/20 text-fuchsia-200;
-			}
-		}
-
-		&.subject-card--vocab {
-			@apply border-purple-600 bg-purple-300 text-purple-700;
-
-			@media (prefers-color-scheme: dark) {
-				@apply border-purple-400 bg-purple-950/20 text-purple-200;
-			}
-		}
-
-		&.subject-card--radical {
-			@apply border-blue-600 bg-blue-300 text-blue-700;
-
-			@media (prefers-color-scheme: dark) {
-				@apply border-blue-400 bg-blue-950/20 text-blue-200;
-			}
-		}
-	}
-
 	.answer-card {
 		@apply rounded-lg border border-border bg-secondary p-4;
 
