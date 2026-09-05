@@ -176,10 +176,6 @@
 		pointer-events: none;
 	}
 
-	.paper-effect__strong::after {
-		opacity: 0.25;
-	}
-
 	.subject-card {
 		@apply flex flex-col items-center justify-center gap-2 rounded-lg border p-6 text-center;
 

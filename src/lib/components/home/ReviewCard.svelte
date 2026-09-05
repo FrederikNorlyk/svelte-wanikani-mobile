@@ -89,7 +89,7 @@
 				}}
 				onclick={onReviewButtonPressed}
 			>
-				<BookOpen size={30} strokeWidth={2.2} />
+				<BookOpen />
 				<span>Start Reviewing</span>
 			</Button>
 		{/if}
