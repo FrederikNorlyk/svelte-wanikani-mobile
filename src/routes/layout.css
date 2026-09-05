@@ -15,10 +15,6 @@
 	--background: #fff4d6;
 	--foreground: #624b38;
 
-	--paper-mix-blend-mode: multiply;
-	--paper-opacity: 0.15;
-	--paper-background: #6f5b45;
-
 	--popover: oklch(1 0 0);
 	--popover-foreground: oklch(0.13 0.028 261.692);
 	--primary: oklch(0.21 0.034 264.665);
@@ -58,10 +54,6 @@
 		--app-background: #01103c;
 		--background: #172540;
 		--foreground: #d4dced;
-
-		--paper-mix-blend-mode: soft-light;
-		--paper-opacity: 0.12;
-		--paper-background: #b8c9df;
 
 		--popover: oklch(0.21 0.034 264.665);
 		--popover-foreground: oklch(0.985 0.002 247.839);
@@ -163,27 +155,32 @@
 	}
 }
 
-@layer components {
-	.paper-effect {
-		position: relative;
-		overflow: hidden;
-	}
+@utility paper-effect {
+	position: relative;
+	overflow: hidden;
 
-	.paper-effect::after {
+	&::after {
 		content: '';
 		position: absolute;
 		inset: 0;
 		z-index: 1;
 
-		background: var(--paper-background);
+		background: light-dark(#6f5b45, #b8c9df);
 		filter: url('#paper-noise');
 
-		opacity: var(--paper-opacity);
-		mix-blend-mode: var(--paper-mix-blend-mode);
+		opacity: 0.15;
+		mix-blend-mode: multiply;
 
 		pointer-events: none;
-	}
 
+		@media (prefers-color-scheme: dark) {
+			opacity: 0.12;
+			mix-blend-mode: soft-light;
+		}
+	}
+}
+
+@layer components {
 	.subject-card {
 		@apply flex flex-col items-center justify-center gap-2 rounded-lg border p-6 text-center;
 

@@ -2,7 +2,6 @@
 	import { uiState } from '$lib/state/uiState.svelte';
 	import { onMount, type Snippet } from 'svelte';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
-	import { cn } from '$lib/shadcn/utils';
 
 	type Props = HTMLButtonAttributes & {
 		children: Snippet;
@@ -58,7 +57,7 @@
 
 <button
 	bind:this={buttonElement}
-	class={cn('paper-effect', className)}
+	class={className}
 	onclick={() => {
 		animateButtonPress().then(onclick);
 	}}
@@ -101,6 +100,7 @@
 
 		--button-focus-outline: rgb(255 255 255 / 85%);
 
+		@apply paper-effect;
 		@apply inline-flex items-center justify-center gap-3;
 		@apply rounded-4xl border-2 border-(--button-border);
 		@apply px-10 py-5;

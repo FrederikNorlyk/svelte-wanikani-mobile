@@ -10,7 +10,7 @@
 	let { children, class: className = '' }: Props = $props();
 </script>
 
-<section class={cn('paper-effect', className)}>
+<section class={cn(className)}>
 	{@render children()}
 </section>
 
@@ -27,6 +27,7 @@
 			rgb(205 225 255 / 12%)
 		);
 
+		@apply paper-effect;
 		@apply rounded-md border-2 border-(--card-border) p-8;
 
 		background:
