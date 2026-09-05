@@ -5,6 +5,8 @@
 @import 'tw-animate-css';
 
 :root {
+	color-scheme: light dark;
+
 	--font-sans: 'Fredoka Variable', 'Noto Sans JP', 'Noto Sans SC', sans-serif;
 	--radius: 4rem;
 
