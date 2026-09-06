@@ -8,7 +8,7 @@
 	import { onMount, untrack } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import SubjectsRepository from '$lib/repository/database/subjectsRepository';
-	import Review from '$lib/components/Review.svelte';
+	import Review from '$lib/components/review/Review.svelte';
 	import Synchronizing from '$lib/components/Synchronizing.svelte';
 	import * as ReviewAPI from '$lib/functions/reviews.remote';
 	import SRSStageToast from '$lib/components/SRSStageToast.svelte';

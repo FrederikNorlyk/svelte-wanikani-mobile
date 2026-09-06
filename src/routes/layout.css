@@ -181,23 +181,4 @@
 }
 
 @layer components {
-	.answer-card {
-		@apply rounded-lg border border-border bg-secondary p-4;
-
-		& .answer-card__label {
-			@apply text-sm font-medium text-muted-foreground;
-		}
-
-		& .answer-card__text {
-			@apply inline-block text-secondary-foreground opacity-75;
-		}
-
-		/* Separate each answer with a dot */
-
-		& .answer-card__text + .answer-card__text::before {
-			content: '·';
-			margin-right: 0.25rem;
-			margin-left: 0.25rem;
-		}
-	}
 }

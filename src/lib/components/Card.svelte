@@ -28,7 +28,7 @@
 		);
 
 		@apply paper-effect;
-		@apply rounded-md border-2 border-(--card-border) p-8;
+		@apply rounded-md border-2 border-(--card-border);
 
 		background:
 			linear-gradient(220deg, rgb(255 255 255 / 4%), transparent 40%),

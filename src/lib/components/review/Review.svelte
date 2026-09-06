@@ -1,20 +1,21 @@
 <script lang="ts">
 	import type { Subject } from '$lib/functions/subjects.remote';
 	import { Progress } from '$lib/shadcn/components/ui/progress';
-	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import ArrowBigLeft from '@lucide/svelte/icons/arrow-big-left';
 	import ArrowBigRight from '@lucide/svelte/icons/arrow-big-right';
 	import SettingsRepository from '$lib/repository/local-storage/settingsRepository';
 	import AudioUtil from '$lib/util/audioUtil';
 	import { onMount } from 'svelte';
 	import { Kbd } from '$lib/shadcn/components/ui/kbd';
-	import { uiState } from '$lib/state/uiState.svelte';
+	import { uiState } from '$lib/state/uiState.svelte.js';
 	import Button from '$lib/components/Button.svelte';
 	import { toast } from 'svelte-sonner';
-	import { studySession } from '$lib/state/studySession.svelte';
+	import { studySession } from '$lib/state/studySession.svelte.js';
 	import { calculatePercentage } from '$lib/util/mathUtil';
-	import SubjectCard from './SubjectCard.svelte';
-	import SubjectCharacter from '$lib/components/SubjectCharacter.svelte';
+	import CurrentSubjectCard from '$lib/components/review/CurrentSubjectCard.svelte';
+	import AnswerCard from '$lib/components/review/AnswerCard.svelte';
+	import BookOpen from '@lucide/svelte/icons/book-open';
+	import MessageCircle from '@lucide/svelte/icons/message-circle';
 
 	interface Props {
 		subject: Subject;
@@ -29,22 +30,8 @@
 	let audioElement: HTMLAudioElement | undefined = $state(undefined);
 	let isShowingAnswer = $state(false);
 
-	const primaryMeaning = $derived(subject.primaryMeaning);
-	const primaryReading = $derived(subject.primaryReading);
 	const secondaryMeanings = $derived(subject.secondaryMeanings);
 	const secondaryReadings = $derived(subject.secondaryReadings);
-
-	const subjectType = $derived.by(() => {
-		switch (subject.type) {
-			case 'radical':
-				return 'Radical';
-			case 'kanji':
-				return 'Kanji';
-			case 'kana_vocabulary':
-			case 'vocabulary':
-				return 'Vocabulary';
-		}
-	});
 
 	const progress = $derived(() => {
 		const completed = studySession().index;
@@ -106,56 +93,23 @@
 
 <Progress value={progress()} />
 
-<a
-	class="block"
-	href={isShowingAnswer ? subject.documentUrl : undefined}
-	rel="external"
-	target="_blank"
->
-	<SubjectCard class="min-h-60 gap-3" {subject}>
-		<div class="flex w-full items-center text-left text-lg font-medium">
-			<span class="flex-1">{subjectType}</span>
-
-			{#if isShowingAnswer}
-				<div class="flex gap-2">
-					<ExternalLink class="inline-block size-5" />
-
-					{#if uiState.isShowingKeyboardShortcuts}
-						<Kbd class="inline-block bg-secondary-foreground text-secondary"
-							>f</Kbd
-						>
-					{/if}
-				</div>
-			{/if}
-		</div>
-
-		<div
-			class="grid flex-1 grid-rows-[1fr_auto_1fr] items-center justify-items-center gap-2"
-		>
-			<div class="self-end">
-				{#if isShowingAnswer && primaryReading}
-					<p class="text-xl">{primaryReading}</p>
-				{/if}
-			</div>
-
-			<SubjectCharacter class="text-5xl" {subject} />
-
-			<div class="self-start">
-				{#if isShowingAnswer && primaryMeaning}
-					<p class="text-xl">{primaryMeaning}</p>
-				{/if}
-			</div>
-		</div>
-	</SubjectCard>
-</a>
+<CurrentSubjectCard {isShowingAnswer} {subject} />
 
 <div class="flex-1 space-y-2">
 	{#if isShowingAnswer}
 		{#if secondaryMeanings.length > 0}
-			{@render answerBlock('Secondary meanings', secondaryMeanings)}
+			<AnswerCard
+				answers={secondaryMeanings}
+				icon={BookOpen}
+				label="Secondary meanings"
+			/>
 		{/if}
 		{#if secondaryReadings.length > 0}
-			{@render answerBlock('Secondary readings', secondaryReadings)}
+			<AnswerCard
+				answers={secondaryReadings}
+				icon={MessageCircle}
+				label="Secondary readings"
+			/>
 		{/if}
 	{/if}
 </div>
@@ -198,17 +152,6 @@
 		</Button>
 	{/if}
 </div>
-
-{#snippet answerBlock(label: string, answers: string[])}
-	<div class="answer-card">
-		<p class="answer-card__label">{label}</p>
-		<div>
-			{#each answers as answer (answer)}
-				<p class="answer-card__text">{answer}</p>
-			{/each}
-		</div>
-	</div>
-{/snippet}
 
 {#snippet arrowLeftShortcut()}
 	<Kbd>
