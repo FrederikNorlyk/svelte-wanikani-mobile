@@ -123,10 +123,6 @@
 }
 
 @layer base {
-	* {
-		@apply border-border outline-ring/50;
-	}
-
 	html {
 		height: 100%;
 		overflow: hidden;
