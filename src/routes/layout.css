@@ -11,7 +11,7 @@
 	--radius: 4rem;
 
 	--app-background-image: url('../lib/assets/background/light/background.png');
-	--app-backgrounde: #2990ee;
+	--app-background: #2990ee;
 	--background: #fff4d6;
 	--foreground: #624b38;
 
@@ -178,7 +178,4 @@
 			mix-blend-mode: soft-light;
 		}
 	}
-}
-
-@layer components {
 }
