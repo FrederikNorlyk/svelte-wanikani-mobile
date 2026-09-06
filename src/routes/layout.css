@@ -7,7 +7,7 @@
 :root {
 	color-scheme: light dark;
 
-	--font-sans: 'Fredoka Variable', 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+	--font-sans: 'Fredoka Variable', 'Noto Sans JP', sans-serif;
 	--radius: 4rem;
 
 	--app-background-image: url('../lib/assets/background/light/background.png');
