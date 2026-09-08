@@ -35,7 +35,7 @@
 	rel="external"
 	target="_blank"
 >
-	<SubjectCard class="min-h-60 gap-3" {subject}>
+	<SubjectCard class="min-h-50 gap-3 sm:min-h-60 " {subject}>
 		<div class="top-row">
 			<span class="flex-1">{subjectType}</span>
 
@@ -53,15 +53,15 @@
 		<div class="card-content">
 			<div class="self-end">
 				{#if isShowingAnswer && primaryReading}
-					<p class="text-xl">{primaryReading}</p>
+					<p class="sm:text-xl">{primaryReading}</p>
 				{/if}
 			</div>
 
-			<SubjectCharacter class="text-5xl" {subject} />
+			<SubjectCharacter class="text-4xl sm:text-5xl" {subject} />
 
 			<div class="self-start">
 				{#if isShowingAnswer && primaryMeaning}
-					<p class="text-xl">{primaryMeaning}</p>
+					<p class="sm:text-xl">{primaryMeaning}</p>
 				{/if}
 			</div>
 		</div>

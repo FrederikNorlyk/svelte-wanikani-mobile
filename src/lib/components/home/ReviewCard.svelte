@@ -69,7 +69,7 @@
 	});
 </script>
 
-<Card class="px-12 py-10">
+<Card class="px-6 py-8 sm:px-12 sm:py-10">
 	<div class="flex flex-col items-center gap-4 text-center">
 		<Illustration alt={reviewState.alt} src={reviewState.src} />
 

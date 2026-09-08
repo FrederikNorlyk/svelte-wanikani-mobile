@@ -103,7 +103,7 @@
 		@apply paper-effect;
 		@apply inline-flex items-center justify-center gap-3;
 		@apply rounded-4xl border-2 border-(--button-border);
-		@apply px-10 py-5;
+		@apply px-6 py-5 sm:px-10;
 		@apply text-xl font-bold tracking-wide text-(--button-foreground);
 
 		@apply [&_svg]:size-7.5 [&_svg]:stroke-[2.2];

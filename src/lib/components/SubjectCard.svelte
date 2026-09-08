@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Subject } from '$lib/functions/subjects.remote';
 	import type { Snippet } from 'svelte';
+	import { cn } from '$lib/shadcn/utils';
 
 	interface Props {
 		class?: string;
@@ -17,7 +18,10 @@
 </script>
 
 <section
-	class={className}
+	class={cn(
+		'paper-effect flex flex-col items-center justify-center gap-2 rounded-md border-2 p-4 text-center sm:p-6',
+		className
+	)}
 	class:kanji={subject.type === 'kanji'}
 	class:radical={subject.type === 'radical'}
 	class:vocab={subject.type === 'vocabulary' ||
@@ -28,8 +32,6 @@
 </section>
 
 <style>
-	@reference '../../routes/layout.css';
-
 	section {
 		/* svgs from WaniKani have a --color-text variable inside of them, that we can use to set the svg's color */
 		--color-text: currentColor;
@@ -86,10 +88,8 @@
 			);
 		}
 
-		@apply paper-effect flex flex-col items-center justify-center gap-2;
-		@apply rounded-md border-2 p-6 text-center;
-
 		color: var(--subject-card-foreground);
+
 		border-color: color-mix(
 			in srgb,
 			var(--subject-card-border) 90%,
