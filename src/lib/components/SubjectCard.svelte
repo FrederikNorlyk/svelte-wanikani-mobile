@@ -45,7 +45,7 @@
 		);
 
 		&.kanji {
-			--subject-card-background: light-dark(#fdd6eb, #460330);
+			--subject-card-background: light-dark(#fccce6, #6c1a48);
 			--subject-card-foreground: light-dark(#c60f64, #f9a8d4);
 			--subject-card-border: light-dark(#f472b6, #db2777);
 			--subject-card-shadow-depth: light-dark(
@@ -92,7 +92,7 @@
 		color: var(--subject-card-foreground);
 		border-color: color-mix(
 			in srgb,
-			var(--subject-card-foreground) 90%,
+			var(--subject-card-border) 90%,
 			transparent
 		);
 
