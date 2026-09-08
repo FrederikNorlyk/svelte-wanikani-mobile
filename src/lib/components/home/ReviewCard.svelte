@@ -88,6 +88,7 @@
 					hintElement: reviewShortcut
 				}}
 				onclick={onReviewButtonPressed}
+				variant="primary"
 			>
 				<BookOpen />
 				<span>Start Reviewing</span>

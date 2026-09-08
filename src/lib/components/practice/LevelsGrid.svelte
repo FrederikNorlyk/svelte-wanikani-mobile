@@ -43,6 +43,7 @@
 			class="relative w-full"
 			disabled={maxLevelGranted < level}
 			onclick={() => onSelectLevel(level)}
+			variant="primary"
 		>
 			<Progress
 				class={cn('absolute bottom-0 rounded-t-none', {

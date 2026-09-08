@@ -110,6 +110,7 @@
 			buildPracticeSession().then(onStartPractice);
 		}
 	}}
+	variant="primary"
 >
 	{isLevelCompleted ? 'Reset' : 'Start'}
 </Button>

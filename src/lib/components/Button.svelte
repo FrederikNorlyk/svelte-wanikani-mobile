@@ -10,6 +10,7 @@
 	type CommonProps = {
 		class?: string;
 		children: Snippet;
+		variant: 'primary' | 'secondary';
 		keyboardShortcut?: {
 			handler: (e: KeyboardEvent) => boolean;
 			hintElement: Snippet;
@@ -36,6 +37,7 @@
 		class: className,
 		children,
 		keyboardShortcut,
+		variant,
 		...actionProps
 	}: Props = $props();
 
@@ -54,6 +56,7 @@
 	const buttonClass = $derived(
 		cn(
 			'button paper-effect inline-flex items-center justify-center gap-3 rounded-4xl border-2 border-(--button-border) px-6 py-5 sm:px-10 text-xl font-bold tracking-wide text-(--button-foreground) [&_svg]:size-7.5 [&_svg]:stroke-[2.2]',
+			variant,
 			className
 		)
 	);
@@ -81,30 +84,7 @@
 	@reference '../../routes/layout.css';
 
 	.button {
-		--button-background: light-dark(#e85d4d, #c84f43);
-
-		--button-background-highlight: light-dark(
-			rgb(255 255 255 / 10%),
-			rgb(255 255 255 / 6%)
-		);
-
 		--button-background-highlight-transparent: rgb(255 255 255 / 0%);
-		--button-border: light-dark(#bd493d, #a33f36);
-		--button-foreground: #fffaf0;
-		--button-shadow-depth: light-dark(#a83f35, #84332c);
-		--button-shadow-drop: light-dark(rgb(75 45 30 / 18%), rgb(0 0 0 / 28%));
-
-		--button-shadow-drop-hover: light-dark(
-			rgb(75 45 30 / 20%),
-			rgb(0 0 0 / 32%)
-		);
-
-		--button-shadow-highlight: light-dark(
-			rgb(255 255 255 / 30%),
-			rgb(255 255 255 / 16%)
-		);
-
-		--button-focus-outline: rgb(255 255 255 / 85%);
 
 		background:
 			linear-gradient(
@@ -123,7 +103,55 @@
 			transform 100ms ease,
 			box-shadow 100ms ease,
 			filter 150ms ease;
+
 		text-decoration: none;
+	}
+
+	.primary {
+		--button-background: light-dark(#e85d4d, #c84f43);
+
+		--button-background-highlight: light-dark(
+			rgb(255 255 255 / 10%),
+			rgb(255 255 255 / 6%)
+		);
+
+		--button-border: light-dark(#bd493d, #a33f36);
+		--button-foreground: #fffaf0;
+		--button-shadow-depth: light-dark(#a83f35, #84332c);
+		--button-shadow-drop: light-dark(rgb(75 45 30 / 18%), rgb(0 0 0 / 28%));
+
+		--button-shadow-drop-hover: light-dark(
+			rgb(75 45 30 / 20%),
+			rgb(0 0 0 / 32%)
+		);
+
+		--button-shadow-highlight: light-dark(
+			rgb(255 255 255 / 30%),
+			rgb(255 255 255 / 16%)
+		);
+
+		--button-focus-outline: rgb(255 255 255 / 85%);
+	}
+
+	.secondary {
+		--button-background: var(--background);
+		--button-background-highlight: rgb(255 255 255 / 4%);
+		--button-border: light-dark(#c8b58f, #52627d);
+		--button-foreground: var(--foreground);
+		--button-shadow-depth: light-dark(rgb(143 119 84 / 28%), rgb(2 8 24 / 55%));
+		--button-shadow-drop: light-dark(
+			rgb(255 128 0 / 14%),
+			rgb(73 115 170 / 18%)
+		);
+		--button-shadow-drop-hover: light-dark(
+			rgb(255 128 0 / 14%),
+			rgb(73 115 170 / 18%)
+		);
+		--button-shadow-highlight: light-dark(
+			rgb(255 255 255 / 70%),
+			rgb(205 225 255 / 12%)
+		);
+		--button-focus-outline: var(--foreground);
 	}
 
 	.button:not(:disabled):not([aria-disabled='true']):hover {

@@ -53,6 +53,7 @@
 		confettiCannon.stop();
 		onContinue();
 	}}
+	variant="primary"
 	>Continue
 </Button>
 

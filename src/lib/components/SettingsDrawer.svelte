@@ -121,7 +121,11 @@
 						</FieldDescription>
 
 						{#if notificationPermission === 'default'}
-							<Button class="relative" onclick={subscribeToPushNotifications}>
+							<Button
+								class="relative"
+								onclick={subscribeToPushNotifications}
+								variant="primary"
+							>
 								{#if !hasSeenNotificationSubscribeButton}
 									<NotificationBadge />
 								{/if}
