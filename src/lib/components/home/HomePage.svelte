@@ -62,7 +62,7 @@
 				hintElement: practiceShortcut
 			}}
 			onclick={onPracticeButtonPressed}
-			variant="primary"
+			variant="secondary"
 		>
 			<Dumbbell />
 			<h2>Practice</h2>
@@ -76,7 +76,7 @@
 			disabled={numberOfLessons === 0}
 			href="https://wanikani.com"
 			target="_blank"
-			variant="primary"
+			variant="secondary"
 		>
 			<GraduationCap />
 			<h2>Lessons</h2>
@@ -97,7 +97,7 @@
 		onclick={() => {
 			isSettingsOpen = true;
 		}}
-		variant="primary"
+		variant="secondary"
 	>
 		{#if !hasSeenNotificationSubscribeButton}
 			<NotificationBadge />
