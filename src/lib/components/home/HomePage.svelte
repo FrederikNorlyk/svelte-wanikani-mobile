@@ -1,4 +1,7 @@
 <script lang="ts">
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import Dumbbell from '@lucide/svelte/icons/dumbbell';
+	import GraduationCap from '@lucide/svelte/icons/graduation-cap';
 	import Settings from '@lucide/svelte/icons/settings';
 	import SettingsDrawer from '$lib/components/SettingsDrawer.svelte';
 	import { onMount } from 'svelte';
@@ -12,6 +15,7 @@
 
 	interface Props {
 		numberOfAssignments: number;
+		numberOfLessons: number;
 		nextReviewData: NextReviewData | null;
 		onReviewButtonPressed: () => void;
 		onPracticeButtonPressed: () => void;
@@ -19,6 +23,7 @@
 
 	const {
 		numberOfAssignments,
+		numberOfLessons,
 		nextReviewData,
 		onReviewButtonPressed,
 		onPracticeButtonPressed
@@ -44,24 +49,45 @@
 	});
 </script>
 
-<div class="flex flex-1 flex-col items-center justify-center">
+<div class="flex min-h-0 flex-1 flex-col items-center justify-center">
 	<ReviewCard {nextReviewData} {numberOfAssignments} {onReviewButtonPressed} />
 </div>
 
-<div class="flex w-full justify-end gap-4">
-	<Button
-		class="flex-1"
-		keyboardShortcut={{
-			handler: (e) => e.key === 'p',
-			hintElement: practiceShortcut
-		}}
-		onclick={onPracticeButtonPressed}
-	>
-		Practice
-	</Button>
+<div class="flex w-full flex-col gap-4">
+	<div class="flex gap-4">
+		<Button
+			class="min-h-40 flex-1 flex-col gap-2 px-4 py-6 sm:px-6"
+			keyboardShortcut={{
+				handler: (e) => e.key === 'p',
+				hintElement: practiceShortcut
+			}}
+			onclick={onPracticeButtonPressed}
+		>
+			<Dumbbell />
+			<h2>Practice</h2>
+			<p class="text-center text-sm font-normal tracking-normal">
+				Review anything you've learned
+			</p>
+		</Button>
+
+		<Button
+			class="min-h-40 flex-1 flex-col gap-2 px-4 py-6 sm:px-6"
+			disabled={numberOfLessons === 0}
+			href="https://wanikani.com"
+			target="_blank"
+		>
+			<GraduationCap />
+			<h2>Lessons</h2>
+			<p class="text-center text-sm font-normal tracking-normal">
+				{numberOfLessons === 0
+					? 'Done'
+					: `${numberOfLessons} ${numberOfLessons === 1 ? 'lesson' : 'lessons'} available`}
+			</p>
+		</Button>
+	</div>
 
 	<Button
-		class="relative"
+		class="relative w-full justify-between px-6 py-4"
 		keyboardShortcut={{
 			handler: (e) => e.key === 's',
 			hintElement: settingsShortcut
@@ -73,7 +99,11 @@
 		{#if !hasSeenNotificationSubscribeButton}
 			<NotificationBadge />
 		{/if}
-		<Settings class="size-5" />
+		<span class="flex items-center gap-3">
+			<Settings />
+			<span>Settings</span>
+		</span>
+		<ChevronRight />
 	</Button>
 </div>
 

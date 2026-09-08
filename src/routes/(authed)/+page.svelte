@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as AssignmentAPI from '$lib/functions/assignments.remote';
+	import * as LessonAPI from '$lib/functions/lessons.remote';
 	import {
 		type Assignment,
 		type NextReviewData
@@ -37,6 +38,7 @@
 		| 'level-up';
 
 	let assignments = $state<Assignment[]>([]);
+	let numberOfLessons = $state(0);
 	let nextReviewData = $state<NextReviewData | null>(null);
 	let appState = $state<AppState>('loading');
 	let user = $state<User | undefined>(undefined);
@@ -85,6 +87,17 @@
 				});
 
 			promises.push(assignmentPromise);
+
+			promises.push(
+				LessonAPI.getAvailableLessonsCount()
+					.then((count) => {
+						numberOfLessons = count;
+					})
+					.catch((e) => {
+						console.error(e);
+						toast.error('Could not get available lessons');
+					})
+			);
 
 			if ((await SubjectsRepository.count()) === 0) {
 				appState = 'synchronizing';
@@ -297,6 +310,7 @@
 	<HomePage
 		{nextReviewData}
 		numberOfAssignments={assignments.length}
+		{numberOfLessons}
 		onPracticeButtonPressed={() => {
 			appState = 'defining-practice-session';
 		}}
