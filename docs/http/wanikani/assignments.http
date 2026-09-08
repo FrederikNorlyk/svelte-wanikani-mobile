@@ -9,3 +9,8 @@ GET https://api.wanikani.com/v2/assignments
     &available_before=2026-02-19T11:50:00.000000Z
     &available_after=2026-02-18T11:50:00.000000Z
 Authorization: Bearer {{WANIKANI_API_TOKEN}}
+
+### GET Get available for lessons
+GET https://api.wanikani.com/v2/assignments
+    ?immediately_available_for_lessons=true
+Authorization: Bearer {{WANIKANI_API_TOKEN}}
