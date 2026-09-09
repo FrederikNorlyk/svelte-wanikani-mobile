@@ -110,6 +110,7 @@
 			buildPracticeSession().then(onStartPractice);
 		}
 	}}
+	size="medium"
 	variant="primary"
 >
 	{isLevelCompleted ? 'Reset' : 'Start'}

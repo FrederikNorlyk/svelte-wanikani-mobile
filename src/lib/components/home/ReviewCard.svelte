@@ -48,8 +48,8 @@
 				alt: 'Man working effortlessly',
 				message:
 					numberOfAssignments === 1
-						? "You've got just a single review."
-						: `You've only got ${numberOfAssignments} reviews.`
+						? "You've got just a single review"
+						: `You've only got ${numberOfAssignments} reviews`
 			};
 		}
 
@@ -57,19 +57,19 @@
 			return {
 				src: study_night_boy,
 				alt: 'Boy studying hard',
-				message: `You've got ${numberOfAssignments} reviews.`
+				message: `You've got ${numberOfAssignments} reviews`
 			};
 		}
 
 		return {
 			src: study_chienetsu_boy,
 			alt: 'Boy overwhelmed by work',
-			message: `Damn! You've got ${numberOfAssignments} reviews.`
+			message: `Damn! You've got ${numberOfAssignments} reviews`
 		};
 	});
 </script>
 
-<Card class="px-6 py-8 sm:px-12 sm:py-10">
+<Card class="w-full px-6 py-8 sm:px-12 sm:py-10">
 	<div class="flex flex-col items-center gap-4 text-center">
 		<Illustration alt={reviewState.alt} src={reviewState.src} />
 
@@ -88,9 +88,10 @@
 					hintElement: reviewShortcut
 				}}
 				onclick={onReviewButtonPressed}
+				size="medium"
 				variant="primary"
 			>
-				<BookOpen />
+				<BookOpen size={30} />
 				<span>Start Reviewing</span>
 			</Button>
 		{/if}

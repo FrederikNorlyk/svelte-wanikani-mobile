@@ -123,6 +123,7 @@
 				hintElement: arrowLeftShortcut
 			}}
 			onclick={onCorrectAnswer}
+			size="medium"
 			variant="primary"
 			>Knew it
 		</Button>
@@ -133,6 +134,7 @@
 				hintElement: arrowRightShortcut
 			}}
 			onclick={onWrongAnswer}
+			size="medium"
 			variant="primary"
 			>Didn't know
 		</Button>
@@ -150,6 +152,7 @@
 				void audioElement?.play();
 				isShowingAnswer = true;
 			}}
+			size="medium"
 			variant="primary"
 			>Show answer
 		</Button>

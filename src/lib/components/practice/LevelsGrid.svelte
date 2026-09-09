@@ -43,6 +43,7 @@
 			class="relative w-full"
 			disabled={maxLevelGranted < level}
 			onclick={() => onSelectLevel(level)}
+			size="medium"
 			variant="primary"
 		>
 			<Progress

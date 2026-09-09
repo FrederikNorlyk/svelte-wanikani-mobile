@@ -86,6 +86,7 @@
 		hintElement: spacebarShortcut
 	}}
 	onclick={onContinue}
+	size="medium"
 	variant="primary"
 >
 	<div

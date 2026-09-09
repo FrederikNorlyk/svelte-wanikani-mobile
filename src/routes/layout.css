@@ -85,6 +85,10 @@
 	}
 }
 
+@theme {
+	--breakpoint-sm: 500px;
+}
+
 @theme inline {
 	--font-sans: var(--font-sans);
 	--radius-sm: calc(var(--radius) - 50px);

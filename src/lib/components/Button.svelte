@@ -10,6 +10,7 @@
 	type CommonProps = {
 		class?: string;
 		children: Snippet;
+		size: 'small' | 'medium' | 'large';
 		variant: 'primary' | 'secondary';
 		keyboardShortcut?: {
 			handler: (e: KeyboardEvent) => boolean;
@@ -37,6 +38,7 @@
 		class: className,
 		children,
 		keyboardShortcut,
+		size,
 		variant,
 		...actionProps
 	}: Props = $props();
@@ -55,7 +57,12 @@
 
 	const buttonClass = $derived(
 		cn(
-			'button paper-effect inline-flex items-center justify-center gap-3 rounded-4xl border-2 border-(--button-border) px-6 py-5 sm:px-10 text-xl font-bold tracking-wide text-(--button-foreground) [&_svg]:size-7.5 [&_svg]:stroke-[2.2]',
+			'button paper-effect inline-flex items-center justify-center gap-3 rounded-4xl border-2 border-(--button-border) font-bold tracking-wide text-(--button-foreground) [&_svg]:stroke-[2.2]',
+			{
+				'px-4 py-3 text-base [&_svg]:size-5': size === 'small',
+				'px-5 py-4 text-xl  [&_svg]:size-7.5': size === 'medium',
+				'px-5 py-4 text-2xl [&_svg]:size-10': size === 'large'
+			},
 			variant,
 			className
 		)

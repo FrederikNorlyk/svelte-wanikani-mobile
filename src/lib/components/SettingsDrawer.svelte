@@ -124,6 +124,7 @@
 							<Button
 								class="relative"
 								onclick={subscribeToPushNotifications}
+								size="medium"
 								variant="primary"
 							>
 								{#if !hasSeenNotificationSubscribeButton}
