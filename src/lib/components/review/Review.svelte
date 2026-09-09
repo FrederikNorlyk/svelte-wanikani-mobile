@@ -1,8 +1,6 @@
 <script lang="ts">
 	import type { Subject } from '$lib/functions/subjects.remote';
 	import { Progress } from '$lib/shadcn/components/ui/progress';
-	import ArrowBigLeft from '@lucide/svelte/icons/arrow-big-left';
-	import ArrowBigRight from '@lucide/svelte/icons/arrow-big-right';
 	import SettingsRepository from '$lib/repository/local-storage/settingsRepository';
 	import AudioUtil from '$lib/util/audioUtil';
 	import { onMount } from 'svelte';
@@ -16,6 +14,7 @@
 	import AnswerCard from '$lib/components/review/AnswerCard.svelte';
 	import BookOpen from '@lucide/svelte/icons/book-open';
 	import MessageCircle from '@lucide/svelte/icons/message-circle';
+	import AnswerButton from '$lib/components/review/AnswerButton.svelte';
 
 	interface Props {
 		subject: Subject;
@@ -116,28 +115,8 @@
 
 <div class="flex space-x-4">
 	{#if isShowingAnswer}
-		<Button
-			class="flex-1"
-			keyboardShortcut={{
-				handler: (e) => e.code === 'ArrowLeft' || e.key === 'h',
-				hintElement: arrowLeftShortcut
-			}}
-			onclick={onCorrectAnswer}
-			size="medium"
-			variant="primary"
-			>Knew it
-		</Button>
-		<Button
-			class="flex-1"
-			keyboardShortcut={{
-				handler: (e) => e.code === 'ArrowRight' || e.key === 'l',
-				hintElement: arrowRightShortcut
-			}}
-			onclick={onWrongAnswer}
-			size="medium"
-			variant="primary"
-			>Didn't know
-		</Button>
+		<AnswerButton onclick={onCorrectAnswer} type="correct" />
+		<AnswerButton onclick={onWrongAnswer} type="wrong" />
 	{:else}
 		<Button
 			class="flex-1"
@@ -158,18 +137,6 @@
 		</Button>
 	{/if}
 </div>
-
-{#snippet arrowLeftShortcut()}
-	<Kbd>
-		<ArrowBigLeft />
-	</Kbd>
-{/snippet}
-
-{#snippet arrowRightShortcut()}
-	<Kbd class="bg-secondary-foreground text-secondary">
-		<ArrowBigRight />
-	</Kbd>
-{/snippet}
 
 {#snippet spacebarShortcut()}
 	<Kbd>Space</Kbd>

@@ -6,7 +6,6 @@
 	import kokage_tree_necchusyou from '$lib/assets/irasutoya/kokage_tree_necchusyou.png';
 	import type { NextReviewData } from '$lib/functions/assignments.remote';
 	import Button from '$lib/components/Button.svelte';
-	import { Kbd } from '$lib/shadcn/components/ui/kbd';
 	import Card from '$lib/components/Card.svelte';
 	import Illustration from '$lib/components/Illustration.svelte';
 
