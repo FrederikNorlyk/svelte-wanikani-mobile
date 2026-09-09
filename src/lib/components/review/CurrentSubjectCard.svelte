@@ -53,7 +53,7 @@
 		<div class="card-content">
 			<div class="self-end">
 				{#if isShowingAnswer && primaryReading}
-					<p class="sm:text-xl">{primaryReading}</p>
+					<p class="text-xl">{primaryReading}</p>
 				{/if}
 			</div>
 
@@ -61,7 +61,7 @@
 
 			<div class="self-start">
 				{#if isShowingAnswer && primaryMeaning}
-					<p class="sm:text-xl">{primaryMeaning}</p>
+					<p class="text-xl">{primaryMeaning}</p>
 				{/if}
 			</div>
 		</div>
