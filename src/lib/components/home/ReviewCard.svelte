@@ -82,22 +82,10 @@
 		</div>
 
 		{#if numberOfAssignments > 0}
-			<Button
-				keyboardShortcut={{
-					handler: (e) => e.key === 'r',
-					hintElement: reviewShortcut
-				}}
-				onclick={onReviewButtonPressed}
-				size="medium"
-				variant="primary"
-			>
+			<Button onclick={onReviewButtonPressed} size="medium" variant="primary">
 				<BookOpen size={30} />
 				<span>Start Reviewing</span>
 			</Button>
 		{/if}
 	</div>
 </Card>
-
-{#snippet reviewShortcut()}
-	<Kbd>R</Kbd>
-{/snippet}

@@ -1,14 +1,10 @@
 <script lang="ts">
-	import type { LucideIcon } from '@lucide/svelte';
-	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import ChevronUp from '@lucide/svelte/icons/chevron-up';
 	import Dumbbell from '@lucide/svelte/icons/dumbbell';
 	import GraduationCap from '@lucide/svelte/icons/graduation-cap';
 	import Settings from '@lucide/svelte/icons/settings';
 	import SettingsDrawer from '$lib/components/SettingsDrawer.svelte';
-	import { onMount } from 'svelte';
 	import Button from '$lib/components/Button.svelte';
-	import { Kbd } from '$lib/shadcn/components/ui/kbd';
-	import { uiState } from '$lib/state/uiState.svelte.js';
 	import type { NextReviewData } from '$lib/functions/assignments.remote';
 	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
 	import NotificationBadge from '$lib/components/NotificationBadge.svelte';
@@ -35,23 +31,10 @@
 	let hasSeenNotificationSubscribeButton = $state(
 		AppMetadataRepository.get().hasSeenNotificationSubscribeButton
 	);
-
-	onMount(() => {
-		const onKeyUp = (e: KeyboardEvent) => {
-			if (e.key === '?') {
-				uiState.isShowingKeyboardShortcuts =
-					!uiState.isShowingKeyboardShortcuts;
-			}
-		};
-
-		window.addEventListener('keyup', onKeyUp, { passive: true });
-
-		return () => window.removeEventListener('keyup', onKeyUp);
-	});
 </script>
 
-<div class="mx-auto flex w-full flex-1 flex-col items-center sm:w-110">
-	<div class="w-full flex-1">
+<div class="mx-auto flex w-full flex-1 flex-col items-center gap-8 sm:w-110">
+	<div class="flex w-full flex-1 items-center">
 		<ReviewCard
 			{nextReviewData}
 			{numberOfAssignments}
@@ -59,10 +42,10 @@
 		/>
 	</div>
 
-	<div class="flex flex-col gap-8">
+	<div class="flex w-full flex-col gap-8">
 		<div class="flex gap-8">
 			<Button
-				class="min:h-40 flex-1 flex-col gap-4"
+				class="flex-1 flex-col gap-4"
 				onclick={onPracticeButtonPressed}
 				size="large"
 				variant="secondary"
@@ -77,7 +60,7 @@
 			</Button>
 
 			<Button
-				class="min:h-40 flex-1 flex-col gap-4"
+				class="flex-1 flex-col gap-4"
 				disabled={numberOfLessons === 0}
 				href="https://wanikani.com"
 				size="large"
@@ -97,7 +80,7 @@
 		</div>
 
 		<Button
-			class="relative w-full justify-between"
+			class="justify-between"
 			onclick={() => {
 				isSettingsOpen = true;
 			}}
@@ -111,7 +94,7 @@
 				<Settings />
 				<span>Settings</span>
 			</span>
-			<ChevronRight />
+			<ChevronUp />
 		</Button>
 	</div>
 </div>
