@@ -38,7 +38,7 @@
 
 <div class="flex flex-1 flex-col justify-end">
 	<img
-		class="pointer-events-none z-10 mx-auto -mb-3.75 h-35"
+		class="pointer-events-none z-10 mx-auto -mb-[9px] h-[80px]"
 		alt=""
 		aria-hidden="true"
 		src={mascot}
