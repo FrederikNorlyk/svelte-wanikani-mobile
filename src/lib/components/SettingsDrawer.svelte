@@ -123,9 +123,9 @@
 						{#if notificationPermission === 'default'}
 							<Button
 								class="relative"
+								buttonColor="red"
 								onclick={subscribeToPushNotifications}
 								size="medium"
-								variant="primary"
 							>
 								{#if !hasSeenNotificationSubscribeButton}
 									<NotificationBadge />

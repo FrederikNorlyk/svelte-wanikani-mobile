@@ -46,9 +46,10 @@
 		<div class="flex gap-8">
 			<Button
 				class="flex-1 flex-col gap-4"
+				buttonColor="sand"
+				iconColor="green"
 				onclick={onPracticeButtonPressed}
 				size="large"
-				variant="secondary"
 			>
 				<Dumbbell />
 				<div class="flex-1 text-center">
@@ -61,11 +62,12 @@
 
 			<Button
 				class="flex-1 flex-col gap-4"
+				buttonColor="sand"
 				disabled={numberOfLessons === 0}
 				href="https://wanikani.com"
+				iconColor="yellow"
 				size="large"
 				target="_blank"
-				variant="secondary"
 			>
 				<GraduationCap />
 				<div class="flex-1 text-center">
@@ -81,11 +83,11 @@
 
 		<Button
 			class="justify-between"
+			buttonColor="sand"
 			onclick={() => {
 				isSettingsOpen = true;
 			}}
 			size="medium"
-			variant="secondary"
 		>
 			{#if !hasSeenNotificationSubscribeButton}
 				<NotificationBadge />

@@ -3,9 +3,6 @@
 	import { Progress } from '$lib/shadcn/components/ui/progress';
 	import SettingsRepository from '$lib/repository/local-storage/settingsRepository';
 	import AudioUtil from '$lib/util/audioUtil';
-	import { onMount } from 'svelte';
-	import { Kbd } from '$lib/shadcn/components/ui/kbd';
-	import { uiState } from '$lib/state/uiState.svelte.js';
 	import Button from '$lib/components/Button.svelte';
 	import { toast } from 'svelte-sonner';
 	import { studySession } from '$lib/state/studySession.svelte.js';
@@ -73,21 +70,6 @@
 			audioElement = undefined;
 		};
 	});
-
-	onMount(() => {
-		const onKeyUp = (e: KeyboardEvent) => {
-			if (e.key === '?') {
-				uiState.isShowingKeyboardShortcuts =
-					!uiState.isShowingKeyboardShortcuts;
-			} else if (isShowingAnswer && e.key === 'f') {
-				window.open(subject.documentUrl, '_blank');
-			}
-		};
-
-		window.addEventListener('keyup', onKeyUp, { passive: true });
-
-		return () => window.removeEventListener('keyup', onKeyUp);
-	});
 </script>
 
 <Progress value={progress()} />
@@ -120,24 +102,13 @@
 	{:else}
 		<Button
 			class="h-30 flex-1"
-			keyboardShortcut={{
-				handler: (e) =>
-					e.code === 'Space' ||
-					e.code === 'ArrowRight' ||
-					e.code === 'ArrowLeft',
-				hintElement: spacebarShortcut
-			}}
+			buttonColor="sand"
 			onclick={() => {
 				void audioElement?.play();
 				isShowingAnswer = true;
 			}}
 			size="medium"
-			variant="secondary"
 			>Show answer
 		</Button>
 	{/if}
 </div>
-
-{#snippet spacebarShortcut()}
-	<Kbd>Space</Kbd>
-{/snippet}

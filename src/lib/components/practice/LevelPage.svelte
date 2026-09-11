@@ -7,7 +7,6 @@
 	import { setStudySession } from '$lib/state/studySession.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { cn } from '$lib/shadcn/utils';
-	import { Kbd } from '$lib/shadcn/components/ui/kbd';
 	import {
 		AlertDialog,
 		AlertDialogAction,
@@ -18,8 +17,6 @@
 		AlertDialogHeader,
 		AlertDialogTitle
 	} from '$lib/shadcn/components/ui/alert-dialog';
-	import { onMount } from 'svelte';
-	import { uiState } from '$lib/state/uiState.svelte';
 	import ScrollableGrid from '$lib/components/practice/ScrollableGrid.svelte';
 	import SubjectCard from '../SubjectCard.svelte';
 	import SubjectCharacter from '$lib/components/SubjectCharacter.svelte';
@@ -59,19 +56,6 @@
 		};
 	});
 
-	onMount(() => {
-		const onKeyUp = (e: KeyboardEvent) => {
-			if (e.key === '?') {
-				uiState.isShowingKeyboardShortcuts =
-					!uiState.isShowingKeyboardShortcuts;
-			}
-		};
-
-		window.addEventListener('keyup', onKeyUp, { passive: true });
-
-		return () => window.removeEventListener('keyup', onKeyUp);
-	});
-
 	async function buildPracticeSession() {
 		const remainingSubjects = subjects.filter(
 			(subject) => !progress.find((p) => p.subjectId === subject.id)
@@ -99,10 +83,7 @@
 </ScrollableGrid>
 
 <Button
-	keyboardShortcut={{
-		handler: (e) => e.code === 'Space',
-		hintElement: spacebarShortcut
-	}}
+	buttonColor="red"
 	onclick={() => {
 		if (isLevelCompleted) {
 			isShowingAlertDialog = true;
@@ -111,7 +92,6 @@
 		}
 	}}
 	size="medium"
-	variant="primary"
 >
 	{isLevelCompleted ? 'Reset' : 'Start'}
 </Button>
@@ -139,7 +119,3 @@
 		</AlertDialogFooter>
 	</AlertDialogContent>
 </AlertDialog>
-
-{#snippet spacebarShortcut()}
-	<Kbd>Space</Kbd>
-{/snippet}

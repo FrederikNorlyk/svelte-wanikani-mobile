@@ -8,7 +8,6 @@
 	import hirune_soto_businessman from '$lib/assets/irasutoya/hirune_soto_businessman.png';
 	import { studySession } from '$lib/state/studySession.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import { Kbd } from '$lib/shadcn/components/ui/kbd';
 
 	interface Props {
 		onContinue: () => void;
@@ -81,13 +80,9 @@
 
 <Button
 	class="relative w-full overflow-hidden"
-	keyboardShortcut={{
-		handler: (e) => e.code === 'Space',
-		hintElement: spacebarShortcut
-	}}
+	buttonColor="red"
 	onclick={onContinue}
 	size="medium"
-	variant="primary"
 >
 	<div
 		class="progress-bar absolute inset-x-0 bottom-0 h-full origin-left bg-primary-foreground/20"
@@ -95,10 +90,6 @@
 	></div>
 	Continue
 </Button>
-
-{#snippet spacebarShortcut()}
-	<Kbd>Space</Kbd>
-{/snippet}
 
 <style>
 	.progress-bar {

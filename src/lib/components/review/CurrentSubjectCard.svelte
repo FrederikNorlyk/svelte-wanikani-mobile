@@ -1,10 +1,8 @@
 <script lang="ts">
 	import ExternalLink from '@lucide/svelte/icons/external-link';
-	import { uiState } from '$lib/state/uiState.svelte';
 	import SubjectCard from '$lib/components/SubjectCard.svelte';
 	import type { Subject } from '$lib/functions/subjects.remote';
 	import SubjectCharacter from '$lib/components/SubjectCharacter.svelte';
-	import { Kbd } from '$lib/shadcn/components/ui/kbd';
 
 	interface Props {
 		subject: Subject;
@@ -40,13 +38,7 @@
 			<span class="flex-1">{subjectType}</span>
 
 			{#if isShowingAnswer}
-				<div class="flex gap-2">
-					<ExternalLink class="inline-block size-5" />
-
-					{#if uiState.isShowingKeyboardShortcuts}
-						<Kbd class="shortcut-hint">f</Kbd>
-					{/if}
-				</div>
+				<ExternalLink class="inline-block size-5" />
 			{/if}
 		</div>
 
@@ -73,10 +65,6 @@
 
 	.top-row {
 		@apply flex w-full items-center text-left text-lg font-medium;
-	}
-
-	.shortcut-hint {
-		@apply inline-block bg-secondary-foreground text-secondary;
 	}
 
 	.card-content {

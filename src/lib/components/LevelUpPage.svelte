@@ -6,8 +6,6 @@
 	import ConfettiCannon from '$lib/ui/confettiCannon';
 	import UserRepository from '$lib/repository/local-storage/userRepository';
 	import Button from '$lib/components/Button.svelte';
-	import { Kbd } from '$lib/shadcn/components/ui/kbd';
-	import { uiState } from '$lib/state/uiState.svelte';
 
 	interface Props {
 		onContinue: () => void;
@@ -20,17 +18,6 @@
 
 	onMount(() => {
 		confettiCannon.fire();
-
-		const onKeyUp = (e: KeyboardEvent) => {
-			if (e.key === '?') {
-				uiState.isShowingKeyboardShortcuts =
-					!uiState.isShowingKeyboardShortcuts;
-			}
-		};
-
-		window.addEventListener('keyup', onKeyUp, { passive: true });
-
-		return () => window.removeEventListener('keyup', onKeyUp);
 	});
 </script>
 
@@ -45,19 +32,11 @@
 
 <Button
 	class="flex h-20"
-	keyboardShortcut={{
-		handler: (e) => e.code === 'Space',
-		hintElement: spacebarShortcut
-	}}
+	buttonColor="red"
 	onclick={() => {
 		confettiCannon.stop();
 		onContinue();
 	}}
 	size="medium"
-	variant="primary"
 	>Continue
 </Button>
-
-{#snippet spacebarShortcut()}
-	<Kbd>Space</Kbd>
-{/snippet}

@@ -12,7 +12,7 @@
 </script>
 
 <div class="flex items-center gap-2">
-	<Button onclick={onBackButtonPressed} size="medium" variant="primary">
+	<Button buttonColor="red" onclick={onBackButtonPressed} size="medium">
 		<ArrowLeft />
 	</Button>
 	<h1 class="text-3xl">

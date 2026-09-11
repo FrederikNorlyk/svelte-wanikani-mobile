@@ -43,7 +43,7 @@
 		aria-hidden="true"
 		src={mascot}
 	/>
-	<Button class="h-30 w-full" {onclick} size="medium" variant="secondary">
+	<Button class="h-30 w-full" buttonColor="sand" {onclick} size="medium">
 		{#if type === 'correct'}
 			Knew it
 		{:else}

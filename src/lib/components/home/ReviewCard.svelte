@@ -81,7 +81,7 @@
 		</div>
 
 		{#if numberOfAssignments > 0}
-			<Button onclick={onReviewButtonPressed} size="medium" variant="primary">
+			<Button buttonColor="red" onclick={onReviewButtonPressed} size="medium">
 				<BookOpen size={30} />
 				<span>Start Reviewing</span>
 			</Button>
