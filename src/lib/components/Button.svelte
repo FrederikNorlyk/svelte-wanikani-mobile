@@ -145,7 +145,7 @@
 		--button-background-highlight: rgb(255 255 255 / 4%);
 		--button-border: light-dark(#c8b58f, #52627d);
 		--button-foreground: var(--foreground);
-		--button-shadow-depth: light-dark(rgb(143 119 84 / 28%), rgb(2 8 24 / 55%));
+		--button-shadow-depth: light-dark(#e0d1b2, #0b152a);
 		--button-shadow-drop: light-dark(
 			rgb(255 128 0 / 14%),
 			rgb(73 115 170 / 18%)

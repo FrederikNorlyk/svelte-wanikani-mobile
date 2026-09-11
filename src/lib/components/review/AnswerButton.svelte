@@ -38,8 +38,8 @@
 
 <div class="flex flex-1 flex-col justify-end">
 	<img
-		class="pointer-events-none z-10 mx-auto -mb-[9px] h-[80px]"
-		alt=""
+		class="pointer-events-none z-10 mx-auto -mb-2 h-20"
+		alt={mascot}
 		aria-hidden="true"
 		src={mascot}
 	/>
