@@ -119,7 +119,7 @@
 		<AnswerButton onclick={onWrongAnswer} type="wrong" />
 	{:else}
 		<Button
-			class="h-35 flex-1"
+			class="h-30 flex-1"
 			keyboardShortcut={{
 				handler: (e) =>
 					e.code === 'Space' ||
@@ -132,7 +132,7 @@
 				isShowingAnswer = true;
 			}}
 			size="medium"
-			variant="primary"
+			variant="secondary"
 			>Show answer
 		</Button>
 	{/if}
