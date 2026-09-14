@@ -29,7 +29,7 @@
 	let isSettingsOpen = $state(false);
 
 	let hasSeenNotificationSubscribeButton = $state(
-		AppMetadataRepository.get().hasSeenNotificationSubscribeButton
+		false && AppMetadataRepository.get().hasSeenNotificationSubscribeButton
 	);
 </script>
 
