@@ -304,7 +304,7 @@
 	<Synchronizing />
 {:else if appState === 'loading'}
 	<Spinner
-		class="absolute top-1/2 left-1/2 size-40 -translate-x-1/2 -translate-y-1/2 text-primary/10"
+		class="absolute top-1/2 left-1/2 size-40 -translate-x-1/2 -translate-y-1/2 text-white opacity-40 dark:opacity-20"
 	/>
 {:else if appState === 'loaded'}
 	<HomePage
