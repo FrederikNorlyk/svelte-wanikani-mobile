@@ -32,6 +32,10 @@
 			notifications.map((notification) => notification.close());
 		};
 
+		void navigator.serviceWorker?.ready.then((registration) => {
+			registration.active?.postMessage({ type: 'cache-images' });
+		});
+
 		void clearNotifications();
 
 		const handleVisibilityChange = () => {
