@@ -3,6 +3,7 @@
 	import Illustration from '$lib/components/Illustration.svelte';
 	import { onMount } from 'svelte';
 	import Centered from '$lib/components/Centered.svelte';
+	import Card from '$lib/components/Card.svelte';
 	import ConfettiCannon from '$lib/ui/confettiCannon';
 	import UserRepository from '$lib/repository/local-storage/userRepository';
 	import Button from '$lib/components/Button.svelte';
@@ -22,12 +23,16 @@
 </script>
 
 <Centered>
-	<Illustration
-		alt="Three office workers cheering"
-		src={business_group_happy}
-	/>
-	<p>レベルアップ、おめでとう！</p>
-	<p>レベル{level}になりました！</p>
+	<Card class="w-full px-6 py-8 sm:px-12 sm:py-10">
+		<div class="flex flex-col items-center gap-4 text-center">
+			<Illustration
+				alt="Three office workers cheering"
+				src={business_group_happy}
+			/>
+			<p>レベルアップ、おめでとう！</p>
+			<p>レベル{level}になりました！</p>
+		</div>
+	</Card>
 </Centered>
 
 <Button
