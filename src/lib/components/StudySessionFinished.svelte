@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Centered from '$lib/components/Centered.svelte';
+	import Card from '$lib/components/Card.svelte';
 	import Illustration from '$lib/components/Illustration.svelte';
 	import pose_happy_businessman_guts from '$lib/assets/irasutoya/pose_happy_businessman_guts.png';
 	import pose_zasetsu from '$lib/assets/irasutoya/pose_zasetsu.png';
@@ -64,18 +65,22 @@
 </script>
 
 <Centered>
-	<p class="text-lg">
-		{#if percentageCorrect === 0}
-			You had no correct answers!
-		{:else if percentageCorrect === 100}
-			You had no wrong answers!
-		{:else}
-			You answered {percentageCorrect}% correctly
-		{/if}
-	</p>
+	<Card class="w-full px-6 py-8 sm:px-12 sm:py-10">
+		<div class="flex flex-col items-center gap-4 text-center">
+			<p class="text-lg">
+				{#if percentageCorrect === 0}
+					You had no correct answers!
+				{:else if percentageCorrect === 100}
+					You had no wrong answers!
+				{:else}
+					You answered {percentageCorrect}% correctly
+				{/if}
+			</p>
 
-	<Illustration alt={illustration.alt} src={illustration.src} />
-	<p>{illustration.paragraph}</p>
+			<Illustration alt={illustration.alt} src={illustration.src} />
+			<p>{illustration.paragraph}</p>
+		</div>
+	</Card>
 </Centered>
 
 <Button
