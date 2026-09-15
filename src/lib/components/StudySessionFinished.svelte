@@ -84,7 +84,7 @@
 </Centered>
 
 <Button
-	class="relative w-full overflow-hidden"
+	class="relative h-30 w-full overflow-hidden"
 	buttonColor="red"
 	onclick={onContinue}
 	size="medium"

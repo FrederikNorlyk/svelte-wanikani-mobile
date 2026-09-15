@@ -36,7 +36,7 @@
 </Centered>
 
 <Button
-	class="flex h-20"
+	class="flex h-30"
 	buttonColor="red"
 	onclick={() => {
 		confettiCannon.stop();
