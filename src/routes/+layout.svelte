@@ -82,6 +82,6 @@
 	position="top-center"
 />
 
-<main class="box-border flex h-dvh min-h-0 flex-col gap-2">
+<main class="box-border flex min-h-svh flex-col gap-2">
 	{@render children()}
 </main>

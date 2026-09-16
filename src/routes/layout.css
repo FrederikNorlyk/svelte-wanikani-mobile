@@ -128,15 +128,8 @@
 
 @layer base {
 	html {
-		height: 100%;
-		overflow: hidden;
-		overscroll-behavior-y: none;
+		min-height: 100%;
 		background-color: var(--app-background);
-		background-image: var(--app-background-image);
-		background-attachment: fixed;
-		background-position: center;
-		background-repeat: no-repeat;
-		background-size: cover;
 	}
 
 	main {
@@ -148,10 +141,23 @@
 
 	body {
 		@apply bg-background font-sans text-foreground;
-		height: 100%;
-		overflow: hidden;
-		overscroll-behavior-y: none;
+		isolation: isolate;
+		min-height: 100%;
+		margin: 0;
 		background-color: transparent;
+	}
+
+	body::before {
+		content: '';
+		position: fixed;
+		inset: 0;
+		z-index: -1;
+		background-color: var(--app-background);
+		background-image: var(--app-background-image);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		pointer-events: none;
 	}
 }
 
