@@ -6,8 +6,7 @@
 	import kokage_tree_necchusyou from '$lib/assets/irasutoya/kokage_tree_necchusyou.png';
 	import type { NextReviewData } from '$lib/functions/assignments.remote';
 	import Button from '$lib/components/Button.svelte';
-	import Card from '$lib/components/Card.svelte';
-	import Illustration from '$lib/components/Illustration.svelte';
+	import IllustrationCard from '$lib/components/IllustrationCard.svelte';
 
 	interface Props {
 		numberOfAssignments: number;
@@ -68,23 +67,19 @@
 	});
 </script>
 
-<Card class="w-full px-6 py-8 sm:px-12 sm:py-10">
-	<div class="flex flex-col items-center gap-4 text-center">
-		<Illustration alt={reviewState.alt} src={reviewState.src} />
+<IllustrationCard alt={reviewState.alt} src={reviewState.src}>
+	<div>
+		<h2 class="text-2xl font-medium">{reviewState.message}</h2>
 
-		<div>
-			<h2 class="text-2xl font-medium">{reviewState.message}</h2>
-
-			{#if reviewState.instructions}
-				<p class="mt-1">{reviewState.instructions}</p>
-			{/if}
-		</div>
-
-		{#if numberOfAssignments > 0}
-			<Button buttonColor="red" onclick={onReviewButtonPressed} size="medium">
-				<BookOpen size={30} />
-				<span>Start Reviewing</span>
-			</Button>
+		{#if reviewState.instructions}
+			<p class="mt-1">{reviewState.instructions}</p>
 		{/if}
 	</div>
-</Card>
+
+	{#if numberOfAssignments > 0}
+		<Button buttonColor="red" onclick={onReviewButtonPressed} size="medium">
+			<BookOpen size={30} />
+			<span>Start Reviewing</span>
+		</Button>
+	{/if}
+</IllustrationCard>
