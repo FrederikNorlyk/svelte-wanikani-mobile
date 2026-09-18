@@ -90,7 +90,7 @@
 			size="medium"
 		>
 			{#if !hasSeenNotificationSubscribeButton}
-				<NotificationBadge />
+				<NotificationBadge class="absolute -top-2 right-1" />
 			{/if}
 			<span class="flex items-center gap-3">
 				<Settings />

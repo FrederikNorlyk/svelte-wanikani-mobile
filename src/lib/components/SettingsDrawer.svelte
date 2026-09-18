@@ -96,7 +96,12 @@
 
 				{#if notificationPermission !== 'granted'}
 					<section aria-labelledby="notifications-title">
-						<h2 id="notifications-title">Notifications</h2>
+						<div class="flex gap-1">
+							<h2 id="notifications-title">Notifications</h2>
+							{#if !hasSeenNotificationSubscribeButton}
+								<NotificationBadge class="h-4 w-4" />
+							{/if}
+						</div>
 						<p>Receive notifications when new reviews are ready</p>
 						{#if notificationPermission === 'default'}
 							<Button
@@ -105,9 +110,6 @@
 								size="small"
 								type="button"
 							>
-								{#if !hasSeenNotificationSubscribeButton}
-									<NotificationBadge />
-								{/if}
 								Subscribe <BellPlus aria-hidden="true" />
 							</Button>
 						{:else}
