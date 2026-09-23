@@ -9,7 +9,7 @@
 	import * as AssignmentService from '$lib/services/assignmentService';
 	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
 	import NotificationBadge from '$lib/components/NotificationBadge.svelte';
-	import Button from '$lib/components/Button.svelte';
+	import Button from '$lib/components/button/Button.svelte';
 
 	interface Props {
 		isOpen: boolean;

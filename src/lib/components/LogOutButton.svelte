@@ -17,7 +17,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import * as NotificationUtil from '$lib/util/notificationUtil';
-	import Button from '$lib/components/Button.svelte';
+	import Button from '$lib/components/button/Button.svelte';
 
 	let isLoggingOut = $state(false);
 	let isShowingAlertDialog = $state(false);

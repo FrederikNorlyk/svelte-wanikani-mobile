@@ -5,7 +5,7 @@
 	import SubjectsRepository from '$lib/repository/database/subjectsRepository';
 	import type { Subject } from '$lib/functions/subjects.remote';
 	import { setStudySession } from '$lib/state/studySession.svelte';
-	import Button from '$lib/components/Button.svelte';
+	import Button from '$lib/components/button/Button.svelte';
 	import { cn } from '$lib/shadcn/utils';
 	import {
 		AlertDialog,

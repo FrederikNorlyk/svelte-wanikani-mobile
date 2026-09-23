@@ -3,7 +3,7 @@
 	import { Progress } from '$lib/shadcn/components/ui/progress';
 	import SettingsRepository from '$lib/repository/local-storage/settingsRepository';
 	import AudioUtil from '$lib/util/audioUtil';
-	import Button from '$lib/components/Button.svelte';
+	import Button from '$lib/components/button/Button.svelte';
 	import { toast } from 'svelte-sonner';
 	import { studySession } from '$lib/state/studySession.svelte.js';
 	import { calculatePercentage } from '$lib/util/mathUtil';

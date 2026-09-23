@@ -11,7 +11,7 @@
 	import luckyCatYes from '$lib/assets/mascots/lucky-cat-yes.png';
 	import tanukiNo from '$lib/assets/mascots/tanuki-no.png';
 	import tanukiYes from '$lib/assets/mascots/tanuki-yes.png';
-	import Button from '$lib/components/Button.svelte';
+	import Button from '$lib/components/button/Button.svelte';
 	import {
 		studySession,
 		type MascotPair

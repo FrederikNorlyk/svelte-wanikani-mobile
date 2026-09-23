@@ -4,7 +4,8 @@
 	import GraduationCap from '@lucide/svelte/icons/graduation-cap';
 	import Settings from '@lucide/svelte/icons/settings';
 	import SettingsDrawer from '$lib/components/SettingsDrawer.svelte';
-	import Button from '$lib/components/Button.svelte';
+	import AnchorButton from '$lib/components/button/AnchorButton.svelte';
+	import Button from '$lib/components/button/Button.svelte';
 	import type { NextReviewData } from '$lib/functions/assignments.remote';
 	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
 	import NotificationBadge from '$lib/components/NotificationBadge.svelte';
@@ -60,7 +61,7 @@
 				</div>
 			</Button>
 
-			<Button
+			<AnchorButton
 				class="flex-1 flex-col gap-4"
 				buttonColor="sand"
 				disabled={numberOfLessons === 0}
@@ -78,7 +79,7 @@
 							: `${numberOfLessons} ${numberOfLessons === 1 ? 'lesson' : 'lessons'} available`}
 					</p>
 				</div>
-			</Button>
+			</AnchorButton>
 		</div>
 
 		<Button

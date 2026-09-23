@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/components/Button.svelte';
+	import Button from '$lib/components/button/Button.svelte';
 	import { Progress } from '$lib/shadcn/components/ui/progress/index';
 	import SubjectsRepository from '$lib/repository/database/subjectsRepository';
 	import ProgressRepository from '$lib/repository/database/progressRepository';

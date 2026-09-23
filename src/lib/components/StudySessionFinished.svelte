@@ -7,7 +7,7 @@
 	import ochanoma_mu_notv from '$lib/assets/irasutoya/ochanoma_mu_notv.png';
 	import hirune_soto_businessman from '$lib/assets/irasutoya/hirune_soto_businessman.png';
 	import { studySession } from '$lib/state/studySession.svelte';
-	import Button from '$lib/components/Button.svelte';
+	import Button from '$lib/components/button/Button.svelte';
 
 	interface Props {
 		onContinue: () => void;

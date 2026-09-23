@@ -5,7 +5,7 @@
 	import Centered from '$lib/components/Centered.svelte';
 	import ConfettiCannon from '$lib/ui/confettiCannon';
 	import UserRepository from '$lib/repository/local-storage/userRepository';
-	import Button from '$lib/components/Button.svelte';
+	import Button from '$lib/components/button/Button.svelte';
 
 	interface Props {
 		onContinue: () => void;
