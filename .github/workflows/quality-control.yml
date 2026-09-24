@@ -16,6 +16,7 @@ jobs:
         command:
           - lint
           - check
+          - test
           - format:check
 
     steps:

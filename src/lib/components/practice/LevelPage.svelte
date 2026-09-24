@@ -6,7 +6,6 @@
 	} from '$lib/repository/database/progressRepository';
 	import SubjectsRepository from '$lib/repository/database/subjectsRepository';
 	import type { Subject } from '$lib/functions/subjects.remote';
-	import { setStudySession } from '$lib/state/studySession.svelte';
 	import Button from '$lib/components/button/Button.svelte';
 	import { cn } from '$lib/shadcn/utils';
 	import {
@@ -26,7 +25,7 @@
 	interface Props {
 		header: Snippet;
 		level: number;
-		onStartPractice: () => void;
+		onStartPractice: (subjectIds: number[]) => void;
 	}
 
 	const { header, level, onStartPractice }: Props = $props();
@@ -59,17 +58,12 @@
 		};
 	});
 
-	async function buildPracticeSession() {
+	function startPractice() {
 		const remainingSubjects = subjects.filter(
 			(subject) => !progress.find((p) => p.subjectId === subject.id)
 		);
 
-		setStudySession({
-			subjectIds: remainingSubjects.map((subject) => subject.id),
-			index: 0,
-			studyType: 'practice',
-			numberOfCorrectAnswers: 0
-		});
+		onStartPractice(remainingSubjects.map((subject) => subject.id));
 	}
 </script>
 
@@ -81,7 +75,7 @@
 				if (isLevelCompleted) {
 					isShowingAlertDialog = true;
 				} else {
-					buildPracticeSession().then(onStartPractice);
+					startPractice();
 				}
 			}}
 			size="medium"

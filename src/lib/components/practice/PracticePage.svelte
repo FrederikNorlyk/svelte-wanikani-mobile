@@ -7,7 +7,7 @@
 	type PageState = 'select-level' | 'view-level';
 
 	interface Props {
-		onStartPractice: () => void;
+		onStartPractice: (subjectIds: number[]) => void;
 		onCancel: () => void;
 	}
 

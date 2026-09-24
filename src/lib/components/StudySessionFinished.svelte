@@ -6,11 +6,12 @@
 	import onsen_man from '$lib/assets/irasutoya/onsen_man.png';
 	import ochanoma_mu_notv from '$lib/assets/irasutoya/ochanoma_mu_notv.png';
 	import hirune_soto_businessman from '$lib/assets/irasutoya/hirune_soto_businessman.png';
-	import { studySession } from '$lib/state/studySession.svelte';
+	import type { StudySessionState } from '$lib/state/studySession.svelte';
 	import Button from '$lib/components/button/Button.svelte';
 
 	interface Props {
 		onContinue: () => void;
+		session: StudySessionState;
 	}
 
 	interface IllustrationProps {
@@ -19,12 +20,11 @@
 		paragraph: string;
 	}
 
-	const { onContinue }: Props = $props();
+	const { onContinue, session }: Props = $props();
 
 	const percentageCorrect = $derived(
 		Math.floor(
-			(studySession().numberOfCorrectAnswers * 100) /
-				studySession().subjectIds.length
+			(session.numberOfCorrectAnswers * 100) / session.subjectIds.length
 		)
 	);
 
