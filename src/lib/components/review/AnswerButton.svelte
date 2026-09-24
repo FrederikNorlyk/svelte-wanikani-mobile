@@ -12,17 +12,15 @@
 	import tanukiNo from '$lib/assets/mascots/tanuki-no.png';
 	import tanukiYes from '$lib/assets/mascots/tanuki-yes.png';
 	import Button from '$lib/components/button/Button.svelte';
-	import {
-		studySession,
-		type MascotPair
-	} from '$lib/state/studySession.svelte';
+	import type { MascotPair } from '$lib/state/studySession.svelte';
 
 	interface Props {
 		type: 'correct' | 'wrong';
+		mascotPair: MascotPair;
 		onclick: () => void;
 	}
 
-	const { type, onclick }: Props = $props();
+	const { type, mascotPair, onclick }: Props = $props();
 
 	const mascots: Record<MascotPair, Record<Props['type'], string>> = {
 		'black-cat': { correct: blackCatYes, wrong: blackCatNo },
@@ -33,7 +31,7 @@
 		tanuki: { correct: tanukiYes, wrong: tanukiNo }
 	};
 
-	const mascot = $derived(mascots[studySession().mascotPair][type]);
+	const mascot = $derived(mascots[mascotPair][type]);
 </script>
 
 <div class="flex flex-1 flex-col justify-end">

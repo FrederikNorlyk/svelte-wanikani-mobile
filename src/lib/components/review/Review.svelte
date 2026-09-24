@@ -6,7 +6,7 @@
 	import AudioUtil from '$lib/util/audioUtil';
 	import Button from '$lib/components/button/Button.svelte';
 	import { toast } from 'svelte-sonner';
-	import { studySession } from '$lib/state/studySession.svelte.js';
+	import type { StudySessionState } from '$lib/state/studySession.svelte';
 	import { calculatePercentage } from '$lib/util/mathUtil';
 	import CurrentSubjectCard from '$lib/components/review/CurrentSubjectCard.svelte';
 	import AnswerCard from '$lib/components/review/AnswerCard.svelte';
@@ -16,12 +16,14 @@
 
 	interface Props {
 		subject: Subject;
+		session: StudySessionState;
 		onCorrectAnswer: () => void;
 		onWrongAnswer: () => void;
 		onCancel: () => void;
 	}
 
-	const { subject, onCorrectAnswer, onWrongAnswer, onCancel }: Props = $props();
+	const { subject, session, onCorrectAnswer, onWrongAnswer, onCancel }: Props =
+		$props();
 
 	const settings = SettingsRepository.get();
 
@@ -32,8 +34,8 @@
 	const secondaryReadings = $derived(subject.secondaryReadings);
 
 	const progress = $derived(() => {
-		const completed = studySession().index;
-		const total = studySession().subjectIds.length;
+		const completed = session.index;
+		const total = session.subjectIds.length;
 		return calculatePercentage(completed, total);
 	});
 
@@ -75,8 +77,12 @@
 </script>
 
 <div class="mb-1 flex place-items-center gap-2">
-	<Button class="w-20" buttonColor="red" onclick={onCancel} size="xs"
-		><ArrowLeft /></Button
+	<Button
+		class="w-20"
+		aria-label="Back"
+		buttonColor="red"
+		onclick={onCancel}
+		size="xs"><ArrowLeft /></Button
 	>
 	<Progress value={progress()} />
 </div>
@@ -104,8 +110,16 @@
 
 <div class="flex space-x-4">
 	{#if isShowingAnswer}
-		<AnswerButton onclick={onCorrectAnswer} type="correct" />
-		<AnswerButton onclick={onWrongAnswer} type="wrong" />
+		<AnswerButton
+			mascotPair={session.mascotPair}
+			onclick={onCorrectAnswer}
+			type="correct"
+		/>
+		<AnswerButton
+			mascotPair={session.mascotPair}
+			onclick={onWrongAnswer}
+			type="wrong"
+		/>
 	{:else}
 		<Button
 			class="h-30 flex-1"

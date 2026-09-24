@@ -6,63 +6,47 @@
 		type NextReviewData
 	} from '$lib/functions/assignments.remote';
 	import * as AssignmentService from '$lib/services/assignmentService';
-	import { onMount, untrack } from 'svelte';
+	import { onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import SubjectsRepository from '$lib/repository/database/subjectsRepository';
 	import Review from '$lib/components/review/Review.svelte';
 	import Synchronizing from '$lib/components/Synchronizing.svelte';
-	import * as ReviewAPI from '$lib/functions/reviews.remote';
-	import SRSStageToast from '$lib/components/SRSStageToast.svelte';
 	import LevelUpPage from '$lib/components/LevelUpPage.svelte';
 	import type { User } from '$lib/functions/user.remote';
-	import * as UserAPI from '$lib/functions/user.remote';
 	import UserRepository from '$lib/repository/local-storage/userRepository';
-	import {
-		setStudySession,
-		studySession
-	} from '$lib/state/studySession.svelte';
+	import { createStudySession } from '$lib/state/studySession.svelte';
 	import HomePage from '$lib/components/home/HomePage.svelte';
 	import PracticePage from '$lib/components/practice/PracticePage.svelte';
-	import ProgressRepository from '$lib/repository/database/progressRepository';
 	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
 	import StudySessionFinished from '$lib/components/StudySessionFinished.svelte';
 	import { Spinner } from '$lib/shadcn/components/ui/spinner';
 
-	type AppState =
-		| 'loading'
-		| 'synchronizing'
-		| 'loaded'
-		| 'studying'
-		| 'defining-practice-session'
-		| 'finished'
-		| 'level-up';
+	type HomeState =
+		'loading' | 'synchronizing' | 'loaded' | 'defining-practice-session';
 
 	let assignments = $state<Assignment[]>([]);
 	let numberOfLessons = $state(0);
 	let nextReviewData = $state<NextReviewData | null>(null);
-	let appState = $state<AppState>('loading');
+	let homeState = $state<HomeState>('loading');
 	let user = $state<User | undefined>(undefined);
 
-	// Used by the StudySessionFinished component to skip the 5-second wait
-	let timeoutAbortController = $state(new AbortController());
-
-	const subject = $derived(async () => {
-		if (studySession().index >= studySession().subjectIds.length) {
-			return undefined;
+	const session = createStudySession({
+		refreshAssignments: async () => {
+			AssignmentAPI.getAvailableAssignments().refresh();
+			const [a, n] = await AssignmentService.refresh(
+				user?.reviewsPresentationOrder ?? 'shuffled'
+			);
+			assignments = a;
+			nextReviewData = n;
 		}
-
-		const subjectId = studySession().subjectIds[studySession().index];
-		const previousState = appState;
-
-		return await SubjectsRepository.getSubject(subjectId, {
-			onSynchronize: () => (appState = 'synchronizing'),
-			afterSynchronize: () => (appState = previousState)
-		});
 	});
+	const appState = $derived(
+		session.screen === 'home' ? homeState : session.screen
+	);
 
 	onMount(() => {
 		const refreshData = async () => {
-			appState = 'loading';
+			homeState = 'loading';
 
 			// Update the cached user
 			try {
@@ -100,7 +84,7 @@
 			);
 
 			if ((await SubjectsRepository.count()) === 0) {
-				appState = 'synchronizing';
+				homeState = 'synchronizing';
 
 				promises.push(
 					SubjectsRepository.synchronize().catch((e) => {
@@ -111,7 +95,7 @@
 			}
 
 			Promise.all(promises).finally(() => {
-				appState = 'loaded';
+				homeState = 'loaded';
 			});
 		};
 
@@ -147,157 +131,10 @@
 		document.addEventListener('visibilitychange', handleVisibilityChange);
 
 		return () => {
+			session.dispose();
 			document.removeEventListener('visibilitychange', handleVisibilityChange);
 		};
 	});
-
-	async function onAnswer(wasCorrect: boolean) {
-		const currentSubject = await subject();
-
-		if (!currentSubject) {
-			toast.error('Could not get current subject');
-			return;
-		}
-
-		if (wasCorrect) {
-			studySession().numberOfCorrectAnswers++;
-		}
-
-		if (studySession().studyType === 'practice') {
-			if (wasCorrect) {
-				void ProgressRepository.set({
-					subjectId: currentSubject.id,
-					level: currentSubject.level
-				});
-			}
-			getNextQuestion();
-			return;
-		}
-
-		try {
-			const currentAssignment = assignments[studySession().index];
-
-			if (!currentAssignment) {
-				toast.error('Could not get current assignment');
-				return;
-			}
-
-			let incorrectReadings = 0;
-			let incorrectMeanings = 0;
-
-			if (!wasCorrect) {
-				incorrectMeanings = 1;
-
-				if (
-					currentSubject.type === 'kanji' ||
-					currentSubject.type === 'vocabulary'
-				) {
-					incorrectReadings = 1;
-				}
-			}
-
-			const reviewPromise = ReviewAPI.createReview({
-				assignmentId: currentAssignment.id,
-				incorrectReadingAnswers: incorrectReadings,
-				incorrectMeaningAnswers: incorrectMeanings
-			});
-
-			// Invalidate the SvelteKit cache
-			UserAPI.getUser().refresh();
-
-			// Keep the UI instant: don't await normally
-			void reviewPromise
-				.then(() => {
-					Promise.all([UserRepository.getUser(), UserAPI.getUser()]).then(
-						([oldUser, newUser]) => {
-							if (newUser.level > oldUser.level) {
-								UserRepository.setUser(newUser);
-								appState = 'level-up';
-							}
-						}
-					);
-				})
-				.catch((e) => {
-					console.error(e);
-					toast.error('Could not create review');
-				});
-
-			if (wasCorrect && currentAssignment.srsStage === 'Enlightened') {
-				toast.custom(SRSStageToast, {
-					componentProps: {
-						srsStage: 'Burned'
-					},
-					duration: 1000
-				});
-			}
-
-			// On the last question, ensure the review has been created before going
-			// back to the home screen
-			const wasLastQuestion =
-				studySession().index === studySession().subjectIds.length - 1;
-
-			if (wasLastQuestion) {
-				await reviewPromise;
-			}
-		} finally {
-			getNextQuestion();
-		}
-	}
-
-	function getNextQuestion() {
-		const wasLastQuestion =
-			studySession().index === studySession().subjectIds.length - 1;
-
-		if (wasLastQuestion) {
-			appState = 'finished';
-		} else {
-			studySession().index++;
-		}
-	}
-
-	$effect(() => {
-		if (appState !== 'finished') {
-			return;
-		}
-
-		untrack(() => {
-			void finishStudySession();
-		});
-	});
-
-	async function finishStudySession() {
-		// Linger on the "Study session finished" illustration for at least 5 seconds
-		const minDelay = new Promise<void>((resolve) => {
-			const id = window.setTimeout(resolve, 5000);
-
-			timeoutAbortController.signal.addEventListener('abort', () => {
-				window.clearTimeout(id);
-				resolve();
-			});
-		}).then(() => {
-			// If the delay ends before the assignments promise, then we enter a loading state.
-			appState = 'loading';
-		});
-
-		// Invalidate the SvelteKit cache
-		AssignmentAPI.getAvailableAssignments().refresh();
-
-		const assignmentPromise = AssignmentService.refresh(
-			user?.reviewsPresentationOrder ?? 'shuffled'
-		)
-			.then(([a, n]) => {
-				assignments = a;
-				nextReviewData = n;
-			})
-			.catch((e) => {
-				console.error(e);
-				toast.error('Could not get assignments');
-			});
-
-		await Promise.all([assignmentPromise, minDelay]);
-
-		appState = 'loaded';
-	}
 </script>
 
 {#if appState === 'synchronizing'}
@@ -312,50 +149,37 @@
 		numberOfAssignments={assignments.length}
 		{numberOfLessons}
 		onPracticeButtonPressed={() => {
-			appState = 'defining-practice-session';
+			homeState = 'defining-practice-session';
 		}}
 		onReviewButtonPressed={() => {
-			setStudySession({
-				subjectIds: assignments.map((assignment) => assignment.subjectId),
-				index: 0,
-				studyType: 'review',
-				numberOfCorrectAnswers: 0
-			});
-			appState = 'studying';
+			session.startReview(assignments);
 		}}
 	/>
 {:else if appState === 'studying'}
-	{@const currentSubject = await subject()}
+	{@const currentSubject = await session.currentSubject()}
 	{#if !currentSubject}
 		Something went wrong. Could not get current subject
 	{:else}
 		<Review
-			onCancel={() => window.location.reload()}
-			onCorrectAnswer={() => onAnswer(true)}
-			onWrongAnswer={() => onAnswer(false)}
+			onCancel={session.back}
+			onCorrectAnswer={() => session.answer(true)}
+			onWrongAnswer={() => session.answer(false)}
+			session={session.state}
 			subject={currentSubject}
 		/>
 	{/if}
 {:else if appState === 'defining-practice-session'}
 	<PracticePage
 		onCancel={() => {
-			appState = 'loaded';
+			homeState = 'loaded';
 		}}
-		onStartPractice={() => {
-			appState = 'studying';
+		onStartPractice={(subjectIds) => {
+			homeState = 'loaded';
+			session.startPractice(subjectIds);
 		}}
 	/>
 {:else if appState === 'finished'}
-	<StudySessionFinished
-		onContinue={() => {
-			timeoutAbortController.abort();
-			timeoutAbortController = new AbortController();
-		}}
-	/>
+	<StudySessionFinished onContinue={session.continue} session={session.state} />
 {:else if appState === 'level-up'}
-	<LevelUpPage
-		onContinue={() => {
-			appState = 'studying';
-		}}
-	/>
+	<LevelUpPage onContinue={session.continue} />
 {/if}
