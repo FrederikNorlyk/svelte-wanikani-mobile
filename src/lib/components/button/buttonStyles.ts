@@ -3,7 +3,7 @@ import { cn } from '$lib/shadcn/utils';
 export type ButtonStyleProps = {
 	class?: string;
 	size: 'xs' | 'small' | 'medium' | 'large';
-	buttonColor: 'red' | 'sand';
+	buttonColor: 'red' | 'sand' | 'white';
 	iconColor?: 'green' | 'yellow';
 };
 

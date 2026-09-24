@@ -40,8 +40,8 @@
 		{@const total = subjectCounts[level] ?? 1}
 
 		<Button
-			class="relative w-full"
-			buttonColor="red"
+			class="rounded-md"
+			buttonColor="white"
 			disabled={maxLevelGranted < level}
 			onclick={() => onSelectLevel(level)}
 			size="medium"

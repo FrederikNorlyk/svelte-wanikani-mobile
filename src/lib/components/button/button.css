@@ -49,6 +49,17 @@
 	--button-focus-outline: var(--foreground);
 }
 
+.white {
+	--button-background: light-dark(#fcfcfc, #dce1df);
+	--button-background-highlight: rgb(255 255 255 / 12%);
+	--button-border: light-dark(#bdc5c2, #a2ada9);
+	--button-foreground: #35413e;
+	--button-shadow-depth: light-dark(#cdd4d0, #899792);
+	--button-shadow-drop: light-dark(rgb(45 65 55 / 14%), rgb(0 0 0 / 28%));
+	--button-shadow-highlight: rgb(255 255 255 / 65%);
+	--button-focus-outline: var(--foreground);
+}
+
 .icon-green {
 	--button-icon: light-dark(#668355, #77a860);
 }

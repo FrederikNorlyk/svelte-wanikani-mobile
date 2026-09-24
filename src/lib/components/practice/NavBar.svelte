@@ -12,10 +12,21 @@
 </script>
 
 <div class="flex items-center gap-2">
-	<Button buttonColor="red" onclick={onBackButtonPressed} size="medium">
+	<Button
+		class="h-10"
+		buttonColor="red"
+		onclick={onBackButtonPressed}
+		size="medium"
+	>
 		<ArrowLeft />
 	</Button>
 	<h1 class="text-3xl">
 		{@render children()}
 	</h1>
 </div>
+
+<style>
+	h1 {
+		color: light-dark(white, var(--foreground));
+	}
+</style>
