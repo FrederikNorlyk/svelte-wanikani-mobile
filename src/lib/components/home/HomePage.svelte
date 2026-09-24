@@ -90,13 +90,17 @@
 			}}
 			size="medium"
 		>
-			{#if !hasSeenNotificationSubscribeButton}
-				<NotificationBadge class="absolute -top-2 right-1" />
-			{/if}
 			<span class="flex items-center gap-3">
 				<Settings />
-				<span>Settings</span>
+
+				<span class="flex gap-1"
+					>Settings
+					{#if !hasSeenNotificationSubscribeButton}
+						<NotificationBadge class="mb-2 h-4 w-4" />
+					{/if}
+				</span>
 			</span>
+
 			<ChevronUp />
 		</Button>
 	</div>
