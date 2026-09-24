@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Centered from '$lib/components/Centered.svelte';
+	import IllustrationLayout from '$lib/components/layouts/IllustrationLayout.svelte';
 	import IllustrationCard from '$lib/components/IllustrationCard.svelte';
 	import pose_happy_businessman_guts from '$lib/assets/irasutoya/pose_happy_businessman_guts.png';
 	import pose_zasetsu from '$lib/assets/irasutoya/pose_zasetsu.png';
@@ -63,7 +63,7 @@
 	});
 </script>
 
-<Centered>
+<IllustrationLayout>
 	<IllustrationCard alt={illustration.alt} src={illustration.src}>
 		<h2 class="text-lg font-medium">
 			{#if percentageCorrect === 0}
@@ -77,20 +77,22 @@
 
 		<p>{illustration.paragraph}</p>
 	</IllustrationCard>
-</Centered>
 
-<Button
-	class="relative h-30 w-full overflow-hidden"
-	buttonColor="red"
-	onclick={onContinue}
-	size="medium"
->
-	<div
-		class="progress-bar absolute inset-x-0 bottom-0 h-full origin-left bg-primary-foreground/20"
-		aria-hidden="true"
-	></div>
-	Continue
-</Button>
+	{#snippet actions()}
+		<Button
+			class="relative h-30 w-full overflow-hidden"
+			buttonColor="red"
+			onclick={onContinue}
+			size="medium"
+		>
+			<div
+				class="progress-bar absolute inset-x-0 bottom-0 h-full origin-left bg-primary-foreground/20"
+				aria-hidden="true"
+			></div>
+			Continue
+		</Button>
+	{/snippet}
+</IllustrationLayout>
 
 <style>
 	.progress-bar {

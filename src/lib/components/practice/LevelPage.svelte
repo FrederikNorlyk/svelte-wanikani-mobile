@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+	import GridLayout from '$lib/components/layouts/GridLayout.svelte';
 	import ProgressRepository, {
 		type Progress
 	} from '$lib/repository/database/progressRepository';
@@ -22,11 +24,12 @@
 	import SubjectCharacter from '$lib/components/SubjectCharacter.svelte';
 
 	interface Props {
+		header: Snippet;
 		level: number;
 		onStartPractice: () => void;
 	}
 
-	const { level, onStartPractice }: Props = $props();
+	const { header, level, onStartPractice }: Props = $props();
 
 	let progress = $state<Progress[]>([]);
 	let subjects = $state<Subject[]>([]);
@@ -70,31 +73,34 @@
 	}
 </script>
 
-<ScrollableGrid>
-	{#each subjects as subject (subject.id)}
-		{@const isCompleted = progress.find((p) => p.subjectId === subject.id)}
+<GridLayout {header}>
+	{#snippet controls()}
+		<Button
+			buttonColor="red"
+			onclick={() => {
+				if (isLevelCompleted) {
+					isShowingAlertDialog = true;
+				} else {
+					buildPracticeSession().then(onStartPractice);
+				}
+			}}
+			size="medium"
+		>
+			{isLevelCompleted ? 'Reset' : 'Start'}
+		</Button>
+	{/snippet}
+	<ScrollableGrid>
+		{#each subjects as subject (subject.id)}
+			{@const isCompleted = progress.find((p) => p.subjectId === subject.id)}
 
-		<a href={subject.documentUrl} rel="external" target="_blank">
-			<SubjectCard class={cn('', { 'opacity-50': isCompleted })} {subject}>
-				<SubjectCharacter {subject} />
-			</SubjectCard>
-		</a>
-	{/each}
-</ScrollableGrid>
-
-<Button
-	buttonColor="red"
-	onclick={() => {
-		if (isLevelCompleted) {
-			isShowingAlertDialog = true;
-		} else {
-			buildPracticeSession().then(onStartPractice);
-		}
-	}}
-	size="medium"
->
-	{isLevelCompleted ? 'Reset' : 'Start'}
-</Button>
+			<a href={subject.documentUrl} rel="external" target="_blank">
+				<SubjectCard class={cn('', { 'opacity-50': isCompleted })} {subject}>
+					<SubjectCharacter {subject} />
+				</SubjectCard>
+			</a>
+		{/each}
+	</ScrollableGrid>
+</GridLayout>
 
 <AlertDialog bind:open={isShowingAlertDialog}>
 	<AlertDialogContent>

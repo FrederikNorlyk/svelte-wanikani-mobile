@@ -1,4 +1,5 @@
 <script lang="ts">
+	import IllustrationLayout from '$lib/components/layouts/IllustrationLayout.svelte';
 	import ChevronUp from '@lucide/svelte/icons/chevron-up';
 	import Dumbbell from '@lucide/svelte/icons/dumbbell';
 	import GraduationCap from '@lucide/svelte/icons/graduation-cap';
@@ -34,77 +35,73 @@
 	);
 </script>
 
-<div class="mx-auto flex w-full flex-1 flex-col items-center gap-8 sm:w-110">
-	<div class="flex w-full flex-1 items-center">
-		<ReviewCard
-			{nextReviewData}
-			{numberOfAssignments}
-			{onReviewButtonPressed}
-		/>
-	</div>
+<IllustrationLayout>
+	<ReviewCard {nextReviewData} {numberOfAssignments} {onReviewButtonPressed} />
 
-	<div class="flex w-full flex-col gap-8">
-		<div class="flex gap-8">
+	{#snippet actions()}
+		<div class="flex w-full flex-col gap-8">
+			<div class="flex gap-8">
+				<Button
+					class="flex-1 flex-col gap-4"
+					buttonColor="sand"
+					iconColor="green"
+					onclick={onPracticeButtonPressed}
+					size="large"
+				>
+					<Dumbbell />
+					<div class="flex-1 text-center">
+						<h2>Practice</h2>
+						<p class="text-sm font-normal tracking-normal">
+							Review anything you've learned
+						</p>
+					</div>
+				</Button>
+
+				<AnchorButton
+					class="flex-1 flex-col gap-4"
+					buttonColor="sand"
+					disabled={numberOfLessons === 0}
+					href="https://wanikani.com"
+					iconColor="yellow"
+					size="large"
+					target="_blank"
+				>
+					<GraduationCap />
+					<div class="flex-1 text-center">
+						<h2>Lessons</h2>
+						<p class="text-sm font-normal tracking-normal">
+							{numberOfLessons === 0
+								? 'Done'
+								: `${numberOfLessons} ${numberOfLessons === 1 ? 'lesson' : 'lessons'} available`}
+						</p>
+					</div>
+				</AnchorButton>
+			</div>
+
 			<Button
-				class="flex-1 flex-col gap-4"
+				class="justify-between"
 				buttonColor="sand"
-				iconColor="green"
-				onclick={onPracticeButtonPressed}
-				size="large"
+				onclick={() => {
+					isSettingsOpen = true;
+				}}
+				size="medium"
 			>
-				<Dumbbell />
-				<div class="flex-1 text-center">
-					<h2>Practice</h2>
-					<p class="text-sm font-normal tracking-normal">
-						Review anything you've learned
-					</p>
-				</div>
-			</Button>
+				<span class="flex items-center gap-3">
+					<Settings />
 
-			<AnchorButton
-				class="flex-1 flex-col gap-4"
-				buttonColor="sand"
-				disabled={numberOfLessons === 0}
-				href="https://wanikani.com"
-				iconColor="yellow"
-				size="large"
-				target="_blank"
-			>
-				<GraduationCap />
-				<div class="flex-1 text-center">
-					<h2>Lessons</h2>
-					<p class="text-sm font-normal tracking-normal">
-						{numberOfLessons === 0
-							? 'Done'
-							: `${numberOfLessons} ${numberOfLessons === 1 ? 'lesson' : 'lessons'} available`}
-					</p>
-				</div>
-			</AnchorButton>
-		</div>
-
-		<Button
-			class="justify-between"
-			buttonColor="sand"
-			onclick={() => {
-				isSettingsOpen = true;
-			}}
-			size="medium"
-		>
-			<span class="flex items-center gap-3">
-				<Settings />
-
-				<span class="flex gap-1"
-					>Settings
-					{#if !hasSeenNotificationSubscribeButton}
-						<NotificationBadge class="mb-2 h-4 w-4" />
-					{/if}
+					<span class="flex gap-1"
+						>Settings
+						{#if !hasSeenNotificationSubscribeButton}
+							<NotificationBadge class="mb-2 h-4 w-4" />
+						{/if}
+					</span>
 				</span>
-			</span>
 
-			<ChevronUp />
-		</Button>
-	</div>
-</div>
+				<ChevronUp />
+			</Button>
+		</div>
+	{/snippet}
+</IllustrationLayout>
 
 <SettingsDrawer
 	bind:isOpen={isSettingsOpen}
