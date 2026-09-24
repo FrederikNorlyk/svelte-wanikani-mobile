@@ -330,6 +330,7 @@
 		Something went wrong. Could not get current subject
 	{:else}
 		<Review
+			onCancel={() => window.location.reload()}
 			onCorrectAnswer={() => onAnswer(true)}
 			onWrongAnswer={() => onAnswer(false)}
 			subject={currentSubject}

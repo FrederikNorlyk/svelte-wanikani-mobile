@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Subject } from '$lib/functions/subjects.remote';
+	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import { Progress } from '$lib/shadcn/components/ui/progress';
 	import SettingsRepository from '$lib/repository/local-storage/settingsRepository';
 	import AudioUtil from '$lib/util/audioUtil';
@@ -17,9 +18,10 @@
 		subject: Subject;
 		onCorrectAnswer: () => void;
 		onWrongAnswer: () => void;
+		onCancel: () => void;
 	}
 
-	const { subject, onCorrectAnswer, onWrongAnswer }: Props = $props();
+	const { subject, onCorrectAnswer, onWrongAnswer, onCancel }: Props = $props();
 
 	const settings = SettingsRepository.get();
 
@@ -72,7 +74,12 @@
 	});
 </script>
 
-<Progress value={progress()} />
+<div class="mb-1 flex place-items-center gap-2">
+	<Button class="w-20" buttonColor="red" onclick={onCancel} size="xs"
+		><ArrowLeft /></Button
+	>
+	<Progress value={progress()} />
+</div>
 
 <CurrentSubjectCard {isShowingAnswer} {subject} />
 
