@@ -25,12 +25,10 @@
 </Card>
 
 <style>
-	@reference '../../../routes/layout.css';
-
 	/* Separate each answer with a dot */
 	.answers > p + p::before {
-		@apply mx-1 font-medium;
-
+		margin-inline: 0.25rem;
+		font-weight: 500;
 		content: '·';
 	}
 </style>

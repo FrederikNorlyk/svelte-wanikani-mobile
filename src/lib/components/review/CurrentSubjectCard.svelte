@@ -34,7 +34,7 @@
 	target="_blank"
 >
 	<SubjectCard class="min-h-50 gap-3 sm:min-h-60 " {subject}>
-		<div class="top-row">
+		<div class="flex w-full items-center text-left text-lg font-medium">
 			<span class="flex-1">{subjectType}</span>
 
 			{#if isShowingAnswer}
@@ -42,7 +42,9 @@
 			{/if}
 		</div>
 
-		<div class="card-content">
+		<div
+			class="grid flex-1 grid-rows-[1fr_auto_1fr] items-center justify-items-center gap-2"
+		>
 			<div class="self-end">
 				{#if isShowingAnswer && primaryReading}
 					<p class="text-xl">{primaryReading}</p>
@@ -59,15 +61,3 @@
 		</div>
 	</SubjectCard>
 </a>
-
-<style>
-	@reference '../../../routes/layout.css';
-
-	.top-row {
-		@apply flex w-full items-center text-left text-lg font-medium;
-	}
-
-	.card-content {
-		@apply grid flex-1 grid-rows-[1fr_auto_1fr] items-center justify-items-center gap-2;
-	}
-</style>
