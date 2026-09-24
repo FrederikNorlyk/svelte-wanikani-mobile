@@ -1,4 +1,5 @@
 <script lang="ts">
+	import GridLayout from '$lib/components/layouts/GridLayout.svelte';
 	import LevelsGrid from '$lib/components/practice/LevelsGrid.svelte';
 	import LevelPage from '$lib/components/practice/LevelPage.svelte';
 	import NavBar from '$lib/components/practice/NavBar.svelte';
@@ -17,20 +18,27 @@
 </script>
 
 {#if pageState === 'select-level'}
-	<NavBar onBackButtonPressed={onCancel}>Levels</NavBar>
-	<LevelsGrid
-		onSelectLevel={(level) => {
-			selectedLevel = level;
-			pageState = 'view-level';
-		}}
-	/>
+	<GridLayout>
+		{#snippet header()}
+			<NavBar onBackButtonPressed={onCancel}>Levels</NavBar>
+		{/snippet}
+		<LevelsGrid
+			onSelectLevel={(level) => {
+				selectedLevel = level;
+				pageState = 'view-level';
+			}}
+		/>
+	</GridLayout>
 {:else if pageState === 'view-level'}
-	<NavBar
-		onBackButtonPressed={() => {
-			pageState = 'select-level';
-		}}
-	>
-		Level {selectedLevel}
-	</NavBar>
-	<LevelPage level={selectedLevel} {onStartPractice} />
+	<LevelPage level={selectedLevel} {onStartPractice}>
+		{#snippet header()}
+			<NavBar
+				onBackButtonPressed={() => {
+					pageState = 'select-level';
+				}}
+			>
+				Level {selectedLevel}
+			</NavBar>
+		{/snippet}
+	</LevelPage>
 {/if}

@@ -2,7 +2,6 @@
 	import LogOut from '@lucide/svelte/icons/log-out';
 	import * as Remote from '$lib/functions/auth.remote';
 	import { toast } from 'svelte-sonner';
-	import { Button } from '$lib/shadcn/components/ui/button';
 	import { Spinner } from '$lib/shadcn/components/ui/spinner';
 	import * as Database from '$lib/repository/database/database';
 	import {
@@ -18,6 +17,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import * as NotificationUtil from '$lib/util/notificationUtil';
+	import Button from '$lib/components/button/Button.svelte';
 
 	let isLoggingOut = $state(false);
 	let isShowingAlertDialog = $state(false);
@@ -41,19 +41,20 @@
 
 <Button
 	class="w-full"
+	buttonColor="sand"
 	disabled={isLoggingOut}
 	onclick={() => {
 		isShowingAlertDialog = true;
 	}}
+	size="small"
 	type="button"
-	variant="outline"
 >
 	{#if isLoggingOut}
-		<Spinner />
 		Logging out
+		<Spinner />
 	{:else}
-		<LogOut />
 		Log out
+		<LogOut />
 	{/if}
 </Button>
 

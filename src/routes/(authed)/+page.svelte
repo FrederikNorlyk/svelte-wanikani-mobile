@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as AssignmentAPI from '$lib/functions/assignments.remote';
+	import * as LessonAPI from '$lib/functions/lessons.remote';
 	import {
 		type Assignment,
 		type NextReviewData
@@ -8,7 +9,7 @@
 	import { onMount, untrack } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import SubjectsRepository from '$lib/repository/database/subjectsRepository';
-	import Review from '$lib/components/Review.svelte';
+	import Review from '$lib/components/review/Review.svelte';
 	import Synchronizing from '$lib/components/Synchronizing.svelte';
 	import * as ReviewAPI from '$lib/functions/reviews.remote';
 	import SRSStageToast from '$lib/components/SRSStageToast.svelte';
@@ -20,7 +21,7 @@
 		setStudySession,
 		studySession
 	} from '$lib/state/studySession.svelte';
-	import HomePage from '$lib/components/HomePage.svelte';
+	import HomePage from '$lib/components/home/HomePage.svelte';
 	import PracticePage from '$lib/components/practice/PracticePage.svelte';
 	import ProgressRepository from '$lib/repository/database/progressRepository';
 	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
@@ -37,6 +38,7 @@
 		| 'level-up';
 
 	let assignments = $state<Assignment[]>([]);
+	let numberOfLessons = $state(0);
 	let nextReviewData = $state<NextReviewData | null>(null);
 	let appState = $state<AppState>('loading');
 	let user = $state<User | undefined>(undefined);
@@ -85,6 +87,17 @@
 				});
 
 			promises.push(assignmentPromise);
+
+			promises.push(
+				LessonAPI.getAvailableLessonsCount()
+					.then((count) => {
+						numberOfLessons = count;
+					})
+					.catch((e) => {
+						console.error(e);
+						toast.error('Could not get available lessons');
+					})
+			);
 
 			if ((await SubjectsRepository.count()) === 0) {
 				appState = 'synchronizing';
@@ -291,12 +304,13 @@
 	<Synchronizing />
 {:else if appState === 'loading'}
 	<Spinner
-		class="absolute top-1/2 left-1/2 size-40 -translate-x-1/2 -translate-y-1/2 text-primary/10"
+		class="absolute top-1/2 left-1/2 size-40 -translate-x-1/2 -translate-y-1/2 text-white opacity-40 dark:opacity-20"
 	/>
 {:else if appState === 'loaded'}
 	<HomePage
 		{nextReviewData}
 		numberOfAssignments={assignments.length}
+		{numberOfLessons}
 		onPracticeButtonPressed={() => {
 			appState = 'defining-practice-session';
 		}}
@@ -316,6 +330,7 @@
 		Something went wrong. Could not get current subject
 	{:else}
 		<Review
+			onCancel={() => window.location.reload()}
 			onCorrectAnswer={() => onAnswer(true)}
 			onWrongAnswer={() => onAnswer(false)}
 			subject={currentSubject}

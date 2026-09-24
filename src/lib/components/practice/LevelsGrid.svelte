@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/components/Button.svelte';
+	import Button from '$lib/components/button/Button.svelte';
 	import { Progress } from '$lib/shadcn/components/ui/progress/index';
 	import SubjectsRepository from '$lib/repository/database/subjectsRepository';
 	import ProgressRepository from '$lib/repository/database/progressRepository';
@@ -40,11 +40,11 @@
 		{@const total = subjectCounts[level] ?? 1}
 
 		<Button
-			class="relative w-full"
+			class="rounded-md"
+			buttonColor="white"
 			disabled={maxLevelGranted < level}
 			onclick={() => onSelectLevel(level)}
-			size="lg"
-			variant="outline"
+			size="medium"
 		>
 			<Progress
 				class={cn('absolute bottom-0 rounded-t-none', {

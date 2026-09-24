@@ -1,24 +1,19 @@
 <script lang="ts">
-	import BadgeAlert from '@lucide/svelte/icons/badge-alert';
-	import { Input } from '$lib/shadcn/components/ui/input';
-	import { Button } from '$lib/shadcn/components/ui/button';
-	import { login } from '$lib/functions/auth.remote';
-	import { Spinner } from '$lib/shadcn/components/ui/spinner';
-	import {
-		Field,
-		FieldDescription,
-		FieldError,
-		FieldGroup,
-		FieldLabel,
-		FieldLegend,
-		FieldSet
-	} from '$lib/shadcn/components/ui/field';
-	import { toast } from 'svelte-sonner';
+	import LockKeyhole from '@lucide/svelte/icons/lock-keyhole';
 	import { onMount } from 'svelte';
+	import { toast } from 'svelte-sonner';
+	import mascot from '$lib/assets/mascots/boy-and-dog.png';
+	import { login } from '$lib/functions/auth.remote';
+	import { FieldError } from '$lib/shadcn/components/ui/field';
+	import { Spinner } from '$lib/shadcn/components/ui/spinner';
+	import Card from '$lib/components/Card.svelte';
+	import Button from '$lib/components/button/Button.svelte';
+	import PermissionHint from './PermissionHint.svelte';
+	import TextField from '$lib/components/form/TextField.svelte';
+	import APITokenPageButton from './APITokenPageButton.svelte';
 
 	let isFormDisabled = $state(false);
 	let apiTokenInput = $state<HTMLInputElement | null>(null);
-	let loginButton = $state<HTMLButtonElement | null>(null);
 	let form = $state<HTMLFormElement | null>(null);
 	let shouldTryClipboardAutopaste = $state(false);
 
@@ -27,7 +22,6 @@
 			return;
 		}
 
-		// If the user already typed/pasted manually, stop trying.
 		if (apiTokenInput.value.trim().length > 0) {
 			shouldTryClipboardAutopaste = false;
 			return;
@@ -46,17 +40,15 @@
 
 			apiTokenInput.value = text.trim();
 			shouldTryClipboardAutopaste = false;
-			loginButton?.click();
+			form?.submit();
 		} catch {
 			// Clipboard reads are often denied without a user gesture.
-			// Keep the flag true so we can retry on the next focus/visibility change.
 		}
 	}
 
 	onMount(() => {
 		const onFocus = () => void tryAutoPasteFromClipboard();
 		const onVisibility = () => void tryAutoPasteFromClipboard();
-
 		window.addEventListener('focus', onFocus);
 		document.addEventListener('visibilitychange', onVisibility);
 
@@ -68,65 +60,89 @@
 	});
 </script>
 
-<form
-	{...login.enhance(async ({ submit }) => {
-		isFormDisabled = true;
-		try {
-			await submit();
-			if (login.fields.allIssues()) {
-				isFormDisabled = false;
-			}
-		} catch (e) {
-			console.error(e);
-			toast.error('Could not log in');
-			isFormDisabled = false;
-		}
-	})}
-	bind:this={form}
-	class="space-y-4"
->
-	<FieldSet>
-		<FieldLegend>Login</FieldLegend>
-		<FieldDescription
-			>You can find your API Token <a
-				href="https://www.wanikani.com/settings/personal_access_tokens"
+<div class="flex flex-1 flex-col items-center justify-center">
+	<img
+		class="pointer-events-none z-3 -mb-14 w-80 drop-shadow-[0_0.3rem_0_rgb(87_51_29/18%)]"
+		alt="A smiling boy and dog welcoming you"
+		src={mascot}
+	/>
+	<Card class="flex flex-col gap-6 p-6">
+		<header class="text-center">
+			<h1 class="text-[clamp(1.8rem,7vw,2.75rem)] leading-[1.1] font-extrabold">
+				<span class="text-[0.7em] text-[#f5ad24]" aria-hidden="true">✦</span>
+				Connect WaniKani
+				<span class="text-[0.7em] text-[#f5ad24]" aria-hidden="true">✦</span>
+			</h1>
+			<p
+				class="mx-auto mt-[0.6rem] max-w-124 text-[clamp(0.98rem,3.6vw,1.25rem)] font-medium"
+			>
+				This app uses your personal WaniKani API token to access your account.
+			</p>
+		</header>
+
+		<div class="flex flex-col gap-2">
+			<APITokenPageButton
 				onclick={() => {
 					shouldTryClipboardAutopaste = true;
 				}}
-				target="_blank">here</a
-			>.
-		</FieldDescription>
-		<div class="flex space-x-1">
-			<BadgeAlert class="size-5" />
-			<p>
-				Make sure it has the permission called <b>reviews:create</b>.
-			</p>
+			/>
+			<PermissionHint />
 		</div>
-		<FieldGroup>
-			<Field>
-				<FieldLabel for="name">API Token</FieldLabel>
-				<Input
+
+		<form
+			{...login.enhance(async ({ submit }) => {
+				isFormDisabled = true;
+				try {
+					await submit();
+					if (login.fields.allIssues()) isFormDisabled = false;
+				} catch (e) {
+					console.error(e);
+					toast.error('Could not log in');
+					isFormDisabled = false;
+				}
+			})}
+			bind:this={form}
+			class="flex flex-col gap-6"
+		>
+			<div class="grid gap-[0.45rem]">
+				<label
+					class="text-[clamp(1.1rem,4vw,1.4rem)] font-[650]"
+					for="api-token">API Token</label
+				>
+				<TextField
 					{...login.fields._apiToken.as('text')}
+					id="api-token"
 					autocomplete="off"
-					autofocus={true}
 					disabled={isFormDisabled}
 					onfocus={tryAutoPasteFromClipboard}
 					placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+					required={true}
 					bind:ref={apiTokenInput}
 				/>
+
+				<p class="mx-2 font-medium">
+					Paste your personal access token to continue.
+				</p>
+
 				{#each login.fields._apiToken.issues() as issue, i (issue.message + ':' + i)}
 					<FieldError>{issue.message}</FieldError>
 				{/each}
-			</Field>
-		</FieldGroup>
-	</FieldSet>
+			</div>
 
-	<Button disabled={isFormDisabled} type="submit" bind:ref={loginButton}>
-		{#if isFormDisabled}
-			<Spinner />
-			Logging in
-		{:else}
-			Log in
-		{/if}
-	</Button>
-</form>
+			<Button
+				buttonColor="red"
+				disabled={isFormDisabled}
+				size="large"
+				type="submit"
+			>
+				{#if isFormDisabled}
+					<Spinner />
+					Logging in
+				{:else}
+					<LockKeyhole aria-hidden="true" />
+					Log in
+				{/if}
+			</Button>
+		</form>
+	</Card>
+</div>

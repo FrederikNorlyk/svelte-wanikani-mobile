@@ -1,14 +1,13 @@
 <script lang="ts">
-	import Centered from '$lib/components/Centered.svelte';
-	import Illustration from '$lib/components/Illustration.svelte';
+	import IllustrationLayout from '$lib/components/layouts/IllustrationLayout.svelte';
+	import IllustrationCard from '$lib/components/IllustrationCard.svelte';
 	import pose_happy_businessman_guts from '$lib/assets/irasutoya/pose_happy_businessman_guts.png';
 	import pose_zasetsu from '$lib/assets/irasutoya/pose_zasetsu.png';
 	import onsen_man from '$lib/assets/irasutoya/onsen_man.png';
 	import ochanoma_mu_notv from '$lib/assets/irasutoya/ochanoma_mu_notv.png';
 	import hirune_soto_businessman from '$lib/assets/irasutoya/hirune_soto_businessman.png';
 	import { studySession } from '$lib/state/studySession.svelte';
-	import Button from '$lib/components/Button.svelte';
-	import { Kbd } from '$lib/shadcn/components/ui/kbd';
+	import Button from '$lib/components/button/Button.svelte';
 
 	interface Props {
 		onContinue: () => void;
@@ -64,41 +63,36 @@
 	});
 </script>
 
-<Centered>
-	<p class="text-lg">
-		{#if percentageCorrect === 0}
-			You had no correct answers!
-		{:else if percentageCorrect === 100}
-			You had no wrong answers!
-		{:else}
-			You answered {percentageCorrect}% correctly
-		{/if}
-	</p>
+<IllustrationLayout>
+	<IllustrationCard alt={illustration.alt} src={illustration.src}>
+		<h2 class="text-lg font-medium">
+			{#if percentageCorrect === 0}
+				You had no correct answers!
+			{:else if percentageCorrect === 100}
+				You had no wrong answers!
+			{:else}
+				You answered {percentageCorrect}% correctly
+			{/if}
+		</h2>
 
-	<Illustration alt={illustration.alt} src={illustration.src}>
 		<p>{illustration.paragraph}</p>
-	</Illustration>
-</Centered>
+	</IllustrationCard>
 
-<Button
-	class="relative w-full overflow-hidden"
-	keyboardShortcut={{
-		handler: (e) => e.code === 'Space',
-		hintElement: spacebarShortcut
-	}}
-	onclick={onContinue}
-	size="lg"
->
-	<div
-		class="progress-bar absolute inset-x-0 bottom-0 h-full origin-left bg-primary-foreground/20"
-		aria-hidden="true"
-	></div>
-	Continue
-</Button>
-
-{#snippet spacebarShortcut()}
-	<Kbd>Space</Kbd>
-{/snippet}
+	{#snippet actions()}
+		<Button
+			class="relative h-30 w-full overflow-hidden"
+			buttonColor="red"
+			onclick={onContinue}
+			size="medium"
+		>
+			<div
+				class="progress-bar absolute inset-x-0 bottom-0 h-full origin-left bg-primary-foreground/20"
+				aria-hidden="true"
+			></div>
+			Continue
+		</Button>
+	{/snippet}
+</IllustrationLayout>
 
 <style>
 	.progress-bar {

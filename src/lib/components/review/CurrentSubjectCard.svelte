@@ -1,0 +1,63 @@
+<script lang="ts">
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import SubjectCard from '$lib/components/SubjectCard.svelte';
+	import type { Subject } from '$lib/functions/subjects.remote';
+	import SubjectCharacter from '$lib/components/SubjectCharacter.svelte';
+
+	interface Props {
+		subject: Subject;
+		isShowingAnswer: boolean;
+	}
+
+	const { subject, isShowingAnswer }: Props = $props();
+
+	const primaryMeaning = $derived(subject.primaryMeaning);
+	const primaryReading = $derived(subject.primaryReading);
+
+	const subjectType = $derived.by(() => {
+		switch (subject.type) {
+			case 'radical':
+				return 'Radical';
+			case 'kanji':
+				return 'Kanji';
+			case 'kana_vocabulary':
+			case 'vocabulary':
+				return 'Vocabulary';
+		}
+	});
+</script>
+
+<a
+	class="block"
+	href={isShowingAnswer ? subject.documentUrl : undefined}
+	rel="external"
+	target="_blank"
+>
+	<SubjectCard class="min-h-50 gap-3 sm:min-h-60 " {subject}>
+		<div class="flex w-full items-center text-left text-lg font-medium">
+			<span class="flex-1">{subjectType}</span>
+
+			{#if isShowingAnswer}
+				<ExternalLink class="inline-block size-5" />
+			{/if}
+		</div>
+
+		<div
+			class="grid flex-1 grid-rows-[1fr_auto_1fr] items-center justify-items-center gap-2"
+		>
+			<div class="self-end">
+				{#if isShowingAnswer && primaryReading}
+					<p class="text-xl">{primaryReading}</p>
+				{/if}
+			</div>
+
+			<SubjectCharacter class="text-4xl sm:text-5xl" {subject} />
+
+			<div class="self-start">
+				{#if isShowingAnswer && primaryMeaning}
+					<p class="text-xl">{primaryMeaning}</p>
+				{/if}
+			</div>
+		</div>
+	</SubjectCard>
+</a>

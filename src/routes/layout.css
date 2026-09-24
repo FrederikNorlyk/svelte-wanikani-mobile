@@ -1,16 +1,20 @@
 @import 'tailwindcss';
-@import '@fontsource-variable/noto-sans';
 @import '@fontsource-variable/noto-sans-jp';
+@import '@fontsource-variable/fredoka';
 
 @import 'tw-animate-css';
 
 :root {
-	--font-sans: 'Noto Sans', 'Noto Sans JP', 'Noto Sans SC', sans-serif;
-	--radius: 0.625rem;
-	--background: oklch(1 0 0);
-	--foreground: oklch(0.13 0.028 261.692);
-	--card: oklch(1 0 0);
-	--card-foreground: oklch(0.13 0.028 261.692);
+	color-scheme: light dark;
+
+	--font-sans: 'Fredoka Variable', 'Noto Sans JP', sans-serif;
+	--radius: 4rem;
+
+	--app-background-image: url('../lib/assets/background/light/background.png');
+	--app-background: #2990ee;
+	--background: #fff4d6;
+	--foreground: #7d4e28;
+
 	--popover: oklch(1 0 0);
 	--popover-foreground: oklch(0.13 0.028 261.692);
 	--primary: oklch(0.21 0.034 264.665);
@@ -25,33 +29,15 @@
 	--border: oklch(0.928 0.006 264.531);
 	--input: oklch(0.928 0.006 264.531);
 	--ring: oklch(0.707 0.022 261.325);
-	--chart-1: oklch(0.646 0.222 41.116);
-	--chart-2: oklch(0.6 0.118 184.704);
-	--chart-3: oklch(0.398 0.07 227.392);
-	--chart-4: oklch(0.828 0.189 84.429);
-	--chart-5: oklch(0.769 0.188 70.08);
-	--sidebar: oklch(0.985 0.002 247.839);
-	--sidebar-foreground: oklch(0.13 0.028 261.692);
-	--sidebar-primary: oklch(0.21 0.034 264.665);
-	--sidebar-primary-foreground: oklch(0.985 0.002 247.839);
-	--sidebar-accent: oklch(0.967 0.003 264.542);
-	--sidebar-accent-foreground: oklch(0.21 0.034 264.665);
-	--sidebar-border: oklch(0.928 0.006 264.531);
-	--sidebar-ring: oklch(0.707 0.022 261.325);
-	--safe-top: env(safe-area-inset-top);
-	--safe-right: env(safe-area-inset-right);
-	--safe-bottom: env(safe-area-inset-bottom);
-	--safe-left: env(safe-area-inset-left);
-	--app-background-image: url('../lib/assets/background/light/background.png');
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
 		--app-background-image: url('../lib/assets/background/dark/background.png');
-		--background: oklch(0.13 0.028 261.692);
-		--foreground: oklch(0.985 0.002 247.839);
-		--card: oklch(0.21 0.034 264.665);
-		--card-foreground: oklch(0.985 0.002 247.839);
+		--app-background: #01103c;
+		--background: #172540;
+		--foreground: #d4dced;
+
 		--popover: oklch(0.21 0.034 264.665);
 		--popover-foreground: oklch(0.985 0.002 247.839);
 		--primary: oklch(0.928 0.006 264.531 / 0.5);
@@ -66,32 +52,21 @@
 		--border: oklch(1 0 0 / 10%);
 		--input: oklch(1 0 0 / 15%);
 		--ring: oklch(0.551 0.027 264.364);
-		--chart-1: oklch(0.488 0.243 264.376);
-		--chart-2: oklch(0.696 0.17 162.48);
-		--chart-3: oklch(0.769 0.188 70.08);
-		--chart-4: oklch(0.627 0.265 303.9);
-		--chart-5: oklch(0.645 0.246 16.439);
-		--sidebar: oklch(0.21 0.034 264.665);
-		--sidebar-foreground: oklch(0.985 0.002 247.839);
-		--sidebar-primary: oklch(0.488 0.243 264.376);
-		--sidebar-primary-foreground: oklch(0.985 0.002 247.839);
-		--sidebar-accent: oklch(0.278 0.033 256.848);
-		--sidebar-accent-foreground: oklch(0.985 0.002 247.839);
-		--sidebar-border: oklch(1 0 0 / 10%);
-		--sidebar-ring: oklch(0.551 0.027 264.364);
 	}
+}
+
+@theme {
+	--breakpoint-sm: 500px;
 }
 
 @theme inline {
 	--font-sans: var(--font-sans);
-	--radius-sm: calc(var(--radius) - 4px);
-	--radius-md: calc(var(--radius) - 2px);
+	--radius-sm: calc(var(--radius) - 50px);
+	--radius-md: calc(var(--radius) - 40px);
 	--radius-lg: var(--radius);
-	--radius-xl: calc(var(--radius) + 4px);
+	--radius-xl: calc(var(--radius) + 40px);
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
-	--color-card: var(--card);
-	--color-card-foreground: var(--card-foreground);
 	--color-popover: var(--popover);
 	--color-popover-foreground: var(--popover-foreground);
 	--color-primary: var(--primary);
@@ -106,24 +81,11 @@
 	--color-border: var(--border);
 	--color-input: var(--input);
 	--color-ring: var(--ring);
-	--color-chart-1: var(--chart-1);
-	--color-chart-2: var(--chart-2);
-	--color-chart-3: var(--chart-3);
-	--color-chart-4: var(--chart-4);
-	--color-chart-5: var(--chart-5);
-	--color-sidebar: var(--sidebar);
-	--color-sidebar-foreground: var(--sidebar-foreground);
-	--color-sidebar-primary: var(--sidebar-primary);
-	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-	--color-sidebar-accent: var(--sidebar-accent);
-	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-	--color-sidebar-border: var(--sidebar-border);
-	--color-sidebar-ring: var(--sidebar-ring);
 }
 
 @layer base {
-	* {
-		@apply border-border outline-ring/50;
+	html {
+		background-color: var(--app-background);
 	}
 
 	main {
@@ -134,63 +96,44 @@
 	}
 
 	body {
-		@apply bg-background font-sans text-foreground;
+		@apply font-sans text-foreground;
+		isolation: isolate;
+	}
+
+	body::before {
+		content: '';
+		position: fixed;
+		inset: 0;
+		z-index: -1;
+		background-color: var(--app-background);
 		background-image: var(--app-background-image);
-		background-attachment: fixed;
 		background-position: center;
 		background-repeat: no-repeat;
 		background-size: cover;
 	}
 }
 
-@layer components {
-	.subject-card {
-		@apply flex flex-col items-center justify-center gap-2 rounded-lg border p-6 text-center;
+@utility paper-effect {
+	position: relative;
+	overflow: hidden;
 
-		/* svgs from WaniKani have a --color-text variable inside of them, that we can use to set the svg's color */
-		--color-text: currentColor;
+	&::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 1;
 
-		&.subject-card--kanji {
-			@apply border-fuchsia-600 bg-fuchsia-300 text-fuchsia-700;
+		background: light-dark(#6f5b45, #b8c9df);
+		filter: url('#paper-noise');
 
-			@media (prefers-color-scheme: dark) {
-				@apply border-fuchsia-400 bg-fuchsia-950/20 text-fuchsia-200;
-			}
-		}
+		opacity: 0.15;
+		mix-blend-mode: multiply;
 
-		&.subject-card--vocab {
-			@apply border-purple-600 bg-purple-300 text-purple-700;
+		pointer-events: none;
 
-			@media (prefers-color-scheme: dark) {
-				@apply border-purple-400 bg-purple-950/20 text-purple-200;
-			}
-		}
-
-		&.subject-card--radical {
-			@apply border-blue-600 bg-blue-300 text-blue-700;
-
-			@media (prefers-color-scheme: dark) {
-				@apply border-blue-400 bg-blue-950/20 text-blue-200;
-			}
-		}
-	}
-
-	.answer-card {
-		@apply rounded-lg border border-border bg-secondary p-4;
-
-		& .answer-card__label {
-			@apply text-sm font-medium text-muted-foreground;
-		}
-
-		& .answer-card__text {
-			@apply inline-block text-secondary-foreground opacity-75;
-		}
-
-		/* Separate each answer with a dot */
-		& .answer-card__text + .answer-card__text::before {
-			content: '·';
-			margin-right: 0.25rem;
-			margin-left: 0.25rem;
+		@media (prefers-color-scheme: dark) {
+			opacity: 0.12;
+			mix-blend-mode: soft-light;
 		}
 	}
 }

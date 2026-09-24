@@ -1,13 +1,14 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+	import GridLayout from '$lib/components/layouts/GridLayout.svelte';
 	import ProgressRepository, {
 		type Progress
 	} from '$lib/repository/database/progressRepository';
 	import SubjectsRepository from '$lib/repository/database/subjectsRepository';
 	import type { Subject } from '$lib/functions/subjects.remote';
 	import { setStudySession } from '$lib/state/studySession.svelte';
-	import Button from '$lib/components/Button.svelte';
+	import Button from '$lib/components/button/Button.svelte';
 	import { cn } from '$lib/shadcn/utils';
-	import { Kbd } from '$lib/shadcn/components/ui/kbd';
 	import {
 		AlertDialog,
 		AlertDialogAction,
@@ -18,18 +19,17 @@
 		AlertDialogHeader,
 		AlertDialogTitle
 	} from '$lib/shadcn/components/ui/alert-dialog';
-	import { onMount } from 'svelte';
-	import { uiState } from '$lib/state/uiState.svelte';
 	import ScrollableGrid from '$lib/components/practice/ScrollableGrid.svelte';
 	import SubjectCard from '../SubjectCard.svelte';
 	import SubjectCharacter from '$lib/components/SubjectCharacter.svelte';
 
 	interface Props {
+		header: Snippet;
 		level: number;
 		onStartPractice: () => void;
 	}
 
-	const { level, onStartPractice }: Props = $props();
+	const { header, level, onStartPractice }: Props = $props();
 
 	let progress = $state<Progress[]>([]);
 	let subjects = $state<Subject[]>([]);
@@ -59,19 +59,6 @@
 		};
 	});
 
-	onMount(() => {
-		const onKeyUp = (e: KeyboardEvent) => {
-			if (e.key === '?') {
-				uiState.isShowingKeyboardShortcuts =
-					!uiState.isShowingKeyboardShortcuts;
-			}
-		};
-
-		window.addEventListener('keyup', onKeyUp, { passive: true });
-
-		return () => window.removeEventListener('keyup', onKeyUp);
-	});
-
 	async function buildPracticeSession() {
 		const remainingSubjects = subjects.filter(
 			(subject) => !progress.find((p) => p.subjectId === subject.id)
@@ -86,34 +73,34 @@
 	}
 </script>
 
-<ScrollableGrid>
-	{#each subjects as subject (subject.id)}
-		{@const isCompleted = progress.find((p) => p.subjectId === subject.id)}
+<GridLayout {header}>
+	{#snippet controls()}
+		<Button
+			buttonColor="red"
+			onclick={() => {
+				if (isLevelCompleted) {
+					isShowingAlertDialog = true;
+				} else {
+					buildPracticeSession().then(onStartPractice);
+				}
+			}}
+			size="medium"
+		>
+			{isLevelCompleted ? 'Reset' : 'Start'}
+		</Button>
+	{/snippet}
+	<ScrollableGrid>
+		{#each subjects as subject (subject.id)}
+			{@const isCompleted = progress.find((p) => p.subjectId === subject.id)}
 
-		<a href={subject.documentUrl} rel="external" target="_blank">
-			<SubjectCard class={cn('', { 'opacity-50': isCompleted })} {subject}>
-				<SubjectCharacter {subject} />
-			</SubjectCard>
-		</a>
-	{/each}
-</ScrollableGrid>
-
-<Button
-	keyboardShortcut={{
-		handler: (e) => e.code === 'Space',
-		hintElement: spacebarShortcut
-	}}
-	onclick={() => {
-		if (isLevelCompleted) {
-			isShowingAlertDialog = true;
-		} else {
-			buildPracticeSession().then(onStartPractice);
-		}
-	}}
-	size="lg"
->
-	{isLevelCompleted ? 'Reset' : 'Start'}
-</Button>
+			<a href={subject.documentUrl} rel="external" target="_blank">
+				<SubjectCard class={cn('', { 'opacity-50': isCompleted })} {subject}>
+					<SubjectCharacter {subject} />
+				</SubjectCard>
+			</a>
+		{/each}
+	</ScrollableGrid>
+</GridLayout>
 
 <AlertDialog bind:open={isShowingAlertDialog}>
 	<AlertDialogContent>
@@ -138,7 +125,3 @@
 		</AlertDialogFooter>
 	</AlertDialogContent>
 </AlertDialog>
-
-{#snippet spacebarShortcut()}
-	<Kbd>Space</Kbd>
-{/snippet}

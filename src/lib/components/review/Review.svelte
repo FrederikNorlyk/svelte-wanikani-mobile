@@ -1,0 +1,121 @@
+<script lang="ts">
+	import type { Subject } from '$lib/functions/subjects.remote';
+	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+	import { Progress } from '$lib/shadcn/components/ui/progress';
+	import SettingsRepository from '$lib/repository/local-storage/settingsRepository';
+	import AudioUtil from '$lib/util/audioUtil';
+	import Button from '$lib/components/button/Button.svelte';
+	import { toast } from 'svelte-sonner';
+	import { studySession } from '$lib/state/studySession.svelte.js';
+	import { calculatePercentage } from '$lib/util/mathUtil';
+	import CurrentSubjectCard from '$lib/components/review/CurrentSubjectCard.svelte';
+	import AnswerCard from '$lib/components/review/AnswerCard.svelte';
+	import BookOpen from '@lucide/svelte/icons/book-open';
+	import MessageCircle from '@lucide/svelte/icons/message-circle';
+	import AnswerButton from '$lib/components/review/AnswerButton.svelte';
+
+	interface Props {
+		subject: Subject;
+		onCorrectAnswer: () => void;
+		onWrongAnswer: () => void;
+		onCancel: () => void;
+	}
+
+	const { subject, onCorrectAnswer, onWrongAnswer, onCancel }: Props = $props();
+
+	const settings = SettingsRepository.get();
+
+	let audioElement: HTMLAudioElement | undefined = $state(undefined);
+	let isShowingAnswer = $state(false);
+
+	const secondaryMeanings = $derived(subject.secondaryMeanings);
+	const secondaryReadings = $derived(subject.secondaryReadings);
+
+	const progress = $derived(() => {
+		const completed = studySession().index;
+		const total = studySession().subjectIds.length;
+		return calculatePercentage(completed, total);
+	});
+
+	$effect(() => {
+		void subject; // Track changes
+		isShowingAnswer = false;
+
+		const controller = new AbortController();
+
+		if (settings.playAudio && navigator.onLine) {
+			AudioUtil.createAudioElement(subject, settings.preferredAudio, {
+				signal: controller.signal
+			})
+				.then((audio) => {
+					if (controller.signal.aborted) {
+						return;
+					}
+					audioElement = audio;
+				})
+				.catch((err) => {
+					if (controller.signal.aborted) {
+						return;
+					} else if (err instanceof DOMException && err.name === 'AbortError') {
+						return;
+					} else if (!navigator.onLine) {
+						return;
+					}
+					console.error(err);
+					toast.error('Failed to load audio');
+				});
+		}
+
+		return () => {
+			controller.abort();
+			audioElement?.pause();
+			audioElement = undefined;
+		};
+	});
+</script>
+
+<div class="mb-1 flex place-items-center gap-2">
+	<Button class="w-20" buttonColor="red" onclick={onCancel} size="xs"
+		><ArrowLeft /></Button
+	>
+	<Progress value={progress()} />
+</div>
+
+<CurrentSubjectCard {isShowingAnswer} {subject} />
+
+<div class="flex-1 space-y-2">
+	{#if isShowingAnswer}
+		{#if secondaryMeanings.length > 0}
+			<AnswerCard
+				answers={secondaryMeanings}
+				icon={BookOpen}
+				label="Secondary meanings"
+			/>
+		{/if}
+		{#if secondaryReadings.length > 0}
+			<AnswerCard
+				answers={secondaryReadings}
+				icon={MessageCircle}
+				label="Secondary readings"
+			/>
+		{/if}
+	{/if}
+</div>
+
+<div class="flex space-x-4">
+	{#if isShowingAnswer}
+		<AnswerButton onclick={onCorrectAnswer} type="correct" />
+		<AnswerButton onclick={onWrongAnswer} type="wrong" />
+	{:else}
+		<Button
+			class="h-30 flex-1"
+			buttonColor="sand"
+			onclick={() => {
+				void audioElement?.play();
+				isShowingAnswer = true;
+			}}
+			size="medium"
+			>Show answer
+		</Button>
+	{/if}
+</div>

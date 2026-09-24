@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
-	import Button from '$lib/components/Button.svelte';
+	import Button from '$lib/components/button/Button.svelte';
 	import { type Snippet } from 'svelte';
 
 	interface Props {
@@ -12,10 +12,21 @@
 </script>
 
 <div class="flex items-center gap-2">
-	<Button onclick={onBackButtonPressed} size="icon">
+	<Button
+		class="h-10"
+		buttonColor="red"
+		onclick={onBackButtonPressed}
+		size="medium"
+	>
 		<ArrowLeft />
 	</Button>
 	<h1 class="text-3xl">
 		{@render children()}
 	</h1>
 </div>
+
+<style>
+	h1 {
+		color: light-dark(white, var(--foreground));
+	}
+</style>

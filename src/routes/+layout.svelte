@@ -6,6 +6,20 @@
 
 	let { children } = $props();
 
+	const toasterOffset = {
+		top: 'calc(2rem + env(safe-area-inset-top, 0px))',
+		right: 'calc(2rem + env(safe-area-inset-right, 0px))',
+		bottom: 'calc(2rem + env(safe-area-inset-bottom, 0px))',
+		left: 'calc(2rem + env(safe-area-inset-left, 0px))'
+	};
+
+	const mobileToasterOffset = {
+		top: 'calc(1rem + env(safe-area-inset-top, 0px))',
+		right: 'calc(1rem + env(safe-area-inset-right, 0px))',
+		bottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))',
+		left: 'calc(1rem + env(safe-area-inset-left, 0px))'
+	};
+
 	onMount(() => {
 		const clearNotifications = async () => {
 			const registration = await navigator.serviceWorker?.ready;
@@ -17,6 +31,10 @@
 			const notifications = await registration.getNotifications();
 			notifications.map((notification) => notification.close());
 		};
+
+		void navigator.serviceWorker?.ready.then((registration) => {
+			registration.active?.postMessage({ type: 'cache-images' });
+		});
 
 		void clearNotifications();
 
@@ -38,8 +56,32 @@
 	<link href={favicon} rel="icon" />
 </svelte:head>
 
-<Toaster position="top-center" />
+<!-- Global SVG filters -->
+<svg
+	style="position: absolute; pointer-events: none;"
+	aria-hidden="true"
+	height="0"
+	width="0"
+>
+	<defs>
+		<filter id="paper-noise">
+			<feTurbulence
+				baseFrequency="0.45"
+				numOctaves="3"
+				stitchTiles="stitch"
+				type="fractalNoise"
+			/>
+			<feColorMatrix type="saturate" values="0" />
+		</filter>
+	</defs>
+</svg>
 
-<main class="box-border flex h-dvh min-h-0 flex-col gap-2">
+<Toaster
+	mobileOffset={mobileToasterOffset}
+	offset={toasterOffset}
+	position="top-center"
+/>
+
+<main class="box-border flex min-h-svh flex-col gap-2">
 	{@render children()}
 </main>
