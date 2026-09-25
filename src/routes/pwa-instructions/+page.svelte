@@ -30,6 +30,9 @@
 			Using another browser? Open this page in Safari first. You may need to log
 			in again after installing.
 		</p>
+	</Card>
+
+	{#snippet actions()}
 		<AnchorButton
 			buttonColor="red"
 			href={resolve('/')}
@@ -38,5 +41,5 @@
 		>
 			Back
 		</AnchorButton>
-	</Card>
+	{/snippet}
 </CenteredCardLayout>
