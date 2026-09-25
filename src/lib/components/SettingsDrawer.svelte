@@ -1,5 +1,6 @@
 <script lang="ts">
 	import BellPlus from '@lucide/svelte/icons/bell-plus';
+	import BadgeInfo from '@lucide/svelte/icons/badge-info';
 	import LogOutButton from '$lib/components/LogOutButton.svelte';
 	import { Drawer } from 'vaul-svelte';
 	import SettingsRepository, {
@@ -10,6 +11,9 @@
 	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
 	import NotificationBadge from '$lib/components/NotificationBadge.svelte';
 	import Button from '$lib/components/button/Button.svelte';
+	import { supportsPushNotifications } from '$lib/util/notificationUtil';
+	import { resolve } from '$app/paths';
+	import AnchorButton from '$lib/components/button/AnchorButton.svelte';
 
 	interface Props {
 		isOpen: boolean;
@@ -22,7 +26,9 @@
 	}: Props = $props();
 
 	const settings = $state<Settings>(SettingsRepository.get());
-	let notificationPermission = $state(Notification.permission);
+	let notificationPermission = $state<NotificationPermission | 'unsupported'>(
+		supportsPushNotifications() ? Notification.permission : 'unsupported'
+	);
 	let hasBeenOpen = $state(isOpen);
 
 	$effect(() => {
@@ -40,7 +46,7 @@
 	});
 
 	async function subscribeToPushNotifications() {
-		if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+		if (!supportsPushNotifications()) {
 			return;
 		}
 
@@ -128,7 +134,21 @@
 						<p class="text-sm">
 							Receive notifications when new reviews are ready
 						</p>
-						{#if notificationPermission === 'default'}
+						{#if notificationPermission === 'unsupported'}
+							<p class="text-sm">
+								Review notifications aren't available in this browser. On iPhone
+								or iPad, add WaniKani Mobile to your Home Screen and open it
+								from there.
+							</p>
+							<AnchorButton
+								class="w-full"
+								buttonColor="red"
+								href={resolve('/pwa-instructions')}
+								size="small"
+								>View installation instructions
+								<BadgeInfo aria-hidden="true" />
+							</AnchorButton>
+						{:else if notificationPermission === 'default'}
 							<Button
 								buttonColor="red"
 								onclick={subscribeToPushNotifications}

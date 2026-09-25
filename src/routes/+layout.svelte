@@ -22,14 +22,18 @@
 
 	onMount(() => {
 		const clearNotifications = async () => {
-			const registration = await navigator.serviceWorker?.ready;
+			try {
+				const registration = await navigator.serviceWorker?.ready;
 
-			if (!registration) {
-				return;
+				if (typeof registration?.getNotifications !== 'function') {
+					return;
+				}
+
+				const notifications = await registration.getNotifications();
+				notifications.forEach((notification) => notification.close());
+			} catch (error) {
+				console.warn('Could not clear review notifications', error);
 			}
-
-			const notifications = await registration.getNotifications();
-			notifications.map((notification) => notification.close());
 		};
 
 		void navigator.serviceWorker?.ready.then((registration) => {
