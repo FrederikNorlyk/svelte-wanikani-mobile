@@ -1,5 +1,6 @@
 <script lang="ts">
 	import BellPlus from '@lucide/svelte/icons/bell-plus';
+	import BadgeInfo from '@lucide/svelte/icons/badge-info';
 	import LogOutButton from '$lib/components/LogOutButton.svelte';
 	import { Drawer } from 'vaul-svelte';
 	import SettingsRepository, {
@@ -11,6 +12,8 @@
 	import NotificationBadge from '$lib/components/NotificationBadge.svelte';
 	import Button from '$lib/components/button/Button.svelte';
 	import { supportsPushNotifications } from '$lib/util/notificationUtil';
+	import { resolve } from '$app/paths';
+	import AnchorButton from '$lib/components/button/AnchorButton.svelte';
 
 	interface Props {
 		isOpen: boolean;
@@ -124,7 +127,7 @@
 							<h2 id="notifications-title" class="text-lg font-semibold">
 								Notifications
 							</h2>
-							{#if notificationPermission !== 'unsupported' && !hasSeenNotificationSubscribeButton}
+							{#if !hasSeenNotificationSubscribeButton}
 								<NotificationBadge class="h-4 w-4" />
 							{/if}
 						</div>
@@ -137,6 +140,14 @@
 								or iPad, add WaniKani Mobile to your Home Screen and open it
 								from there.
 							</p>
+							<AnchorButton
+								class="w-full"
+								buttonColor="red"
+								href={resolve('/pwa-instructions')}
+								size="small"
+								>View installation instructions
+								<BadgeInfo aria-hidden="true" />
+							</AnchorButton>
 						{:else if notificationPermission === 'default'}
 							<Button
 								buttonColor="red"

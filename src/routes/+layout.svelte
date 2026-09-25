@@ -3,7 +3,6 @@
 	import favicon from '$lib/assets/favicon.png';
 	import { onMount } from 'svelte';
 	import { Toaster } from '$lib/shadcn/components/ui/sonner/index.js';
-	import IosInstallPrompt from '$lib/components/IosInstallPrompt.svelte';
 
 	let { children } = $props();
 
@@ -88,6 +87,5 @@
 />
 
 <main class="box-border flex min-h-svh flex-col gap-2">
-	<IosInstallPrompt />
 	{@render children()}
 </main>
