@@ -3,6 +3,7 @@
 	import favicon from '$lib/assets/favicon.png';
 	import { onMount } from 'svelte';
 	import { Toaster } from '$lib/shadcn/components/ui/sonner/index.js';
+	import IosInstallPrompt from '$lib/components/IosInstallPrompt.svelte';
 
 	let { children } = $props();
 
@@ -22,14 +23,18 @@
 
 	onMount(() => {
 		const clearNotifications = async () => {
-			const registration = await navigator.serviceWorker?.ready;
+			try {
+				const registration = await navigator.serviceWorker?.ready;
 
-			if (!registration) {
-				return;
+				if (typeof registration?.getNotifications !== 'function') {
+					return;
+				}
+
+				const notifications = await registration.getNotifications();
+				notifications.forEach((notification) => notification.close());
+			} catch (error) {
+				console.warn('Could not clear review notifications', error);
 			}
-
-			const notifications = await registration.getNotifications();
-			notifications.map((notification) => notification.close());
 		};
 
 		void navigator.serviceWorker?.ready.then((registration) => {
@@ -83,5 +88,6 @@
 />
 
 <main class="box-border flex min-h-svh flex-col gap-2">
+	<IosInstallPrompt />
 	{@render children()}
 </main>

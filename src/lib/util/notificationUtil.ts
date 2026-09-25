@@ -2,8 +2,18 @@ import { PUBLIC_VAPID } from '$env/static/public';
 import * as NotificationsAPI from '$lib/functions/notifications.remote';
 import { base64UrlToUint8Array } from '$lib/util/base64';
 
+export function supportsPushNotifications(): boolean {
+	return (
+		typeof navigator !== 'undefined' &&
+		'serviceWorker' in navigator &&
+		typeof PushManager !== 'undefined' &&
+		typeof Notification !== 'undefined' &&
+		typeof Notification.requestPermission === 'function'
+	);
+}
+
 export async function getSubscription(): Promise<PushSubscription | undefined> {
-	if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+	if (!supportsPushNotifications()) {
 		return undefined;
 	}
 

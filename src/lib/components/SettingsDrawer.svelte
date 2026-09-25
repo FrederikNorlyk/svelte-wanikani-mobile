@@ -10,6 +10,7 @@
 	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
 	import NotificationBadge from '$lib/components/NotificationBadge.svelte';
 	import Button from '$lib/components/button/Button.svelte';
+	import { supportsPushNotifications } from '$lib/util/notificationUtil';
 
 	interface Props {
 		isOpen: boolean;
@@ -22,7 +23,9 @@
 	}: Props = $props();
 
 	const settings = $state<Settings>(SettingsRepository.get());
-	let notificationPermission = $state(Notification.permission);
+	let notificationPermission = $state<NotificationPermission | 'unsupported'>(
+		supportsPushNotifications() ? Notification.permission : 'unsupported'
+	);
 	let hasBeenOpen = $state(isOpen);
 
 	$effect(() => {
@@ -40,7 +43,7 @@
 	});
 
 	async function subscribeToPushNotifications() {
-		if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+		if (!supportsPushNotifications()) {
 			return;
 		}
 
@@ -121,14 +124,20 @@
 							<h2 id="notifications-title" class="text-lg font-semibold">
 								Notifications
 							</h2>
-							{#if !hasSeenNotificationSubscribeButton}
+							{#if notificationPermission !== 'unsupported' && !hasSeenNotificationSubscribeButton}
 								<NotificationBadge class="h-4 w-4" />
 							{/if}
 						</div>
 						<p class="text-sm">
 							Receive notifications when new reviews are ready
 						</p>
-						{#if notificationPermission === 'default'}
+						{#if notificationPermission === 'unsupported'}
+							<p class="text-sm">
+								Review notifications aren't available in this browser. On iPhone
+								or iPad, add WaniKani Mobile to your Home Screen and open it
+								from there.
+							</p>
+						{:else if notificationPermission === 'default'}
 							<Button
 								buttonColor="red"
 								onclick={subscribeToPushNotifications}

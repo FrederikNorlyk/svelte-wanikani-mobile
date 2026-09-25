@@ -11,6 +11,7 @@
 	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
 	import NotificationBadge from '$lib/components/NotificationBadge.svelte';
 	import ReviewCard from '$lib/components/home/ReviewCard.svelte';
+	import { supportsPushNotifications } from '$lib/util/notificationUtil';
 
 	interface Props {
 		numberOfAssignments: number;
@@ -91,7 +92,7 @@
 
 					<span class="flex gap-1"
 						>Settings
-						{#if !hasSeenNotificationSubscribeButton}
+						{#if supportsPushNotifications() && !hasSeenNotificationSubscribeButton}
 							<NotificationBadge class="mb-2 h-4 w-4" />
 						{/if}
 					</span>
