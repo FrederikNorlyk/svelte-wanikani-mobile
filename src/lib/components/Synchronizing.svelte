@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { Spinner } from '$lib/shadcn/components/ui/spinner';
 	import crane_game_kani from '$lib/assets/irasutoya/crane_game_kani.png';
-	import IllustrationLayout from '$lib/components/layouts/IllustrationLayout.svelte';
+	import CenteredCardLayout from '$lib/components/layouts/CenteredCardLayout.svelte';
 	import IllustrationCard from '$lib/components/IllustrationCard.svelte';
 </script>
 
-<IllustrationLayout>
+<CenteredCardLayout>
 	<IllustrationCard
 		class="relative"
 		alt="Illustration of a crane game where you can catch crabs"
@@ -14,4 +14,4 @@
 		<Spinner class="absolute top-18 size-30 text-white opacity-30" />
 		<p>Synchronizing with WaniKani</p>
 	</IllustrationCard>
-</IllustrationLayout>
+</CenteredCardLayout>

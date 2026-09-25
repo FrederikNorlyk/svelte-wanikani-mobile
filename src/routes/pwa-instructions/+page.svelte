@@ -3,9 +3,10 @@
 	import Card from '$lib/components/Card.svelte';
 	import AnchorButton from '$lib/components/button/AnchorButton.svelte';
 	import { resolve } from '$app/paths';
+	import CenteredCardLayout from '$lib/components/layouts/CenteredCardLayout.svelte';
 </script>
 
-<section class="m-auto w-full max-w-110">
+<CenteredCardLayout>
 	<Card class="flex flex-col gap-4 p-6">
 		<h2 id="ios-install-title" class="text-2xl font-semibold">
 			Install WaniKani Mobile
@@ -38,4 +39,4 @@
 			Back
 		</AnchorButton>
 	</Card>
-</section>
+</CenteredCardLayout>

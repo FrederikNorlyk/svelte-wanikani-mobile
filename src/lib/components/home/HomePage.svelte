@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IllustrationLayout from '$lib/components/layouts/IllustrationLayout.svelte';
+	import CenteredCardLayout from '$lib/components/layouts/CenteredCardLayout.svelte';
 	import ChevronUp from '@lucide/svelte/icons/chevron-up';
 	import Dumbbell from '@lucide/svelte/icons/dumbbell';
 	import GraduationCap from '@lucide/svelte/icons/graduation-cap';
@@ -35,7 +35,7 @@
 	);
 </script>
 
-<IllustrationLayout>
+<CenteredCardLayout>
 	<ReviewCard {nextReviewData} {numberOfAssignments} {onReviewButtonPressed} />
 
 	{#snippet actions()}
@@ -101,7 +101,7 @@
 			</Button>
 		</div>
 	{/snippet}
-</IllustrationLayout>
+</CenteredCardLayout>
 
 <SettingsDrawer
 	bind:isOpen={isSettingsOpen}

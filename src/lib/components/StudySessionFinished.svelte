@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IllustrationLayout from '$lib/components/layouts/IllustrationLayout.svelte';
+	import CenteredCardLayout from '$lib/components/layouts/CenteredCardLayout.svelte';
 	import IllustrationCard from '$lib/components/IllustrationCard.svelte';
 	import pose_happy_businessman_guts from '$lib/assets/irasutoya/pose_happy_businessman_guts.png';
 	import pose_zasetsu from '$lib/assets/irasutoya/pose_zasetsu.png';
@@ -63,7 +63,7 @@
 	});
 </script>
 
-<IllustrationLayout>
+<CenteredCardLayout>
 	<IllustrationCard alt={illustration.alt} src={illustration.src}>
 		<h2 class="text-lg font-medium">
 			{#if percentageCorrect === 0}
@@ -92,7 +92,7 @@
 			Continue
 		</Button>
 	{/snippet}
-</IllustrationLayout>
+</CenteredCardLayout>
 
 <style>
 	.progress-bar {

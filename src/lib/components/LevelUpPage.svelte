@@ -2,7 +2,7 @@
 	import business_group_happy from '$lib/assets/irasutoya/business_group_happy.png';
 	import IllustrationCard from '$lib/components/IllustrationCard.svelte';
 	import { onMount } from 'svelte';
-	import IllustrationLayout from '$lib/components/layouts/IllustrationLayout.svelte';
+	import CenteredCardLayout from '$lib/components/layouts/CenteredCardLayout.svelte';
 	import ConfettiCannon from '$lib/ui/confettiCannon';
 	import UserRepository from '$lib/repository/local-storage/userRepository';
 	import Button from '$lib/components/button/Button.svelte';
@@ -21,7 +21,7 @@
 	});
 </script>
 
-<IllustrationLayout>
+<CenteredCardLayout>
 	<IllustrationCard
 		alt="Three office workers cheering"
 		src={business_group_happy}
@@ -42,4 +42,4 @@
 			>Continue
 		</Button>
 	{/snippet}
-</IllustrationLayout>
+</CenteredCardLayout>
