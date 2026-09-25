@@ -30,7 +30,7 @@
 			in again after installing.
 		</p>
 		<AnchorButton
-			buttonColor="sand"
+			buttonColor="red"
 			href={resolve('/')}
 			size="small"
 			type="button"
