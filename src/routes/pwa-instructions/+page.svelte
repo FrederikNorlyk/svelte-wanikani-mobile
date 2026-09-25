@@ -5,7 +5,7 @@
 	import { resolve } from '$app/paths';
 </script>
 
-<section class="mx-auto mb-6 w-full max-w-110">
+<section class="m-auto w-full max-w-110">
 	<Card class="flex flex-col gap-4 p-6">
 		<h2 id="ios-install-title" class="text-2xl font-semibold">
 			Install WaniKani Mobile
