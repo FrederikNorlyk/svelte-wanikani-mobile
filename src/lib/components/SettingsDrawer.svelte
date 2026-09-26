@@ -1,7 +1,6 @@
 <script lang="ts">
 	import BellPlus from '@lucide/svelte/icons/bell-plus';
 	import BadgeInfo from '@lucide/svelte/icons/badge-info';
-	import LogOutButton from '$lib/components/LogOutButton.svelte';
 	import { Drawer } from 'vaul-svelte';
 	import SettingsRepository, {
 		AUDIO_CHOICES,
@@ -14,6 +13,7 @@
 	import { supportsPushNotifications } from '$lib/util/notificationUtil';
 	import { resolve } from '$app/paths';
 	import AnchorButton from '$lib/components/button/AnchorButton.svelte';
+	import LogOutButton from '$lib/components/button/LogOutButton.svelte';
 
 	interface Props {
 		isOpen: boolean;

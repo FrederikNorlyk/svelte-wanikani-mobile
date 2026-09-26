@@ -10,10 +10,8 @@
 	import { toast } from 'svelte-sonner';
 	import SubjectsRepository from '$lib/repository/database/subjectsRepository';
 	import Review from '$lib/components/review/Review.svelte';
-	import Synchronizing from '$lib/components/Synchronizing.svelte';
 	import * as ReviewAPI from '$lib/functions/reviews.remote';
 	import SRSStageToast from '$lib/components/SRSStageToast.svelte';
-	import LevelUpPage from '$lib/components/LevelUpPage.svelte';
 	import type { User } from '$lib/functions/user.remote';
 	import * as UserAPI from '$lib/functions/user.remote';
 	import UserRepository from '$lib/repository/local-storage/userRepository';
@@ -25,8 +23,10 @@
 	import PracticePage from '$lib/components/practice/PracticePage.svelte';
 	import ProgressRepository from '$lib/repository/database/progressRepository';
 	import AppMetadataRepository from '$lib/repository/local-storage/appMetadataRepository';
-	import StudySessionFinished from '$lib/components/StudySessionFinished.svelte';
 	import { Spinner } from '$lib/shadcn/components/ui/spinner';
+	import StudySessionFinished from '$lib/components/illustration-cards/StudySessionFinished.svelte';
+	import LevelUpPage from '$lib/components/illustration-cards/LevelUpPage.svelte';
+	import Synchronizing from '$lib/components/illustration-cards/Synchronizing.svelte';
 
 	type AppState =
 		| 'loading'

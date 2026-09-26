@@ -6,7 +6,6 @@
 	import { calculatePercentage } from '$lib/util/mathUtil';
 	import { cn } from '$lib/shadcn/utils';
 	import UserRepository from '$lib/repository/local-storage/userRepository';
-	import ScrollableGrid from '$lib/components/practice/ScrollableGrid.svelte';
 	import { onMount } from 'svelte';
 
 	interface Props {
@@ -34,26 +33,23 @@
 	});
 </script>
 
-<ScrollableGrid>
-	{#each Array.from({ length: 60 }, (_, i) => i + 1) as level (level)}
-		{@const completed = progressCounts[level] ?? 0}
-		{@const total = subjectCounts[level] ?? 1}
+{#each Array.from({ length: 60 }, (_, i) => i + 1) as level (level)}
+	{@const completed = progressCounts[level] ?? 0}
+	{@const total = subjectCounts[level] ?? 1}
 
-		<Button
-			class="rounded-md"
-			buttonColor="white"
-			disabled={maxLevelGranted < level}
-			onclick={() => onSelectLevel(level)}
-			size="medium"
-		>
-			<Progress
-				class={cn('absolute bottom-0 rounded-t-none', {
-					"**:data-[slot='progress-indicator']:bg-amber-300":
-						completed === total
-				})}
-				value={calculatePercentage(completed, total)}
-			/>
-			{level}
-		</Button>
-	{/each}
-</ScrollableGrid>
+	<Button
+		class="h-auto w-auto rounded-md"
+		buttonColor="white"
+		disabled={maxLevelGranted < level}
+		onclick={() => onSelectLevel(level)}
+		size="medium"
+	>
+		<Progress
+			class={cn('absolute bottom-0 rounded-t-none', {
+				"**:data-[slot='progress-indicator']:bg-amber-300": completed === total
+			})}
+			value={calculatePercentage(completed, total)}
+		/>
+		{level}
+	</Button>
+{/each}
