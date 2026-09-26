@@ -19,7 +19,6 @@
 		AlertDialogHeader,
 		AlertDialogTitle
 	} from '$lib/shadcn/components/ui/alert-dialog';
-	import ScrollableGrid from '$lib/components/practice/ScrollableGrid.svelte';
 	import SubjectCard from '../SubjectCard.svelte';
 	import SubjectCharacter from '$lib/components/SubjectCharacter.svelte';
 
@@ -89,17 +88,16 @@
 			{isLevelCompleted ? 'Reset' : 'Start'}
 		</Button>
 	{/snippet}
-	<ScrollableGrid>
-		{#each subjects as subject (subject.id)}
-			{@const isCompleted = progress.find((p) => p.subjectId === subject.id)}
 
-			<a href={subject.documentUrl} rel="external" target="_blank">
-				<SubjectCard class={cn('', { 'opacity-50': isCompleted })} {subject}>
-					<SubjectCharacter {subject} />
-				</SubjectCard>
-			</a>
-		{/each}
-	</ScrollableGrid>
+	{#each subjects as subject (subject.id)}
+		{@const isCompleted = progress.find((p) => p.subjectId === subject.id)}
+
+		<a href={subject.documentUrl} rel="external" target="_blank">
+			<SubjectCard class={cn('', { 'opacity-50': isCompleted })} {subject}>
+				<SubjectCharacter {subject} />
+			</SubjectCard>
+		</a>
+	{/each}
 </GridLayout>
 
 <AlertDialog bind:open={isShowingAlertDialog}>

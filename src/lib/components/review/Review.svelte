@@ -74,48 +74,50 @@
 	});
 </script>
 
-<div class="mb-1 flex place-items-center gap-2">
-	<Button class="w-20" buttonColor="red" onclick={onCancel} size="xs"
-		><ArrowLeft /></Button
-	>
-	<Progress value={progress()} />
-</div>
+<section class="flex flex-auto flex-col gap-2">
+	<div class="flex place-items-center gap-2">
+		<Button class="w-20" buttonColor="red" onclick={onCancel} size="xs"
+			><ArrowLeft /></Button
+		>
+		<Progress value={progress()} />
+	</div>
 
-<CurrentSubjectCard {isShowingAnswer} {subject} />
+	<CurrentSubjectCard {isShowingAnswer} {subject} />
 
-<div class="flex-1 space-y-2">
-	{#if isShowingAnswer}
-		{#if secondaryMeanings.length > 0}
-			<AnswerCard
-				answers={secondaryMeanings}
-				icon={BookOpen}
-				label="Secondary meanings"
-			/>
+	<div class="flex-1 space-y-2">
+		{#if isShowingAnswer}
+			{#if secondaryMeanings.length > 0}
+				<AnswerCard
+					answers={secondaryMeanings}
+					icon={BookOpen}
+					label="Secondary meanings"
+				/>
+			{/if}
+			{#if secondaryReadings.length > 0}
+				<AnswerCard
+					answers={secondaryReadings}
+					icon={MessageCircle}
+					label="Secondary readings"
+				/>
+			{/if}
 		{/if}
-		{#if secondaryReadings.length > 0}
-			<AnswerCard
-				answers={secondaryReadings}
-				icon={MessageCircle}
-				label="Secondary readings"
-			/>
-		{/if}
-	{/if}
-</div>
+	</div>
 
-<div class="flex space-x-4">
-	{#if isShowingAnswer}
-		<AnswerButton onclick={onCorrectAnswer} type="correct" />
-		<AnswerButton onclick={onWrongAnswer} type="wrong" />
-	{:else}
-		<Button
-			class="h-30 flex-1"
-			buttonColor="sand"
-			onclick={() => {
-				void audioElement?.play();
-				isShowingAnswer = true;
-			}}
-			size="medium"
-			>Show answer
-		</Button>
-	{/if}
-</div>
+	<div class="flex space-x-4">
+		{#if isShowingAnswer}
+			<AnswerButton onclick={onCorrectAnswer} type="correct" />
+			<AnswerButton onclick={onWrongAnswer} type="wrong" />
+		{:else}
+			<Button
+				class="h-30 flex-1"
+				buttonColor="sand"
+				onclick={() => {
+					void audioElement?.play();
+					isShowingAnswer = true;
+				}}
+				size="medium"
+				>Show answer
+			</Button>
+		{/if}
+	</div>
+</section>

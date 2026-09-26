@@ -86,6 +86,6 @@
 	position="top-center"
 />
 
-<main class="box-border flex min-h-svh flex-col gap-2">
+<main class="mx-auto flex min-h-svh max-w-110 md:max-w-150">
 	{@render children()}
 </main>
